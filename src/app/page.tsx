@@ -12,9 +12,12 @@ export default function HomePage() {
     <>
       <HeroBanner />
    
-   {/*  <CategoryGrid />*/ } 
+   {/*  <CategoryGrid />
+   <ProductDetails/>
+   
+   */ } 
       <MegaMenu/>
-      <ProductDetails/>
+      
       <ProductGrid />
       <TopCities />
       <PremiumBrands/>
