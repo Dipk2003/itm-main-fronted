@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Authentication Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        function log(message) {
+            const results = document.getElementById('results');
+            results.innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+        
+        async function testAuth() {
+            log("🔍 Testing Authentication...");
+            
+            // Check localStorage
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token) {
+                log("❌ No token found in localStorage. Please log in first.");
+                return;
+            }
+            
+            log("✅ Token found: " + token.substring(0, 20) + "...");
+            
+            // Decode JWT token
+            try {
+                const tokenParts = token.split('.');
+                const payload = JSON.parse(atob(tokenParts[1]));
+                log("🔐 JWT Payload:");
+                log("  Subject: " + payload.sub);
+                log("  Role: " + payload.role);
+                log("  User ID: " + payload.userId);
+                log("  Expires: " + new Date(payload.exp * 1000));
+                log("  Is Expired: " + (Date.now() > payload.exp * 1000));
+            } catch (error) {
+                log("❌ Error decoding token: " + error);
+            }
+            
+            // Test API endpoints
+            const baseUrl = 'http://localhost:8080';
+            
+            // Test profile endpoint
+            try {
+                const profileResponse = await fetch(`${baseUrl}/auth/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (profileResponse.ok) {
+                    const profileData = await profileResponse.json();
+                    log("✅ Profile API works: " + JSON.stringify(profileData));
+                } else {
+                    log("❌ Profile API failed: " + profileResponse.status);
+                }
+            } catch (error) {
+                log("❌ Profile API error: " + error);
+            }
+            
+            // Test product add endpoint
+            const testProduct = {
+                name: "Test Product",
+                description: "Test Description",
+                price: 100,
+                stock: 10,
+                categoryId: 1
+            };
+            
+            try {
+                const productResponse = await fetch(`${baseUrl}/api/products/vendor/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testProduct)
+                });
+                
+                if (productResponse.ok) {
+                    const productData = await productResponse.json();
+                    log("✅ Product Add API works: " + JSON.stringify(productData));
+                } else {
+                    const errorText = await productResponse.text();
+                    log("❌ Product Add API failed: " + productResponse.status + " - " + errorText);
+                }
+            } catch (error) {
+                log("❌ Product Add API error: " + error);
+            }
+        }
+        
+        // Run test on page load
+        window.onload = testAuth;
+    </script>
+</body>
+</html>
