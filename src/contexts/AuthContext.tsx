@@ -42,6 +42,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
+      // Check if we're in the browser environment
+      if (typeof window === 'undefined') {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      
       const token = localStorage.getItem('token');
       if (!token) {
         console.log('No token found, user not authenticated');
@@ -55,12 +62,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(userProfile);
       } catch (profileError) {
         console.warn('Profile fetch failed, clearing token:', profileError);
-        localStorage.removeItem('token');
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token');
+        }
         setUser(null);
       }
     } catch (error) {
       console.error('Auth check failed:', error);
-      localStorage.removeItem('token');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+      }
       setUser(null);
     } finally {
       setLoading(false);
@@ -73,7 +84,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // If response is an object with token, it's a successful login
       if (typeof response === 'object' && response.token) {
-        localStorage.setItem('token', response.token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', response.token);
+        }
         setUser(response.user);
         return response;
       } else {
@@ -112,7 +125,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await authAPI.verifyOtp({ emailOrPhone, otp });
       
       if (response.token) {
-        localStorage.setItem('token', response.token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', response.token);
+        }
         setUser(response.user);
       }
       

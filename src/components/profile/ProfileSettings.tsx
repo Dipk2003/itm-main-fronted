@@ -12,10 +12,27 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({ className = '' }) => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const authState = useSelector((state: RootState) => state?.auth);
+  const user = authState?.user;
   const isAdmin = user?.role === 'ADMIN';
   const isVendor = user?.role === 'VENDOR';
   const isUser = user?.role === 'USER';
+  
+  // If no user data is available, show a loading state or redirect
+  if (!user) {
+    return (
+      <div className={`max-w-4xl mx-auto ${className}`}>
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading profile...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   const [isEditing, setIsEditing] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showPasswords, setShowPasswords] = useState({

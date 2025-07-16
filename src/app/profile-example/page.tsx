@@ -1,7 +1,9 @@
-import React from 'react';
-import ProfileSettings from '../components/profile/ProfileSettings';
+'use client';
 
-const ProfileExamplePage = () => {
+import React from 'react';
+import ProfileSettings from '@/components/profile/ProfileSettings';
+
+export default function ProfileExamplePage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
@@ -14,6 +16,4 @@ const ProfileExamplePage = () => {
       </div>
     </div>
   );
-};
-
-export default ProfileExamplePage;
+}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'next/navigation';
 import { RootState } from '@/store';
@@ -16,7 +16,7 @@ import UserOrders from "@/components/dashboard/user/UserOrders"
 import UserWishlist from "@/components/dashboard/user/UserWishlist"
 import UserSupport from "@/components/dashboard/user/UserSupport"
 
-export default function UserDashboard() {
+function UserDashboardContent() {
   const searchParams = useSearchParams();
   const [activeView, setActiveView] = useState('home');
   const { user, isAuthenticated, loading } = useSelector((state: RootState) => state.auth);
@@ -71,37 +71,45 @@ export default function UserDashboard() {
   };
 
   return (
-    <AuthGuard allowedRoles={['ROLE_USER', 'USER']}>
-      <section className="px-4 py-10 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold">
-              {activeView === 'home' ? `Welcome back, ${user?.name || 'User'}!` : 
-               activeView === 'profile' ? 'My Profile' :
-               activeView === 'orders' ? 'My Orders' :
-               activeView === 'wishlist' ? 'My Wishlist' :
-               activeView === 'support' ? 'Support' : 'Dashboard'}
-            </h1>
-            {process.env.NODE_ENV === 'development' && (
-              <div className="text-xs text-gray-500 mt-1">
-                Auth: {isAuthenticated ? 'Yes' : 'No'} | User: {user?.email || 'None'} | Role: {user?.role || 'None'}
-              </div>
-            )}
-          </div>
-          {activeView !== 'home' && (
-            <button
-              onClick={() => setActiveView('home')}
-              className="text-blue-600 hover:underline"
-            >
-              ← Back to Dashboard
-            </button>
+    <section className="px-4 py-10 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">
+            {activeView === 'home' ? `Welcome back, ${user?.name || 'User'}!` : 
+             activeView === 'profile' ? 'My Profile' :
+             activeView === 'orders' ? 'My Orders' :
+             activeView === 'wishlist' ? 'My Wishlist' :
+             activeView === 'support' ? 'Support' : 'Dashboard'}
+          </h1>
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-xs text-gray-500 mt-1">
+              Auth: {isAuthenticated ? 'Yes' : 'No'} | User: {user?.email || 'None'} | Role: {user?.role || 'None'}
+            </div>
           )}
         </div>
-        
-        {activeView === 'home' && <UserActions onNavigate={handleNavigate} />}
-        
-        {renderActiveView()}
-      </section>
+        {activeView !== 'home' && (
+          <button
+            onClick={() => setActiveView('home')}
+            className="text-blue-600 hover:underline"
+          >
+            ← Back to Dashboard
+          </button>
+        )}
+      </div>
+      
+      {activeView === 'home' && <UserActions onNavigate={handleNavigate} />}
+      
+      {renderActiveView()}
+    </section>
+  )
+}
+
+export default function UserDashboard() {
+  return (
+    <AuthGuard allowedRoles={['ROLE_USER', 'USER']}>
+      <Suspense fallback={<div className="flex items-center justify-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div></div>}>
+        <UserDashboardContent />
+      </Suspense>
     </AuthGuard>
   )
 }

@@ -96,9 +96,9 @@ if (!isTokenValid && typeof window !== 'undefined') {
 }
 
 const initialState: AuthState = {
-  user: isTokenValid ? initialUser : null,
-  token: isTokenValid ? initialToken : null,
-  isAuthenticated: isTokenValid && !!initialToken && !!initialUser,
+  user: typeof window !== 'undefined' && isTokenValid ? initialUser : null,
+  token: typeof window !== 'undefined' && isTokenValid ? initialToken : null,
+  isAuthenticated: typeof window !== 'undefined' && isTokenValid && !!initialToken && !!initialUser,
   loading: false,
   error: null,
   otpSent: false,
