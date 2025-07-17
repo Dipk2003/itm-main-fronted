@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL:process.env.NEXT_PUBLIC_BASE_URL,
   withCredentials: true, // for cookies later
   timeout: 30000, // 30 seconds timeout
   headers: {
