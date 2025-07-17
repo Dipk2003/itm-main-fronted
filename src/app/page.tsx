@@ -17,7 +17,6 @@ export default function HomePage() {
    
    */ } 
       <MegaMenu/>
-      
       <ProductGrid />
       <TopCities />
       <PremiumBrands/>

@@ -4,6 +4,9 @@ const brandLogos = [
   { name: "PDCE Group", src: "/brands/Pdgroup.png" },
   { name: "Pdss", src: "/brands/Pdss.png" },
   { name: "Sristech", src: "/brands/Sristech.png" },
+  { name: "BSHRealty", src: "/brands/BSHRealty.png" },
+  { name: "Sritech", src: "/brands/Sritech.png" },
+  { name: "StartUpIndia", src: "/brands/Startupindia.png" },
 ];
 
 export default function PremiumBrands() {
