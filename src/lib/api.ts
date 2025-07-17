@@ -1,7 +1,22 @@
 import axios from "axios";
 
+// Get the backend URL from environment variables
+const getBackendUrl = () => {
+  // For production, use the environment variable
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
+  }
+  
+  // For development, use environment variable or fallback to localhost
+  return process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8080';
+};
+
+const BACKEND_URL = getBackendUrl();
+
+console.log('Backend URL:', BACKEND_URL);
+
 export const api = axios.create({
-  baseURL:process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: BACKEND_URL,
   withCredentials: true, // for cookies later
   timeout: 30000, // 30 seconds timeout
   headers: {
