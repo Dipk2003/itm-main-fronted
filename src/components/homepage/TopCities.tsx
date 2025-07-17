@@ -6,13 +6,13 @@ import { StaticImageData } from 'next/image';
 
 // Import city images
 import city1 from '@/assets/homepage-assets/city1.jpg';
-import city2 from '@/assets/homepage-assets/city2.jpg';
-import city3 from '@/assets/homepage-assets/city3.jpg';
 import city4 from '@/assets/homepage-assets/city4.jpg';
 import city5 from '@/assets/homepage-assets/city5.jpg';
 import city6 from '@/assets/homepage-assets/city6.jpg';
 import city7 from '@/assets/homepage-assets/city7.jpg';
 import city8 from '@/assets/homepage-assets/city8.jpg';
+import city2 from '@/assets/homepage-assets/city2.jpg';
+import city3 from '@/assets/homepage-assets/city3.jpg';
 import city9 from '@/assets/homepage-assets/city9.jpg';
 import city10 from '@/assets/homepage-assets/city10.jpg';
 
@@ -27,16 +27,16 @@ interface City {
 
 // City data with imported images
 const cities: City[] = [
-  { id: 'delhi', name: 'Delhi', image: city1, supplierCount: 15420, href: '/suppliers/delhi' },
-  { id: 'bengaluru', name: 'Bengaluru', image: city2, supplierCount: 12850, href: '/suppliers/bengaluru' },
   { id: 'chennai', name: 'Chennai', image: city3, supplierCount: 9680, href: '/suppliers/chennai' },
   { id: 'mumbai', name: 'Mumbai', image: city4, supplierCount: 18750, href: '/suppliers/mumbai' },
-  { id: 'ahmedabad', name: 'Ahmedabad', image: city5, supplierCount: 8920, href: '/suppliers/ahmedabad' },
-  { id: 'kolkata', name: 'Kolkata', image: city6, supplierCount: 7340, href: '/suppliers/kolkata' },
-  { id: 'pune', name: 'Pune', image: city7, supplierCount: 11200, href: '/suppliers/pune' },
-  { id: 'surat', name: 'Surat', image: city8, supplierCount: 6890, href: '/suppliers/surat' },
   { id: 'jaipur', name: 'Jaipur', image: city9, supplierCount: 5670, href: '/suppliers/jaipur' },
   { id: 'hyderabad', name: 'Hyderabad', image: city10, supplierCount: 10300, href: '/suppliers/hyderabad' },
+  { id: 'delhi', name: 'Delhi', image: city1, supplierCount: 15420, href: '/suppliers/delhi' },
+  { id: 'bengaluru', name: 'Bengaluru', image: city2, supplierCount: 12850, href: '/suppliers/bengaluru' },
+  { id: 'pune', name: 'Pune', image: city7, supplierCount: 11200, href: '/suppliers/pune' },
+  { id: 'kolkata', name: 'Kolkata', image: city6, supplierCount: 7340, href: '/suppliers/kolkata' },
+  { id: 'surat', name: 'Surat', image: city8, supplierCount: 6890, href: '/suppliers/surat' },
+   { id: 'ahmedabad', name: 'Ahmedabad', image: city5, supplierCount: 8920, href: '/suppliers/ahmedabad' },
 ];
 
 // Helper function to format supplier count
