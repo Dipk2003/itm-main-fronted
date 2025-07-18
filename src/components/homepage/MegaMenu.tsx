@@ -157,18 +157,18 @@ const MegaMenu: React.FC = () => {
               return (
                 <div
                   key={category.id}
-                  className="group relative"
+                  className="group relative h-full"
                   onMouseEnter={() => handleMouseEnter(category.id)}
                   onMouseLeave={handleMouseLeave}
                 >
                   {/* Category Button */}
                   <button 
                     onClick={() => handleCategoryClick(category.id)}
-                    className={`flex flex-col items-center justify-center w-full p-4 rounded-xl bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 ${isActive ? 'border-indigo-200 shadow-lg' : 'hover:border-indigo-200'} group`}
+                    className={`flex flex-col items-center justify-between w-full h-full min-h-[160px] sm:min-h-[180px] md:min-h-[200px] p-4 rounded-xl bg-white shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 border border-gray-100 ${isActive ? 'border-indigo-200 shadow-lg' : 'hover:border-indigo-200'} group`}
                   >
-                    <div className="flex flex-col items-center space-y-3 w-full">
+                    <div className="flex flex-col items-center space-y-3 w-full flex-1 justify-center">
                       {/* Icon */}
-                      <div className="relative">
+                      <div className="relative flex-shrink-0">
                         <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-full flex items-center justify-center group-hover:from-indigo-100 group-hover:to-blue-100 transition-all duration-300">
                           <Image
                             src={category.icon}
@@ -185,23 +185,25 @@ const MegaMenu: React.FC = () => {
                       </div>
                       
                       {/* Title */}
-                      <div className="text-center">
-                        <h3 className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300 leading-tight">
+                      <div className="text-center flex-1 flex flex-col justify-center">
+                        <h3 className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-300 leading-tight mb-1">
                           {category.title}
                         </h3>
                         {category.description && (
-                          <p className="text-xs text-gray-500 mt-1 group-hover:text-indigo-500 transition-colors duration-300">
+                          <p className="text-xs text-gray-500 mt-1 group-hover:text-indigo-500 transition-colors duration-300 overflow-hidden" style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'}}>
                             {category.description}
                           </p>
                         )}
                         {category.itemCount && (
-                          <span className="inline-block mt-1 text-xs text-indigo-600 font-medium">
+                          <span className="inline-block mt-2 text-xs text-indigo-600 font-medium">
                             {category.itemCount}+ items
                           </span>
                         )}
                       </div>
-                      
-                      {/* Chevron */}
+                    </div>
+                    
+                    {/* Chevron - Always at bottom */}
+                    <div className="flex-shrink-0 mt-2">
                       <ChevronDownIcon className={`w-4 h-4 text-gray-400 group-hover:text-indigo-600 transition-all duration-300 ${isActive ? 'rotate-180' : 'group-hover:rotate-180'}`} />
                     </div>
                   </button>

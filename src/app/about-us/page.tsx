@@ -7,11 +7,11 @@ export default function AboutUs() {
    
       <main className="max-w-7xl mx-auto px-4 py-12">
         <div className="bg-white rounded-lg shadow-sm p-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-8">About India Trade Mart</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-8">About Indian Trade Mart</h1>
           
           <div className="prose prose-lg max-w-none">
             <p className="text-xl text-gray-700 mb-8">
-              India Trade Mart is India's leading B2B marketplace connecting businesses with trusted technology providers and suppliers across the country.
+              Indian Trade Mart is India's leading B2B marketplace connecting businesses with trusted technology providers and suppliers across the country.
             </p>
             
             <div className="grid md:grid-cols-2 gap-8 mb-12">
@@ -31,7 +31,7 @@ export default function AboutUs() {
             </div>
             
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Why Choose India Trade Mart?</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Why Choose Indian Trade Mart?</h2>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start">
                   <span className="text-blue-600 mr-2">✓</span>
@@ -74,7 +74,7 @@ export default function AboutUs() {
             <div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Story</h2>
               <p className="text-gray-700 mb-4">
-                Founded in 2020, India Trade Mart emerged from the vision of creating a digital ecosystem where businesses of all sizes could thrive. We recognized the challenges faced by traditional B2B trade and set out to build a platform that would bridge the gap between suppliers and buyers.
+                Founded in 2024, Indian Trade Mart emerged from the vision of creating a digital ecosystem where businesses of all sizes could thrive. We recognized the challenges faced by traditional B2B trade and set out to build a platform that would bridge the gap between suppliers and buyers.
               </p>
               <p className="text-gray-700">
                 Today, we serve thousands of businesses across India, from small manufacturers to large enterprises, helping them discover new opportunities, expand their reach, and grow their businesses in the digital age.

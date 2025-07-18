@@ -6,8 +6,8 @@ export default function SuccessStories() {
     {
       company: "TechCorp Solutions",
       category: "Technology",
-      story: "Increased sales by 300% within 6 months of joining India Trade Mart",
-      testimonial: "India Trade Mart transformed our business. We connected with buyers across India and expanded our market reach significantly.",
+      story: "Increased sales by 300% within 6 months of joining Indian Trade Mart",
+      testimonial: "Indian Trade Mart transformed our business. We connected with buyers across India and expanded our market reach significantly.",
       author: "Rajesh Kumar",
       position: "CEO, TechCorp Solutions",
       growth: "300%",
@@ -27,7 +27,7 @@ export default function SuccessStories() {
       company: "Fashion Forward",
       category: "Textiles",
       story: "Expanded to 15 new cities and doubled customer base",
-      testimonial: "As a small textile business, we struggled to find buyers. India Trade Mart connected us with retailers nationwide.",
+      testimonial: "As a small textile business, we struggled to find buyers. Indian Trade Mart connected us with retailers nationwide.",
       author: "Amit Patel",
       position: "Founder",
       growth: "200%",
@@ -60,7 +60,7 @@ export default function SuccessStories() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Success Stories</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover how businesses across India are growing and thriving with India Trade Mart
+            Discover how businesses across India are growing and thriving with Indian Trade Mart
           </p>
         </div>
 
@@ -113,7 +113,7 @@ export default function SuccessStories() {
         <div className="mt-16 bg-blue-600 text-white rounded-lg p-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Write Your Success Story?</h2>
           <p className="text-xl mb-8 opacity-90">
-            Join thousands of businesses that have transformed their operations with India Trade Mart
+            Join thousands of businesses that have transformed their operations with Indian Trade Mart
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a

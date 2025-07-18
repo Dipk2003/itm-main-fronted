@@ -6,7 +6,7 @@ export default function HeroBanner() {
           Empowering Businesses with Smart Technology
         </h1>
         <p className="mt-6 text-lg md:text-xl max-w-2xl text-white/90">
-          Explore innovative solutions and services tailored to your industry. India Trade Mart is your gateway to digital transformation.
+          Explore innovative solutions and services tailored to your industry. Indian Trade Mart is your gateway to digital transformation.
         </p>
         <button className="mt-8 px-8 py-3 bg-white text-blue-700 rounded-full text-base font-semibold hover:bg-gray-100 shadow transition duration-300">
           Get Started

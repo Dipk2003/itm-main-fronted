@@ -4,42 +4,42 @@ export default function PressSection() {
   const pressReleases = [
     {
       date: "2024-12-15",
-      title: "India Trade Mart Raises $50M in Series B Funding to Expand B2B Operations",
+      title: "Indian Trade Mart Raises $50M in Series B Funding to Expand B2B Operations",
       excerpt: "Leading B2B marketplace secures significant funding to accelerate growth and enhance technology platform across India.",
       category: "Funding",
       downloadLink: "#"
     },
     {
       date: "2024-11-28",
-      title: "India Trade Mart Crosses 1 Million Product Listings Milestone",
+      title: "Indian Trade Mart Crosses 1 Million Product Listings Milestone",
       excerpt: "Platform achieves major milestone with over 1 million active product listings from verified suppliers nationwide.",
       category: "Company News",
       downloadLink: "#"
     },
     {
       date: "2024-10-20",
-      title: "India Trade Mart Launches AI-Powered Supplier Matching System",
+      title: "Indian Trade Mart Launches AI-Powered Supplier Matching System",
       excerpt: "New artificial intelligence technology helps buyers find the most suitable suppliers based on requirements and preferences.",
       category: "Product Launch",
       downloadLink: "#"
     },
     {
       date: "2024-09-15",
-      title: "India Trade Mart Partners with MSME Development Foundation",
+      title: "Indian Trade Mart Partners with MSME Development Foundation",
       excerpt: "Strategic partnership aimed at supporting small and medium enterprises with digital transformation and market access.",
       category: "Partnership",
       downloadLink: "#"
     },
     {
       date: "2024-08-10",
-      title: "India Trade Mart Expands to 50+ Cities Across India",
+      title: "Indian Trade Mart Expands to 50+ Cities Across India",
       excerpt: "B2B marketplace extends its reach to tier-2 and tier-3 cities, connecting more businesses to the digital ecosystem.",
       category: "Expansion",
       downloadLink: "#"
     },
     {
       date: "2024-07-05",
-      title: "India Trade Mart Wins 'Best B2B Platform' Award at Indian eCommerce Awards",
+      title: "Indian Trade Mart Wins 'Best B2B Platform' Award at Indian eCommerce Awards",
       excerpt: "Platform recognized for excellence in B2B commerce and innovation in connecting businesses across India.",
       category: "Awards",
       downloadLink: "#"
@@ -88,7 +88,7 @@ export default function PressSection() {
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Press Center</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Stay updated with the latest news, announcements, and developments from India Trade Mart
+            Stay updated with the latest news, announcements, and developments from Indian Trade Mart
           </p>
         </div>
 

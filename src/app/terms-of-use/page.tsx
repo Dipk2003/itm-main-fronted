@@ -70,7 +70,7 @@ export default function TermsOfUse() {
                   <p className="text-gray-700">
                     <strong>Email:</strong> terms@indiantrademart.com<br />
                     <strong>Phone:</strong> +91 9876543210<br />
-                    <strong>Address:</strong> India Trade Mart Pvt. Ltd., 123 Business Hub, Tech City, Gurgaon, Haryana 122001
+                    <strong>Address:</strong> Indian Trade Mart Pvt. Ltd., 123 Business Hub, Tech City, Gurgaon, Haryana 122001
                   </p>
                 </div>
               </section>

@@ -97,7 +97,7 @@ export default function InvestorSection() {
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">Investor Relations</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Welcome to India Trade Mart's investor relations center. Find the latest financial information, reports, and updates for our stakeholders.
+            Welcome to Indian Trade Mart's investor relations center. Find the latest financial information, reports, and updates for our stakeholders.
           </p>
         </div>
 
@@ -231,7 +231,7 @@ export default function InvestorSection() {
                 <div>
                   <p className="font-medium text-gray-900">Address</p>
                   <p className="text-sm text-gray-600">
-                    India Trade Mart Pvt. Ltd.<br />
+                    Indian Trade Mart Pvt. Ltd.<br />
                     123 Business Hub, Tech City<br />
                     Gurgaon, Haryana 122001
                   </p>

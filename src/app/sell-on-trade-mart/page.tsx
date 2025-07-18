@@ -184,7 +184,7 @@ export default function SellOnTradeMart() {
             Ready to Start Selling?
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Join thousands of successful businesses already selling on India Trade Mart
+            Join thousands of successful businesses already selling on Indian Trade Mart
           </p>
           <a
             href="/auth/vendor/register"

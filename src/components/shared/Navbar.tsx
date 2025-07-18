@@ -25,7 +25,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between gap-4">
           <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity flex-shrink-0">
-            <img src="/logo.png" alt="India Trade Mart" className="h-8 w-auto" />
+            <img src="/logo.png" alt="Indian Trade Mart" className="h-8 w-auto" />
             <div className="text-xl font-bold hidden sm:block">Indian Trade Mart</div>
           </a>
           

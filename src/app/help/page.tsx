@@ -5,7 +5,7 @@ import { Search, MessageCircle, Phone, Mail } from 'lucide-react';
 export default function Help() {
   const faqs = [
     {
-      question: "How do I register as a supplier on India Trade Mart?",
+      question: "How do I register as a supplier on Indian Trade Mart?",
       answer: "To register as a supplier, click on 'Vendor' in the navigation menu and select 'Register'. Fill in your business details, upload required documents, and complete the verification process."
     },
     {
@@ -18,7 +18,7 @@ export default function Help() {
     },
     {
       question: "How does the payment process work?",
-      answer: "India Trade Mart supports secure payment gateways. You can pay using credit/debit cards, net banking, UPI, or digital wallets. All transactions are encrypted and secure."
+      answer: "Indian Trade Mart supports secure payment gateways. You can pay using credit/debit cards, net banking, UPI, or digital wallets. All transactions are encrypted and secure."
     },
     {
       question: "Can I track my orders?",

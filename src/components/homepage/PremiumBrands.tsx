@@ -5,7 +5,6 @@ const brandLogos = [
   { name: "PDSS", src: "/brands/Pdss.png" },
   { name: "Sristech", src: "/brands/Sristech.png" },
   { name: "BSHRealty", src: "/brands/BSHRealty.png" },
-  { name: "Sritech", src: "/brands/Sritech.png" },
   { name: "StartUpIndia", src: "/brands/Startupindia.png" },
 ];
 

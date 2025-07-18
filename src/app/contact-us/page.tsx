@@ -41,7 +41,7 @@ export default function ContactUs() {
                   <div>
                     <h3 className="font-medium text-gray-900">Office Address</h3>
                     <p className="text-gray-700">
-                      India Trade Mart Pvt. Ltd.<br />
+                      Indian Trade Mart Pvt. Ltd.<br />
                       123 Business Hub, Tech City<br />
                       Gurgaon, Haryana 122001<br />
                       India
