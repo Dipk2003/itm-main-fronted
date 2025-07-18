@@ -299,6 +299,7 @@ export default function UserRegisterPage() {
                 onChange={handleChange}
                 placeholder="Password (min 8 chars, strong)"
                 required
+                autoComplete="new-password"
                 className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${validationErrors.password ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
               />
               {validationErrors.password && (
@@ -314,6 +315,7 @@ export default function UserRegisterPage() {
                 onChange={handleChange}
                 placeholder="Confirm Password"
                 required
+                autoComplete="new-password"
                 className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${validationErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
               />
               {validationErrors.confirmPassword && (
