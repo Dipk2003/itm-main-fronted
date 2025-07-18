@@ -21,7 +21,7 @@ export function Navbar() {
   const isUser = user?.role === 'USER';
 
   return (
-    <nav className="w-full px-4 py-3 bg-white border-b shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-3 bg-white border-b shadow-sm">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between gap-4">
           <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity flex-shrink-0">

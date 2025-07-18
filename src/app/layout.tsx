@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className}>
         <ClientProviders>
           <Navbar />
-          <main>{children}</main>
+          <main className="pt-[73px]">{children}</main>
           <Footer />
           <ChatbotToggle />
         </ClientProviders>
