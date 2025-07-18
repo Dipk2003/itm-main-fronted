@@ -2,7 +2,6 @@ const brandLogos = [
   { name: "BSH Infra", src: "/brands/Bshinfra.png" },
   { name: "Eimager", src: "/brands/Eimager.png" },
   { name: "PDCE Group", src: "/brands/Pdgroup.png" },
-  { name: "PDSS", src: "/brands/Pdss.png" },
   { name: "Sristech", src: "/brands/Sristech.png" },
   { name: "BSHRealty", src: "/brands/BSHRealty.png" },
   { name: "StartUpIndia", src: "/brands/Startupindia.png" },
