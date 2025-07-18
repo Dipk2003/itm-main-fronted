@@ -5,6 +5,7 @@ const brandLogos = [
   { name: "Sristech", src: "/brands/Sristech.png" },
   { name: "BSHRealty", src: "/brands/BSHRealty.png" },
   { name: "StartUpIndia", src: "/brands/Startupindia.png" },
+  { name: "PDSS", src: "/brands/pdss.png" },
 ];
 
 export default function PremiumBrands() {
