@@ -120,8 +120,11 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   'auth/register',
-  async (userData: { name: string; email: string; phone?: string; password: string; userType: string }, { rejectWithValue }) => {
+  async (userData: { name: string; email: string; phone?: string; password: string; userType: string; [key: string]: any }, { rejectWithValue }) => {
     try {
+      console.log('📝 Registration attempt for userType:', userData.userType);
+      console.log('📝 Registration data:', userData);
+      
       // Determine the correct endpoint based on userType
       let endpoint = '/auth/register'; // default for 'user'
       if (userData.userType === 'vendor') {
@@ -130,10 +133,25 @@ export const register = createAsyncThunk(
         endpoint = '/auth/admin/register';
       }
       
+      console.log('📝 Using endpoint:', endpoint);
+      
       const response = await api.post(endpoint, userData);
+      console.log('✅ Registration response:', response.data);
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || 'Registration failed');
+      console.error('❌ Registration failed:', error);
+      
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+        return rejectWithValue(error.response.data?.message || error.response.data || 'Registration failed');
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        return rejectWithValue('No response from server. Please check your connection.');
+      } else {
+        console.error('Request setup error:', error.message);
+        return rejectWithValue('Registration request failed');
+      }
     }
   }
 );

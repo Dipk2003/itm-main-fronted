@@ -129,45 +129,57 @@ const handleVerification = async () => {
 const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Skip API verification, use only client-side validation
-    const errors = validateForm();
-    setValidationErrors(errors);
-    
-    if (Object.keys(errors).length > 0) {
-      return;
-    }
-    
-
-    // Store credentials for OTP verification
-    dispatch(setTempCredentials({
-      emailOrPhone: formData.email,
-      password: formData.password,
-    }));
-
-    const registerData: any = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      password: formData.password,
-      userType: formData.userType,
-    };
-    
-    if (formData.userType === 'vendor') {
-      registerData.panNumber = formData.panCard; // PAN card for vendors
-      registerData.businessName = formData.businessName;
-      registerData.businessAddress = formData.businessAddress;
-      if (formData.gstNumber.trim()) {
-        registerData.gstNumber = formData.gstNumber;
+    try {
+      // Clear previous errors
+      setValidationErrors({});
+      dispatch(clearError());
+      
+      // Skip API verification, use only client-side validation
+      const errors = validateForm();
+      setValidationErrors(errors);
+      
+      if (Object.keys(errors).length > 0) {
+        console.log('Validation errors:', errors);
+        return;
       }
-    } else {
-      // For regular users, we'll need to handle Aadhar differently
-      // Since backend doesn't have aadhar field, we'll skip it for now
-    }
+      
+      // Store credentials for OTP verification
+      dispatch(setTempCredentials({
+        emailOrPhone: formData.email,
+        password: formData.password,
+      }));
 
-    const result = await dispatch(register(registerData));
-    
-    if (register.fulfilled.match(result)) {
-      // OTP sent, show OTP form
+      const registerData: any = {
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        password: formData.password,
+        userType: formData.userType,
+      };
+      
+      if (formData.userType === 'vendor') {
+        registerData.panNumber = formData.panCard.trim(); // PAN card for vendors
+        registerData.businessName = formData.businessName.trim();
+        registerData.businessAddress = formData.businessAddress.trim();
+        if (formData.gstNumber.trim()) {
+          registerData.gstNumber = formData.gstNumber.trim();
+        }
+      }
+      
+      console.log('Sending registration data:', registerData);
+      
+      const result = await dispatch(register(registerData));
+      
+      if (register.fulfilled.match(result)) {
+        console.log('Registration successful, OTP sent');
+        // OTP sent, show OTP form
+      } else if (register.rejected.match(result)) {
+        console.error('Registration failed:', result.payload);
+        // Error will be handled by the reducer
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      setValidationErrors({ general: 'Registration failed. Please try again.' });
     }
   };
 
@@ -477,8 +489,10 @@ const handleRegister = async (e: React.FormEvent) => {
             </div>
           </div>
 
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+          {(error || validationErrors.general) && (
+            <div className="text-red-600 text-sm text-center">
+              {error || validationErrors.general}
+            </div>
           )}
 
           <div>
