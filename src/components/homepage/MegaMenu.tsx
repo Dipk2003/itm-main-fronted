@@ -39,7 +39,7 @@ interface MenuCategory {
 const menuData: MenuCategory[] = [
   {
     id: 'building-construction',
-    title: 'Building & Construction',
+    title: 'Properties, Builder & Real Estate',
     icon: mm1,
     component: BuildingConstructionMenu,
     description: 'Wood, Steel, Roofing & Construction Materials',
@@ -47,7 +47,7 @@ const menuData: MenuCategory[] = [
   },
   {
     id: 'electronics-electrical',
-    title: 'Electronics & Electrical',
+    title: 'Survey & Soil Investigation',
     icon: mm2,
     component: ElectronicsMenu,
     description: 'Solar, Lighting, Batteries & Home Appliances',

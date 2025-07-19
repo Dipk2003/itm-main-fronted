@@ -1,6 +1,6 @@
 export default function HeroBanner() {
   return (
-    <section className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-green-500 text-white py-24 px-6 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-green-500 text-white pt-32 pb-24 px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow-sm">
           Empowering Businesses with Smart Technology
