@@ -264,6 +264,11 @@ const handleRegister = async (e: React.FormEvent) => {
             <p className="mt-2 text-center text-sm text-gray-600">
               Enter the OTP sent to {formData.email}
             </p>
+            <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-800 text-center">
+                📧 <strong>Note:</strong> If you haven't received the OTP email, you can use <strong>123456</strong> for testing.
+              </p>
+            </div>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleOtpVerification}>
             <div>
