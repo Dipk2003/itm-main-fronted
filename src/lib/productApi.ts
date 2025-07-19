@@ -124,6 +124,12 @@ export const productAPI = {
   },
 
   getProductsByCategory: async (categoryId: number, page = 0, size = 12): Promise<ProductsResponse> => {
+    // Validate categoryId to prevent sending NaN to backend
+    if (!categoryId || isNaN(categoryId) || categoryId <= 0) {
+      console.warn('Invalid categoryId provided:', categoryId);
+      throw new Error('Invalid category ID provided');
+    }
+    
     const response = await api.get(`/api/products/category/${categoryId}`, {
       params: { page, size }
     });
