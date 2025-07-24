@@ -1,0 +1,55 @@
+[
+  {
+    "city": "Chennai",
+    "categories": [
+      {
+        "category": "Building & Construction",
+        "subcategories": [
+          {"subcategory": "Wood", "count": 15},
+          {"subcategory": "Steel Bars", "count": 10}
+        ]
+      },
+      {
+        "category": "Healthcare",
+        "subcategories": [
+          {"subcategory": "Ayurvedic", "count": 20}
+        ]
+      }
+    ]
+  },
+  {
+    "city": "Mumbai",
+    "categories": [
+      {
+        "category": "Electronics",
+        "subcategories": [
+          {"subcategory": "Consumer Electronics", "count": 25}
+        ]
+      },
+      {
+        "category": "Food & Beverages",
+        "subcategories": [
+          {"subcategory": "Beverages", "count": 30}
+        ]
+      }
+    ]
+  },
+  {
+    "city": "Delhi",
+    "categories": [
+      {
+        "category": "Textiles",
+        "subcategories": [
+          {"subcategory": "Fabrics", "count": 18}
+        ]
+      },
+      {
+        "category": "Automotive",
+        "subcategories": [
+          {"subcategory": "Vehicles", "count": 12}
+        ]
+      }
+    ]
+  }
+]
+
