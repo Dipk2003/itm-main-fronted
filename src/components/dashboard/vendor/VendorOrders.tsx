@@ -1,12 +1,80 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { getVendorOrders } from '@/lib/api';
+
+interface Order {
+  id: number;
+  customer: string;
+  email: string;
+  products: string[];
+  amount: number;
+  status: string;
+  date: string;
+  paymentStatus: string;
+}
 
 export default function VendorOrders() {
+  const { user } = useSelector((state: RootState) => state.auth);
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const orders = [
+  // Load orders from API
+  useEffect(() => {
+    const loadOrders = async () => {
+      if (!user?.id) {
+        console.log('No user ID available');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log('Loading orders for vendor:', user.id);
+        const response = await getVendorOrders(user.id, currentPage, 10);
+        console.log('Orders response:', response.data);
+        
+        // Handle both array and paginated response formats
+        const ordersData = response.data.content || response.data;
+        const transformedOrders = (Array.isArray(ordersData) ? ordersData : []).map((order: any) => ({
+          id: order.id || order.orderId,
+          customer: order.customerName || order.customer || order.user?.name || 'Unknown Customer',
+          email: order.customerEmail || order.email || order.user?.email || '',
+          products: order.products?.map((p: any) => p.name || p.productName) || 
+                   order.orderItems?.map((item: any) => item.productName || item.product?.name) || 
+                   [order.productName || 'Unknown Product'],
+          amount: order.totalAmount || order.amount || order.total || 0,
+          status: order.status || order.orderStatus || 'pending',
+          date: order.orderDate || order.createdAt || order.date || new Date().toISOString().split('T')[0],
+          paymentStatus: order.paymentStatus || 'pending'
+        }));
+        
+        setOrders(transformedOrders);
+        setTotalPages(response.data.totalPages || 1);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error loading orders:', err);
+        setError('Failed to load orders. Using fallback data.');
+        
+        // Fallback to mock data if API fails
+        setOrders(mockOrders);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadOrders();
+  }, [user?.id, currentPage]);
+
+  // Mock data as fallback
+  const mockOrders: Order[] = [
     {
       id: 12345,
       customer: 'John Doe',
@@ -78,6 +146,36 @@ export default function VendorOrders() {
     setSelectedOrders([]);
   };
 
+  // Calculate dynamic stats
+  const stats = {
+    total: orders.length,
+    pending: orders.filter(order => order.status === 'pending').length,
+    processing: orders.filter(order => order.status === 'processing').length,
+    shipped: orders.filter(order => order.status === 'shipped').length,
+    delivered: orders.filter(order => order.status === 'delivered').length
+  };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Order Management</h2>
+            <p className="text-gray-600 mt-1">Loading your orders...</p>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg border border-gray-200 p-12">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <span className="ml-3 text-gray-600">Loading orders...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -97,13 +195,23 @@ export default function VendorOrders() {
         </div>
       </div>
 
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="flex">
+            <span className="text-yellow-600 mr-2">⚠️</span>
+            <p className="text-yellow-800">{error}</p>
+          </div>
+        </div>
+      )}
+
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Orders</p>
-              <p className="text-2xl font-bold text-gray-900">156</p>
+              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
             <span className="text-2xl">📋</span>
           </div>
@@ -113,7 +221,7 @@ export default function VendorOrders() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-2xl font-bold text-yellow-600">23</p>
+              <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
             </div>
             <span className="text-2xl">⏳</span>
           </div>
@@ -123,7 +231,7 @@ export default function VendorOrders() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Processing</p>
-              <p className="text-2xl font-bold text-blue-600">45</p>
+              <p className="text-2xl font-bold text-blue-600">{stats.processing}</p>
             </div>
             <span className="text-2xl">⚙️</span>
           </div>
@@ -133,7 +241,7 @@ export default function VendorOrders() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Shipped</p>
-              <p className="text-2xl font-bold text-purple-600">67</p>
+              <p className="text-2xl font-bold text-purple-600">{stats.shipped}</p>
             </div>
             <span className="text-2xl">🚚</span>
           </div>
@@ -143,7 +251,7 @@ export default function VendorOrders() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Delivered</p>
-              <p className="text-2xl font-bold text-green-600">21</p>
+              <p className="text-2xl font-bold text-green-600">{stats.delivered}</p>
             </div>
             <span className="text-2xl">✅</span>
           </div>
