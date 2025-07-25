@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .test-button {
+            padding: 10px 20px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background-color: #2563eb;
+        }
+        .test-button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+        .log {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f3f4f6;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Button Click Test</h1>
+    <p>This is to test if buttons are working on your system.</p>
+    
+    <button class="test-button" onclick="testClick(1)">Test Button 1</button>
+    <button class="test-button" onclick="testClick(2)">Test Button 2</button>
+    <button class="test-button" onclick="testClick(3)" disabled>Disabled Button</button>
+    
+    <div class="log" id="log">
+        <strong>Click Log:</strong><br>
+        No clicks yet...
+    </div>
+
+    <script>
+        let clickCount = 0;
+        
+        function testClick(buttonNumber) {
+            clickCount++;
+            const log = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            log.innerHTML += `<br>${timestamp}: Button ${buttonNumber} clicked! (Total clicks: ${clickCount})`;
+            console.log(`Button ${buttonNumber} clicked at ${timestamp}`);
+        }
+        
+        // Test if JavaScript is working
+        console.log('JavaScript is running!');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded successfully!');
+            document.getElementById('log').innerHTML = '<strong>Click Log:</strong><br>JavaScript loaded successfully! Try clicking the buttons above.';
+        });
+    </script>
+</body>
+</html>
