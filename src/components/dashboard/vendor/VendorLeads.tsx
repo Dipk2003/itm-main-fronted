@@ -1,12 +1,86 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { getVendorLeads } from '@/lib/api';
+
+interface Lead {
+  id: number;
+  name: string;
+  company: string;
+  email: string;
+  phone: string;
+  product: string;
+  quantity: number;
+  budget: string;
+  status: string;
+  priority: string;
+  source: string;
+  date: string;
+  lastContact: string;
+}
 
 export default function VendorLeads() {
+  const { user } = useSelector((state: RootState) => state.auth);
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedLeads, setSelectedLeads] = useState<number[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
 
-  const leads = [
+  // Load leads from API
+  useEffect(() => {
+    const loadLeads = async () => {
+      if (!user?.id) {
+        console.log('No user ID available');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log('Loading leads for vendor:', user.id);
+        const response = await getVendorLeads(user.id);
+        console.log('Leads response:', response.data);
+        
+        // Transform API data to match our interface
+        const transformedLeads = response.data.map((lead: any, index: number) => ({
+          id: lead.id || index + 1,
+          name: lead.name || lead.customerName || 'Unknown',
+          company: lead.company || lead.companyName || 'N/A',
+          email: lead.email || lead.customerEmail || '',
+          phone: lead.phone || lead.customerPhone || '',
+          product: lead.product || lead.productName || lead.requirement || 'N/A',
+          quantity: lead.quantity || 1,
+          budget: lead.budget || lead.budgetRange || '₹0',
+          status: lead.status || 'new',
+          priority: lead.priority || 'medium',
+          source: lead.source || lead.leadSource || 'website',
+          date: lead.date || lead.createdAt || new Date().toISOString().split('T')[0],
+          lastContact: lead.lastContact || lead.updatedAt || new Date().toISOString().split('T')[0]
+        }));
+        
+        setLeads(transformedLeads);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error loading leads:', err);
+        setError('Failed to load leads. Using fallback data.');
+        
+        // Fallback to mock data if API fails
+        setLeads(mockLeads);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLeads();
+  }, [user?.id]);
+
+  // Mock data as fallback
+  const mockLeads: Lead[] = [
     {
       id: 1,
       name: 'Rajesh Kumar',
@@ -104,8 +178,48 @@ export default function VendorLeads() {
     );
   };
 
+  // Calculate dynamic stats
+  const stats = {
+    total: leads.length,
+    new: leads.filter(lead => lead.status === 'new').length,
+    contacted: leads.filter(lead => lead.status === 'contacted').length,
+    qualified: leads.filter(lead => lead.status === 'qualified').length,
+    proposals: leads.filter(lead => lead.status === 'proposal_sent').length,
+    won: leads.filter(lead => lead.status === 'won').length
+  };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Lead Management</h2>
+            <p className="text-gray-600 mt-1">Loading your leads...</p>
+          </div>
+        </div>
+        
+        <div className="bg-white rounded-lg border border-gray-200 p-12">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <span className="ml-3 text-gray-600">Loading leads...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
+      {/* Error Message */}
+      {error && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+          <div className="flex">
+            <span className="text-yellow-600 mr-2">⚠️</span>
+            <p className="text-yellow-800">{error}</p>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -129,7 +243,7 @@ export default function VendorLeads() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Total Leads</p>
-              <p className="text-2xl font-bold text-gray-900">48</p>
+              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
             </div>
             <span className="text-2xl">🎯</span>
           </div>
@@ -139,7 +253,7 @@ export default function VendorLeads() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">New</p>
-              <p className="text-2xl font-bold text-blue-600">12</p>
+              <p className="text-2xl font-bold text-blue-600">{stats.new}</p>
             </div>
             <span className="text-2xl">🆕</span>
           </div>
@@ -149,7 +263,7 @@ export default function VendorLeads() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Contacted</p>
-              <p className="text-2xl font-bold text-yellow-600">8</p>
+              <p className="text-2xl font-bold text-yellow-600">{stats.contacted}</p>
             </div>
             <span className="text-2xl">📞</span>
           </div>
@@ -159,7 +273,7 @@ export default function VendorLeads() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Qualified</p>
-              <p className="text-2xl font-bold text-purple-600">15</p>
+              <p className="text-2xl font-bold text-purple-600">{stats.qualified}</p>
             </div>
             <span className="text-2xl">✅</span>
           </div>
@@ -169,7 +283,7 @@ export default function VendorLeads() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Proposals</p>
-              <p className="text-2xl font-bold text-orange-600">9</p>
+              <p className="text-2xl font-bold text-orange-600">{stats.proposals}</p>
             </div>
             <span className="text-2xl">📄</span>
           </div>
@@ -179,7 +293,7 @@ export default function VendorLeads() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Won</p>
-              <p className="text-2xl font-bold text-green-600">4</p>
+              <p className="text-2xl font-bold text-green-600">{stats.won}</p>
             </div>
             <span className="text-2xl">🏆</span>
           </div>
