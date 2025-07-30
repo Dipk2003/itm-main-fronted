@@ -142,5 +142,10 @@ export const authAPI = {
   setPassword: async (data: { emailOrPhone: string; newPassword: string; otp: string }): Promise<string> => {
     const response = await api.post('/auth/set-password', data);
     return response.data;
+  },
+
+  changePassword: async (data: { currentPassword: string; newPassword: string }): Promise<string> => {
+    const response = await api.post('/auth/change-password', data);
+    return response.data;
   }
 };

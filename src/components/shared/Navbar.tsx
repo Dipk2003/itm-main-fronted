@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { SearchBar } from './SearchBar';
+import NotificationCenter from './NotificationCenter';
 import { Search, User, LogOut, Settings, ShoppingCart, BarChart } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
@@ -16,9 +17,16 @@ export function Navbar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
-  const isAdmin = user?.role === 'ADMIN';
-  const isVendor = user?.role === 'VENDOR';
-  const isUser = user?.role === 'USER';
+  // Make role checking case-insensitive and flexible
+  const userRole = user?.role?.toUpperCase() || '';
+  const isAdmin = userRole === 'ADMIN';
+  const isVendor = userRole === 'VENDOR';
+  const isUser = userRole === 'USER' || userRole === 'BUYER';
+  
+  // Debug user role
+  console.log('Current user:', user);
+  console.log('User role:', user?.role);
+  console.log('isAdmin:', isAdmin, 'isVendor:', isVendor, 'isUser:', isUser);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 w-full px-4 py-3 bg-white border-b shadow-sm">
@@ -52,6 +60,9 @@ export function Navbar() {
               <Search size={20} className="text-gray-600" />
             </button>
             
+            {/* Notification Bell - Only show when authenticated */}
+            {isAuthenticated && <NotificationCenter />}
+            
             <div className="text-sm space-x-6 text-gray-700 flex items-center flex-shrink-0">
               <button 
                 onClick={() => router.push('/')} 
@@ -80,64 +91,89 @@ export function Navbar() {
                       <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
                         {isVendor && (
                           <>
-                            <a
-                              href="/dashboard/vendor-panel"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                              onClick={() => setUserDropdownOpen(false)}
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                router.push('/dashboard/vendor-panel');
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                             >
                               <BarChart size={16} className="mr-2" />
                               Dashboard
-                            </a>
-                            <a
-                              href="/products-you-buy"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                              onClick={() => setUserDropdownOpen(false)}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                router.push('/products-you-buy');
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                             >
                               <ShoppingCart size={16} className="mr-2" />
                               Products
-                            </a>
+                            </button>
                           </>
                         )}
                         {isUser && (
                           <>
-                            <a
-                              href="/dashboard/user"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                              onClick={() => setUserDropdownOpen(false)}
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                router.push('/dashboard/user');
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                             >
                               <BarChart size={16} className="mr-2" />
                               Dashboard
-                            </a>
-                            <a
-                              href="/products-you-buy"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                              onClick={() => setUserDropdownOpen(false)}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                router.push('/products-you-buy');
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                             >
                               <ShoppingCart size={16} className="mr-2" />
                               Products
-                            </a>
+                            </button>
                           </>
                         )}
                         {isAdmin && (
                           <>
-                            <a
-                              href="/dashboard/admin"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                              onClick={() => setUserDropdownOpen(false)}
+                            <button
+                              onClick={() => {
+                                setUserDropdownOpen(false);
+                                router.push('/dashboard/admin');
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                             >
                               <BarChart size={16} className="mr-2" />
                               Admin Dashboard
-                            </a>
+                            </button>
                           </>
                         )}
-                        <a
-                          href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
-                          onClick={() => setUserDropdownOpen(false)}
+                        {/* General Dashboard option for users whose role doesn't match the specific conditions */}
+                        {!isVendor && !isUser && !isAdmin && isAuthenticated && (
+                          <button
+                            onClick={() => {
+                              setUserDropdownOpen(false);
+                              router.push('/dashboard');
+                            }}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                          >
+                            <BarChart size={16} className="mr-2" />
+                            Dashboard
+                          </button>
+                        )}
+                        <button
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            router.push('/profile');
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
                         >
                           <Settings size={16} className="mr-2" />
                           Profile Settings
-                        </a>
+                        </button>
                         <button
                           onClick={() => {
                             setUserDropdownOpen(false);

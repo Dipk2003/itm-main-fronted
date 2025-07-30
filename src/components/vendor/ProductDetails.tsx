@@ -25,6 +25,9 @@ import {
   DialogClose 
 } from '@/components/ui/Dialog';
 import { ADD_Cart_item } from '@/redux/Carts/Cart.action';
+import InquiryForm from '@/components/forms/InquiryForm';
+import ReviewsSection from '@/components/reviews/ReviewsSection';
+import WishlistButton from '@/components/wishlist/WishlistButton';
 
 
 // Types
@@ -239,12 +242,19 @@ const ProductDetails: React.FC = () => {
                   We offers Bronchodilator & Expectorant {product.name}.
                 </p>
 
-                <Button
-                  className="w-full mt-6 bg-teal-600 hover:bg-teal-700 text-white"
-                  onClick={() => setIsOrderDialogOpen(true)}
-                >
-                  Buy Now
-                </Button>
+                <div className="flex space-x-3 mt-6">
+                  <Button
+                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-white"
+                    onClick={() => setIsOrderDialogOpen(true)}
+                  >
+                    Buy Now
+                  </Button>
+                  <WishlistButton 
+                    productId={product.id} 
+                    size="lg"
+                    className="relative"
+                  />
+                </div>
               </div>
             </div>
 
@@ -303,6 +313,14 @@ const ProductDetails: React.FC = () => {
                 </CardContent>
               </Card>
             </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="mb-12">
+            <ReviewsSection 
+              productId={product.id} 
+              vendorId={product.delear_name || 'default_vendor'}
+            />
           </div>
 
           {/* Related Products Section */}
@@ -378,100 +396,17 @@ const ProductDetails: React.FC = () => {
               </div>
             </div>
 
-            {/* Order Form */}
-            <form ref={formRef} onSubmit={handleOrderSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
-                <Input
-                  type="text"
-                  name="user_name"
-                  value={orderForm.user_name}
-                  onChange={handleFormChange}
-                  placeholder="Enter your name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <Input
-                  type="email"
-                  name="user_email"
-                  value={orderForm.user_email}
-                  onChange={handleFormChange}
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Quantity
-                </label>
-                <Input
-                  type="number"
-                  name="qty"
-                  value={orderForm.qty}
-                  onChange={handleFormChange}
-                  placeholder="Enter quantity"
-                  min="1"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Product Name
-                </label>
-                <select
-                  name="product_name"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  defaultValue={product.name}
-                >
-                  <option value={product.name}>{product.name}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price
-                </label>
-                <select
-                  name="price"
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  defaultValue={product.price}
-                >
-                  <option value={product.price}>{product.price}</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  value={orderForm.message}
-                  onChange={handleFormChange}
-                  rows={4}
-                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Type your message here..."
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white"
-              >
-                Order Confirm
-              </Button>
-            </form>
+            {/* Inquiry Form */}
+            <InquiryForm 
+              productId={product.id} 
+              productName={product.name} 
+              vendorId={product.delear_name || 'default_vendor'}
+              onSuccess={() => {
+                alert('Inquiry sent successfully. Check your email for confirmation.');
+              }}
+            />
           </div>
-          
+
           <p className="text-center text-sm text-gray-600 mt-4">
             Dealer will contact you within 3 days
           </p>

@@ -24,6 +24,7 @@ const ProfilePage = () => {
     newPassword: '',
     confirmPassword: '',
   });
+  const [phoneError, setPhoneError] = useState('');
 
   // Update formData when user data changes
   useEffect(() => {
@@ -38,13 +39,36 @@ const ProfilePage = () => {
     }
   }, [user]);
 
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Phone number validation - only allow exactly 10 digits
+    if (name === 'phone') {
+      // Remove any non-digit characters
+      const cleanValue = value.replace(/\D/g, '');
+      
+      // Limit to 10 digits
+      if (cleanValue.length > 10) {
+        return; // Don't update if more than 10 digits
+      }
+      
+      // Set error message if not exactly 10 digits (and not empty)
+      if (cleanValue.length > 0 && cleanValue.length !== 10) {
+        setPhoneError('Phone number must be exactly 10 digits');
+      } else {
+        setPhoneError('');
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        [name]: cleanValue
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,13 +80,60 @@ const ProfilePage = () => {
   };
 
   const handleSave = async () => {
+    // Validate phone number before saving
+    if (formData.phone && formData.phone.length !== 10) {
+      alert('Phone number must be exactly 10 digits');
+      return;
+    }
+    
+    // Validate required fields
+    if (!formData.name || formData.name.trim().length === 0) {
+      alert('Name is required');
+      return;
+    }
+    
     try {
-      await updateProfile(formData);
+      console.log('📝 Starting profile update...');
+      console.log('Current user:', user);
+      console.log('Form data:', formData);
+      
+      // Don't send email in the update data to prevent changes
+      const updateData = {
+        name: formData.name.trim(),
+        phone: formData.phone || '',
+        address: formData.address || '',
+        ...(isVendor && { companyName: formData.companyName || '' })
+      };
+      
+      console.log('Update data being sent:', updateData);
+      
+      const updatedUser = await updateProfile(updateData);
+      console.log('✅ Profile update successful:', updatedUser);
+      
       setIsEditing(false);
       alert('Profile updated successfully!');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Failed to update profile. Please try again.');
+    } catch (error: any) {
+      console.error('❌ Error updating profile:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
+      let errorMessage = 'Failed to update profile. Please try again.';
+      
+      if (error.response?.data) {
+        if (typeof error.response.data === 'string') {
+          errorMessage = error.response.data;
+        } else if (error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.data.error) {
+          errorMessage = error.response.data.error;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
+      
+      // Don't reset editing state if there's an error so user can try again
     }
   };
 
@@ -74,17 +145,33 @@ const ProfilePage = () => {
       address: user?.address || '',
       companyName: user?.companyName || '',
     });
+    setPhoneError('');
     setIsEditing(false);
   };
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate password requirements
+    if (passwordData.newPassword.length < 6) {
+      alert('New password must be at least 6 characters long');
+      return;
+    }
+    
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert('New passwords do not match');
       return;
     }
+    
     try {
-      // Here you would typically call an API to change password
+      // Import authAPI at the top and use it here
+      const { authAPI } = await import('@/lib/auth');
+      
+      await authAPI.changePassword({
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword
+      });
+      
       alert('Password changed successfully!');
       setPasswordData({
         currentPassword: '',
@@ -92,9 +179,10 @@ const ProfilePage = () => {
         confirmPassword: '',
       });
       setShowChangePassword(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error changing password:', error);
-      alert('Failed to change password. Please try again.');
+      const errorMessage = error.response?.data || error.message || 'Failed to change password';
+      alert(errorMessage);
     }
   };
 
@@ -226,6 +314,7 @@ const ProfilePage = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter your full name"
                     />
                   ) : (
                     <p className="text-gray-900">{user?.name}</p>
@@ -236,18 +325,23 @@ const ProfilePage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     <Mail className="h-4 w-4 inline mr-2" />
                     Email Address
+                    <span className="text-xs text-gray-500 block">Email cannot be changed</span>
                   </label>
-                  {isEditing ? (
+                  <div className="relative">
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      readOnly
+                      disabled
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed"
                     />
-                  ) : (
-                    <p className="text-gray-900">{user?.email}</p>
-                  )}
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -256,13 +350,23 @@ const ProfilePage = () => {
                     Phone Number
                   </label>
                   {isEditing ? (
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
+                    <div>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Enter 10-digit phone number"
+                        maxLength={10}
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          phoneError ? 'border-red-300' : 'border-gray-300'
+                        }`}
+                      />
+                      {phoneError && (
+                        <p className="text-red-500 text-xs mt-1">{phoneError}</p>
+                      )}
+                      <p className="text-gray-500 text-xs mt-1">Enter exactly 10 digits (numbers only)</p>
+                    </div>
                   ) : (
                     <p className="text-gray-900">{user?.phone || 'Not provided'}</p>
                   )}

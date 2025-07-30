@@ -206,11 +206,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateProfile = async (data: Partial<User>) => {
     try {
+      console.log('🔄 Updating profile with data:', data);
       const updatedUser = await authAPI.updateProfile(data);
+      console.log('✅ Profile updated successfully:', updatedUser);
+      
+      // Update user in state
       setUser(updatedUser);
+      
+      // Also update localStorage to keep data in sync
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        console.log('📝 Updated user data in localStorage');
+      }
+      
       return updatedUser;
-    } catch (error) {
-      console.error('Profile update failed:', error);
+    } catch (error: any) {
+      console.error('❌ Profile update failed:', error);
+      console.error('Error details:', error.response?.data || error.message);
       throw error;
     }
   };

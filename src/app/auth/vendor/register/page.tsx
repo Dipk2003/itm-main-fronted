@@ -22,7 +22,25 @@ export default function VendorRegisterPage() {
     panCard: '',
     businessName: '',
     businessAddress: '',
+    city: '',
+    state: '',
+    pincode: '',
+    gstNumber: '',
   });
+  
+  const [kycDocuments, setKycDocuments] = useState<{
+    panCardFile: File | null;
+    gstCertificate: File | null;
+    businessRegistration: File | null;
+    bankStatement: File | null;
+  }>({
+    panCardFile: null,
+    gstCertificate: null,
+    businessRegistration: null,
+    bankStatement: null,
+  });
+  
+  const [uploadProgress, setUploadProgress] = useState<{[key: string]: number}>({});
   
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
   const [otpCode, setOtpCode] = useState('');
@@ -82,6 +100,28 @@ export default function VendorRegisterPage() {
     // Business address validation
     if (!formData.businessAddress.trim()) {
       errors.businessAddress = 'Business address is required for vendors';
+    }
+    
+    // City validation
+    if (!formData.city.trim()) {
+      errors.city = 'City is required';
+    }
+    
+    // State validation
+    if (!formData.state.trim()) {
+      errors.state = 'State is required';
+    }
+    
+    // Pincode validation
+    if (!formData.pincode.trim()) {
+      errors.pincode = 'Pincode is required';
+    } else if (!/^\d{6}$/.test(formData.pincode)) {
+      errors.pincode = 'Pincode must be exactly 6 digits';
+    }
+    
+    // GST validation (optional but if provided should be valid)
+    if (formData.gstNumber && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(formData.gstNumber)) {
+      errors.gstNumber = 'Invalid GST format';
     }
     
     return errors;
@@ -312,6 +352,53 @@ export default function VendorRegisterPage() {
               )}
             </div>
             
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Input
+                  name="city"
+                  type="text"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="City"
+                  required
+                  className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${validationErrors.city ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                />
+                {validationErrors.city && (
+                  <p className="mt-1 text-sm text-red-600">{validationErrors.city}</p>
+                )}
+              </div>
+              <div>
+                <Input
+                  name="state"
+                  type="text"
+                  value={formData.state}
+                  onChange={handleChange}
+                  placeholder="State"
+                  required
+                  className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${validationErrors.state ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+                />
+                {validationErrors.state && (
+                  <p className="mt-1 text-sm text-red-600">{validationErrors.state}</p>
+                )}
+              </div>
+            </div>
+            
+            <div>
+              <Input
+                name="pincode"
+                type="text"
+                value={formData.pincode}
+                onChange={handleChange}
+                placeholder="Pincode (6 digits)"
+                required
+                maxLength={6}
+                className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${validationErrors.pincode ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+              />
+              {validationErrors.pincode && (
+                <p className="mt-1 text-sm text-red-600">{validationErrors.pincode}</p>
+              )}
+            </div>
+
             <div>
               <Input
                 name="panCard"
@@ -326,6 +413,21 @@ export default function VendorRegisterPage() {
               />
               {validationErrors.panCard && (
                 <p className="mt-1 text-sm text-red-600">{validationErrors.panCard}</p>
+              )}
+            </div>
+            
+            <div>
+              <Input
+                name="gstNumber"
+                type="text"
+                value={formData.gstNumber}
+                onChange={handleChange}
+                placeholder="GST Number (Optional)"
+                style={{ textTransform: 'uppercase' }}
+                className={`appearance-none rounded-md relative block w-full px-3 py-2 border ${validationErrors.gstNumber ? 'border-red-500' : 'border-gray-300'} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+              />
+              {validationErrors.gstNumber && (
+                <p className="mt-1 text-sm text-red-600">{validationErrors.gstNumber}</p>
               )}
             </div>
            
@@ -359,6 +461,75 @@ export default function VendorRegisterPage() {
               {validationErrors.confirmPassword && (
                 <p className="mt-1 text-sm text-red-600">{validationErrors.confirmPassword}</p>
               )}
+            </div>
+          </div>
+
+          {/* KYC Document Upload Section */}
+          <div className="space-y-4 border-t pt-4">
+            <h3 className="text-lg font-medium text-gray-900">KYC Documents</h3>
+            <p className="text-sm text-gray-600">Upload required documents for verification</p>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">PAN Card *</label>
+                <input
+                  type="file"
+                  name="panCardFile"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setKycDocuments({ ...kycDocuments, panCardFile: e.target.files?.[0] || null })}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-l-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+                {kycDocuments.panCardFile && (
+                  <p className="mt-1 text-xs text-green-600">✓ {kycDocuments.panCardFile.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">GST Certificate</label>
+                <input
+                  type="file"
+                  name="gstCertificate"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setKycDocuments({ ...kycDocuments, gstCertificate: e.target.files?.[0] || null })}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-l-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+                {kycDocuments.gstCertificate && (
+                  <p className="mt-1 text-xs text-green-600">✓ {kycDocuments.gstCertificate.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Business Registration Document</label>
+                <input
+                  type="file"
+                  name="businessRegistration"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setKycDocuments({ ...kycDocuments, businessRegistration: e.target.files?.[0] || null })}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-l-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+                {kycDocuments.businessRegistration && (
+                  <p className="mt-1 text-xs text-green-600">✓ {kycDocuments.businessRegistration.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Bank Statement (Last 3 months)</label>
+                <input
+                  type="file"
+                  name="bankStatement"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setKycDocuments({ ...kycDocuments, bankStatement: e.target.files?.[0] || null })}
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-l-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+                {kycDocuments.bankStatement && (
+                  <p className="mt-1 text-xs text-green-600">✓ {kycDocuments.bankStatement.name}</p>
+                )}
+              </div>
+            </div>
+            
+            <div className="text-xs text-gray-500">
+              <p>• Accepted formats: JPG, PNG, PDF (Max 5MB each)</p>
+              <p>• Documents will be verified by our team within 24-48 hours</p>
             </div>
           </div>
 
