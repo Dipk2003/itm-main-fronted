@@ -147,5 +147,16 @@ export const authAPI = {
   changePassword: async (data: { currentPassword: string; newPassword: string }): Promise<string> => {
     const response = await api.post('/auth/change-password', data);
     return response.data;
+  },
+
+  // Forgot password flow
+  forgotPassword: async (emailOrPhone: string): Promise<string> => {
+    const response = await api.post('/auth/forgot-password', { emailOrPhone });
+    return response.data;
+  },
+
+  verifyForgotPasswordOtp: async (data: { emailOrPhone: string; otp: string; newPassword: string }): Promise<JwtResponse> => {
+    const response = await api.post('/auth/verify-forgot-password-otp', data);
+    return response.data;
   }
 };

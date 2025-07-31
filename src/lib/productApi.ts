@@ -1,5 +1,5 @@
 import { api } from './api';
-import { MOCK_MODE, mockResponses, mockDelay } from './mockMode';
+import { MOCK_MODE, mockDelay, mockResponses } from './mockMode';
 
 export interface Product {
   id: number;
@@ -276,6 +276,63 @@ export const productAPI = {
     const response = await api.get('/api/products/pending-approval', {
       params: { page, size }
     });
+    return response.data;
+  },
+
+  // Enhanced Search & Discovery
+  advancedSearch: async (params: {
+    query?: string;
+    category?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    brand?: string;
+    location?: string;
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
+    page?: number;
+    size?: number;
+  }): Promise<ProductsResponse> => {
+    const response = await api.get('/api/products/advanced-search-products', { params });
+    return response.data;
+  },
+
+  getFeaturedProducts: async (page = 0, size = 12): Promise<ProductsResponse> => {
+    const response = await api.get('/api/products/search/featured', {
+      params: { page, size }
+    });
+    return response.data;
+  },
+
+  // Product categories
+  getCategories: async (): Promise<Category[]> => {
+    const response = await api.get('/api/products/categories');
+    return response.data;
+  },
+
+  getSubCategories: async (categoryId: number): Promise<SubCategory[]> => {
+    const response = await api.get(`/api/products/categories/${categoryId}/subcategories`);
+    return response.data;
+  },
+
+  // Product by vendor
+  getByVendor: async (vendorId: number, page: number = 0, size: number = 12): Promise<ProductsResponse> => {
+    const response = await api.get(`/api/products/vendor/${vendorId}`, {
+      params: { page, size }
+    });
+    return response.data;
+  },
+
+  // Product by category
+  getByCategory: async (categoryId: number, page: number = 0, size: number = 12): Promise<ProductsResponse> => {
+    const response = await api.get(`/api/products/category/${categoryId}`, {
+      params: { page, size }
+    });
+    return response.data;
+  },
+
+  // Get product by ID
+  getById: async (id: number): Promise<Product> => {
+    const response = await api.get(`/api/products/${id}`);
     return response.data;
   }
 };

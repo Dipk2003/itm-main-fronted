@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { cartWishlistAPI } from '@/lib/cartWishlistApi';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Cart Item Interface
 export interface CartItem {
@@ -35,6 +36,67 @@ const initialState: CartState = {
   isLoading: false,
   error: null,
 };
+
+// Async thunks for backend integration
+export const fetchCart = createAsyncThunk(
+  'cart/fetchCart',
+  async (_, { rejectWithValue }) => {
+    try {
+      const cart = await cartWishlistAPI.cart.get();
+      return cart;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch cart');
+    }
+  }
+);
+
+export const addToCartAsync = createAsyncThunk(
+  'cart/addToCart',
+  async (data: { productId: number; quantity: number }, { rejectWithValue }) => {
+    try {
+      const cartItem = await cartWishlistAPI.cart.addItem(data);
+      return cartItem;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to add item to cart');
+    }
+  }
+);
+
+export const updateCartItemAsync = createAsyncThunk(
+  'cart/updateCartItem',
+  async (data: { cartItemId: number; quantity: number }, { rejectWithValue }) => {
+    try {
+      const cartItem = await cartWishlistAPI.cart.updateItem(data.cartItemId, { quantity: data.quantity });
+      return cartItem;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to update cart item');
+    }
+  }
+);
+
+export const removeFromCartAsync = createAsyncThunk(
+  'cart/removeFromCart',
+  async (cartItemId: number, { rejectWithValue }) => {
+    try {
+      await cartWishlistAPI.cart.removeItem(cartItemId);
+      return cartItemId;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to remove item from cart');
+    }
+  }
+);
+
+export const clearCartAsync = createAsyncThunk(
+  'cart/clearCart',
+  async (_, { rejectWithValue }) => {
+    try {
+      await cartWishlistAPI.cart.clear();
+      return true;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to clear cart');
+    }
+  }
+);
 
 // Helper function to calculate total amount
 const calculateTotalAmount = (items: CartItem[]): number => {
@@ -112,6 +174,88 @@ const cartSlice = createSlice({
       const userItems = state.items.filter(item => item.user_email === action.payload);
       // You can add any additional logic here if needed
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      // Fetch cart
+      .addCase(fetchCart.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Convert backend cart format to local format if needed
+        if (action.payload.items) {
+          state.items = action.payload.items.map((item: any) => ({
+            id: item.id.toString(),
+            name: item.product.name,
+            price: item.price.toString(),
+            img_src: item.product.imageUrls || '',
+            desc: item.product.description,
+            company: item.product.vendor?.companyName || '',
+            rating: '0',
+            qty: item.quantity.toString(),
+            user_name: '',
+            user_email: '',
+            date: new Date().toISOString(),
+          }));
+          state.totalItems = action.payload.totalItems;
+          state.totalAmount = action.payload.totalAmount;
+        }
+      })
+      .addCase(fetchCart.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      // Add to cart
+      .addCase(addToCartAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(addToCartAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Add the new item to local state
+        const newItem: CartItem = {
+          id: action.payload.id.toString(),
+          name: action.payload.product.name,
+          price: action.payload.price.toString(),
+          img_src: action.payload.product.imageUrls || '',
+          desc: action.payload.product.description,
+          company: action.payload.product.vendor?.companyName || '',
+          rating: '0',
+          qty: action.payload.quantity.toString(),
+          user_name: '',
+          user_email: '',
+          date: new Date().toISOString(),
+        };
+        state.items.push(newItem);
+        state.totalItems = state.items.length;
+        state.totalAmount = calculateTotalAmount(state.items);
+      })
+      .addCase(addToCartAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      // Update cart item
+      .addCase(updateCartItemAsync.fulfilled, (state, action) => {
+        const itemIndex = state.items.findIndex(item => item.id === action.payload.id.toString());
+        if (itemIndex !== -1) {
+          state.items[itemIndex].qty = action.payload.quantity.toString();
+          state.totalAmount = calculateTotalAmount(state.items);
+        }
+      })
+      // Remove from cart
+      .addCase(removeFromCartAsync.fulfilled, (state, action) => {
+        state.items = state.items.filter(item => item.id !== action.payload.toString());
+        state.totalItems = state.items.length;
+        state.totalAmount = calculateTotalAmount(state.items);
+      })
+      // Clear cart
+      .addCase(clearCartAsync.fulfilled, (state) => {
+        state.items = [];
+        state.totalItems = 0;
+        state.totalAmount = 0;
+      });
   },
 });
 

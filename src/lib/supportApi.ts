@@ -45,18 +45,35 @@ export interface LiveChatSession {
   lastMessageTime?: string;
 }
 
-// Support Ticket API
+// Support Ticket API - Enhanced to match backend endpoints
 export const supportAPI = {
-  // Create a new support ticket
+  // Get user tickets (matches GET /api/support/tickets)
+  getTickets: async (filters?: {
+    status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+    category?: string;
+    priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+    page?: number;
+    size?: number;
+  }): Promise<{
+    content: SupportTicket[];
+    totalElements: number;
+    totalPages: number;
+    number: number;
+  }> => {
+    const response = await api.get('/api/support/tickets', { params: filters });
+    return response.data;
+  },
+
+  // Create a new support ticket (matches POST /api/support/tickets)
   createTicket: async (data: CreateTicketData): Promise<SupportTicket> => {
     const response = await api.post('/api/support/tickets', data);
     return response.data;
   },
 
-  // Get user's tickets
+  // Get user's tickets (legacy method for backward compatibility)
   getUserTickets: async (): Promise<SupportTicket[]> => {
-    const response = await api.get('/api/support/tickets/user');
-    return response.data;
+    const response = await api.get('/api/support/tickets');
+    return response.data.content || response.data;
   },
 
   // Get all tickets (admin only)
@@ -91,6 +108,36 @@ export const supportAPI = {
   // Get ticket messages
   getTicketMessages: async (ticketId: string): Promise<ChatMessage[]> => {
     const response = await api.get(`/api/support/tickets/${ticketId}/messages`);
+    return response.data;
+  },
+
+  // Close ticket
+  closeTicket: async (ticketId: string): Promise<SupportTicket> => {
+    const response = await api.patch(`/api/support/tickets/${ticketId}/close`);
+    return response.data;
+  },
+
+  // Reopen ticket
+  reopenTicket: async (ticketId: string): Promise<SupportTicket> => {
+    const response = await api.patch(`/api/support/tickets/${ticketId}/reopen`);
+    return response.data;
+  },
+
+  // Assign ticket (Admin only)
+  assignTicket: async (ticketId: string, adminId: string): Promise<SupportTicket> => {
+    const response = await api.patch(`/api/support/tickets/${ticketId}/assign`, { adminId });
+    return response.data;
+  },
+
+  // Get ticket statistics
+  getTicketStats: async (): Promise<{
+    totalTickets: number;
+    openTickets: number;
+    inProgressTickets: number;
+    resolvedTickets: number;
+    closedTickets: number;
+  }> => {
+    const response = await api.get('/api/support/tickets/stats');
     return response.data;
   }
 };
