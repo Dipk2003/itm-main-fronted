@@ -1,5 +1,5 @@
 import React from 'react';
-import { getFinanceOverview } from 'src/lib/api/financeApi';
+import { getFinanceOverview } from '@/lib/api/financeApi';
 
 const FinanceDashboard = () => {
     // Placeholder for finance data fetching and state management
