@@ -1,10 +1,10 @@
 # Deployment Version Log
 
-## Latest Deployment: v0.1.1
+## Latest Deployment: v0.1.2
 - **Date**: 2025-08-01
-- **Commit**: 3e35676
-- **Changes**: Fixed AWS backend integration and Vercel deployment configuration
-- **Backend URL**: http://indianmart.ap-south-1.elasticbeanstalk.com
+- **Commit**: PENDING
+- **Changes**: Fixed Mixed Content Security Policy - Added HTTPS support and CSP upgrade-insecure-requests
+- **Backend URL**: https://indianmart.ap-south-1.elasticbeanstalk.com (with fallback to HTTP)
 
 ## Deployment Notes:
 - Configured vercel.json with proper backend proxy

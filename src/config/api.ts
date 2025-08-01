@@ -1,6 +1,6 @@
 // API Configuration for connecting to Spring Boot backend
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://indianmart.ap-south-1.elasticbeanstalk.com',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'https://indianmart.ap-south-1.elasticbeanstalk.com',
   ENDPOINTS: {
     // Data Entry API endpoints
     CATEGORIES: '/api/dataentry/categories',

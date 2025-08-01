@@ -12,15 +12,15 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "http://indianmart.ap-south-1.elasticbeanstalk.com/api/$1"
+      "dest": "https://indianmart.ap-south-1.elasticbeanstalk.com/api/$1"
     }
   ],
   "env": {
-    "NEXT_PUBLIC_API_URL": "http://indianmart.ap-south-1.elasticbeanstalk.com"
+    "NEXT_PUBLIC_API_URL": "https://indianmart.ap-south-1.elasticbeanstalk.com"
   },
   "build": {
     "env": {
-      "NEXT_PUBLIC_API_URL": "http://indianmart.ap-south-1.elasticbeanstalk.com"
+      "NEXT_PUBLIC_API_URL": "https://indianmart.ap-south-1.elasticbeanstalk.com"
     }
   }
 }
