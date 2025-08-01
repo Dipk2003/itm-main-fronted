@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
   
   // Image optimization
   images: {
-    domains: ['localhost', 'your-api-domain.com'],
+    domains: ['localhost', 'indianmart.ap-south-1.elasticbeanstalk.com'],
     formats: ['image/webp', 'image/avif'],
   },
   
