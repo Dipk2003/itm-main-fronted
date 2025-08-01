@@ -10,7 +10,6 @@ const nextConfig: NextConfig = {
   },
   
   // Performance optimizations
-  swcMinify: true,
   compress: true,
   
   // Output configuration for deployment
