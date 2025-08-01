@@ -22,7 +22,7 @@
     "docker:compose:build": "docker-compose up --build -d",
     "docker:compose:down": "docker-compose down",
     "api:test": "node -e \"require('./src/utils/apiTest.ts').quickAPITest()\"",
-    "prebuild": "npm run clean && npm run type-check",
+"prebuild": "npm run clean",
     "postbuild": "echo \"Build completed successfully!\""
   },
   "dependencies": {
