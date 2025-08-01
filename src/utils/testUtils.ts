@@ -102,9 +102,9 @@ export const renderWithRedux = (
   const { initialState, ...renderOptions } = options || {};
   const store = createMockStore(initialState);
 
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <Provider store={store}>{children}</Provider>
-  );
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+    return React.createElement(Provider, { store }, children);
+  };
 
   return {
     ...render(ui, { wrapper: Wrapper, ...renderOptions }),

@@ -9,8 +9,8 @@ import {
   UsersIcon,
   ShoppingBagIcon,
   CurrencyDollarIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon as TrendingUpIcon,
+  ArrowTrendingDownIcon as TrendingDownIcon,
   EyeIcon,
   StarIcon
 } from '@heroicons/react/24/outline';
@@ -167,7 +167,7 @@ const AnalyticsDashboard: React.FC = () => {
             {(['7d', '30d', '90d', '1y'] as const).map((range) => (
               <Button
                 key={range}
-                variant={timeRange === range ? 'default' : 'outline'}
+                variant={timeRange === range ? 'primary' : 'outline'}
                 onClick={() => setTimeRange(range)}
                 className="text-sm"
               >
