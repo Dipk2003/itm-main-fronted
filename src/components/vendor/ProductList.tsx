@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { productAPI, Product } from '@/lib/productApi';
 import Button from '@/components/ui/Button';
-import { Edit, Trash2, Eye, ToggleLeft, ToggleRight, Plus } from 'lucide-react';
+import ImageManager from './ImageManager';
+import { Edit, Trash2, Eye, ToggleLeft, ToggleRight, Plus, Image } from 'lucide-react';
 
 interface ProductListProps {
   onAddProduct?: () => void;
@@ -20,6 +21,8 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
   const [totalElements, setTotalElements] = useState(0);
   const [isApiDown, setIsApiDown] = useState(false);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [selectedProductForImages, setSelectedProductForImages] = useState<Product | null>(null);
+  const [showImageManager, setShowImageManager] = useState(false);
 
   // Enable automatic loading to show products on dashboard
   useEffect(() => {
@@ -29,11 +32,24 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
   const loadProducts = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Loading products from API...');
       const response = await productAPI.getMyProducts(0, 1000); // Get all products for filtering
+      console.log('✅ Products loaded:', response);
+      console.log('📊 Products count:', response.content?.length || 0);
+      
+      // Debug each product's image data
+      response.content?.forEach((product, index) => {
+        console.log(`📋 Product ${index + 1}: ${product.name}`);
+        console.log(`   🆔 ID: ${product.id}`);
+        console.log(`   📸 Images array:`, product.images);
+        console.log(`   🔗 ImageUrls string:`, product.imageUrls);
+        console.log(`   🖼️ Has images:`, (product.images?.length || 0) + (product.imageUrls ? product.imageUrls.split(',').filter(u => u.trim()).length : 0));
+      });
+      
       setAllProducts(response.content || []);
       setTotalElements(response.totalElements || 0);
     } catch (error: any) {
-      console.error('Error loading products:', error);
+      console.error('❌ Error loading products:', error);
       
       // For now, set empty products to prevent app crash
       setAllProducts([]);
@@ -120,11 +136,74 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
     }
   };
 
-  const getImageUrl = (product: Product) => {
-    if (product.images && product.images.length > 0) {
-      return product.images[0].imageUrl;
+  // Helper function to convert relative URLs to absolute URLs
+  const getAbsoluteImageUrl = (url: string): string => {
+    if (!url) return url;
+    
+    // If it's already an absolute URL (http/https), return as is
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
     }
-    return '/placeholder-product.jpg';
+    
+    // If it's a relative URL starting with /, prepend backend URL
+    if (url.startsWith('/')) {
+      return `http://localhost:8080${url}`;
+    }
+    
+    // If it's a relative URL without /, prepend backend URL with /
+    return `http://localhost:8080/${url}`;
+  };
+
+  const getImageUrl = (product: Product) => {
+    // First try to get image from images array
+    if (product.images && product.images.length > 0) {
+      return getAbsoluteImageUrl(product.images[0].imageUrl);
+    }
+    
+    // Then try to get from imageUrls string (comma-separated URLs)
+    if (product.imageUrls && product.imageUrls.trim()) {
+      const urls = product.imageUrls.split(',').filter(url => url.trim());
+      if (urls.length > 0) {
+        return getAbsoluteImageUrl(urls[0].trim());
+      }
+    }
+    
+    // Fallback to SVG placeholder
+    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzlDQTNBRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K';
+  };
+  
+  const getAllImageUrls = (product: Product): string[] => {
+    const urls: string[] = [];
+    
+    // Get from images array
+    if (product.images && product.images.length > 0) {
+      urls.push(...product.images.map(img => img.imageUrl));
+    }
+    
+    // Get from imageUrls string
+    if (product.imageUrls && product.imageUrls.trim()) {
+      const stringUrls = product.imageUrls.split(',').filter(url => url.trim()).map(url => url.trim());
+      urls.push(...stringUrls);
+    }
+    
+    return [...new Set(urls)]; // Remove duplicates
+  };
+  
+  const handleManageImages = (product: Product) => {
+    setSelectedProductForImages(product);
+    setShowImageManager(true);
+  };
+  
+  const handleImageUpdate = (updatedProduct: Product) => {
+    // Update the product in the local state
+    setAllProducts(prev => 
+      prev.map(p => p.id === updatedProduct.id ? updatedProduct : p)
+    );
+  };
+  
+  const handleCloseImageManager = () => {
+    setShowImageManager(false);
+    setSelectedProductForImages(null);
   };
 
   if (loading) {
@@ -230,6 +309,15 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
                         ) : (
                           <ToggleLeft className="h-4 w-4 text-gray-400" />
                         )}
+                      </Button>
+                      
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleManageImages(product)}
+                        title="Manage Images"
+                      >
+                        <Image className="h-4 w-4 text-purple-600" />
                       </Button>
                       
                       {onEditProduct && (
@@ -345,6 +433,15 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
             </div>
           </div>
         </div>
+      )}
+      
+      {/* Image Manager Modal */}
+      {showImageManager && selectedProductForImages && (
+        <ImageManager
+          product={selectedProductForImages}
+          onClose={handleCloseImageManager}
+          onImageUpdate={handleImageUpdate}
+        />
       )}
     </div>
   );

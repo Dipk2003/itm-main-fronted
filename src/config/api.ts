@@ -64,13 +64,14 @@ export const getHeaders = (includeAuth: boolean = false): Record<string, string>
   return headers;
 };
 
-// API request helper with error handling
+// API request helper with intelligent HTTPS/HTTP fallback
 export const apiRequest = async <T>(
   endpoint: string,
   options: RequestInit = {},
   includeAuth: boolean = false
 ): Promise<T> => {
-  const url = endpoint.startsWith('http') ? endpoint : buildApiUrl(endpoint);
+  const baseUrl = API_CONFIG.BASE_URL;
+  const fullEndpoint = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
   
   const config: RequestInit = {
     ...options,
@@ -78,34 +79,60 @@ export const apiRequest = async <T>(
       ...getHeaders(includeAuth),
       ...options.headers,
     },
+    timeout: 15000, // 15 second timeout
   };
   
-  try {
-    const response = await fetch(url, config);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    // Handle empty responses (like 204 No Content from DELETE operations)
-    if (response.status === 204 || response.headers.get('content-length') === '0') {
-      return undefined as T;
-    }
-    
-    // Try to parse JSON, but handle empty responses gracefully
-    const text = await response.text();
-    if (!text) {
-      return undefined as T;
-    }
-    
+  // Try HTTPS first, then fallback to HTTP
+  const urlsToTry = [
+    fullEndpoint, // Try configured URL first
+    fullEndpoint.replace('https://', 'http://'), // Fallback to HTTP if HTTPS fails
+  ];
+  
+  let lastError: Error;
+  
+  for (const url of urlsToTry) {
     try {
-      return JSON.parse(text);
-    } catch (parseError) {
-      console.warn('Could not parse response as JSON:', text);
-      return text as T;
+      console.log(`🌐 Attempting API call to: ${url}`);
+      
+      const response = await fetch(url, config);
+      
+      // Check if backend is returning 502 Bad Gateway
+      if (response.status === 502) {
+        console.warn(`⚠️ Backend returning 502 Bad Gateway from: ${url}`);
+        throw new Error(`Backend service unavailable (502 Bad Gateway)`);
+      }
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} from ${url}`);
+      }
+      
+      console.log(`✅ API call successful to: ${url}`);
+      
+      // Handle empty responses (like 204 No Content from DELETE operations)
+      if (response.status === 204 || response.headers.get('content-length') === '0') {
+        return undefined as T;
+      }
+      
+      // Try to parse JSON, but handle empty responses gracefully
+      const text = await response.text();
+      if (!text) {
+        return undefined as T;
+      }
+      
+      try {
+        return JSON.parse(text);
+      } catch (parseError) {
+        console.warn('Could not parse response as JSON:', text);
+        return text as T;
+      }
+      
+    } catch (error) {
+      console.error(`❌ API call failed to ${url}:`, error);
+      lastError = error as Error;
+      continue; // Try next URL
     }
-  } catch (error) {
-    console.error('API request failed:', error);
-    throw error;
   }
+  
+  // If all URLs failed, throw the last error
+  throw new Error(`All API endpoints failed. Last error: ${lastError?.message || 'Unknown error'}. Please check if your backend server is running.`);
 };

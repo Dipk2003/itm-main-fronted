@@ -235,18 +235,58 @@ export const productAPI = {
         formData.append('images', image);
       });
 
+      console.log(`🖼️ Uploading ${images.length} images for product ${productId}`);
       const response = await api.post(`/api/products/${productId}/images`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      return response.data;
+      
+      console.log('✅ Images uploaded successfully:', response.data);
+      // Handle both array response and object response with imageUrls
+      return Array.isArray(response.data) ? response.data : response.data.imageUrls || [];
     } catch (error: any) {
+      console.error('❌ Error uploading product images:', error);
       // If API endpoint doesn't exist (404), fallback to mock data
       if (error.response?.status === 404) {
         console.warn('Product images API not available, using mock response');
         await mockDelay(1000);
         return images.map((_, index) => `mock-image-${productId}-${index + 1}.jpg`);
+      }
+      throw error;
+    }
+  },
+  
+  updateProductImages: async (productId: number, images: File[]): Promise<string[]> => {
+    if (MOCK_MODE) {
+      console.log('Mock mode: Updating images for product', productId, images);
+      await mockDelay(1000);
+      return images.map((_, index) => `mock-updated-image-${productId}-${index + 1}.jpg`);
+    }
+    
+    try {
+      const formData = new FormData();
+      images.forEach(image => {
+        formData.append('images', image);
+      });
+
+      console.log(`🔄 Updating ${images.length} images for product ${productId}`);
+      const response = await api.put(`/api/products/${productId}/images`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      console.log('✅ Images updated successfully:', response.data);
+      // Handle both array response and object response with imageUrls
+      return Array.isArray(response.data) ? response.data : response.data.imageUrls || [];
+    } catch (error: any) {
+      console.error('❌ Error updating product images:', error);
+      // If API endpoint doesn't exist (404), fallback to mock data
+      if (error.response?.status === 404) {
+        console.warn('Product images update API not available, using mock response');
+        await mockDelay(1000);
+        return images.map((_, index) => `mock-updated-image-${productId}-${index + 1}.jpg`);
       }
       throw error;
     }
