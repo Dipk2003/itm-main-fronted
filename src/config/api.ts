@@ -1,6 +1,6 @@
 // API Configuration for connecting to Spring Boot backend
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'https://indianmart.ap-south-1.elasticbeanstalk.com',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080',
   ENDPOINTS: {
     // Data Entry API endpoints
     CATEGORIES: '/api/dataentry/categories',
@@ -12,10 +12,10 @@ export const API_CONFIG = {
     
     // Authentication endpoints
     AUTH: {
-      LOGIN: '/api/auth/login',
-      REGISTER: '/api/auth/register',
-      REFRESH: '/api/auth/refresh',
-      LOGOUT: '/api/auth/logout'
+      LOGIN: '/auth/login',
+      REGISTER: '/auth/register',
+      REFRESH: '/auth/refresh',
+      LOGOUT: '/auth/logout'
     },
     
     // Vendor endpoints

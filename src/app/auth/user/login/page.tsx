@@ -5,10 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { login, verifyOtp, clearError, sendForgotPasswordOtp, setTempCredentials, checkEmailRole } from '@/features/auth/authSlice';
 import { RootState, AppDispatch } from '@/store';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import AuthRedirect from '@/components/auth/AuthRedirect';
-import ForgotPassword from '@/components/auth/ForgotPassword';
+import { Button, Input } from '@/shared/components';
+import { ForgotPassword } from '@/modules/core';
 
 export default function UserLoginPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,7 +26,11 @@ export default function UserLoginPage() {
     e.preventDefault();
     console.log('🚀 Starting login process with:', formData);
     
-    const loginData = {...formData, userType: 'user'};
+    const loginData = {
+      emailOrPhone: formData.emailOrPhone,
+      password: formData.password,
+      userType: 'user'
+    };
     console.log('📤 Dispatching login with:', loginData);
     
     const result = await dispatch(login(loginData));
@@ -38,18 +40,28 @@ export default function UserLoginPage() {
     if (login.fulfilled.match(result)) {
       console.log('✅ Login fulfilled with payload:', result.payload);
       
-      // Check if user is authenticated and redirect to user dashboard
-      if (result.payload.user && (result.payload.user.role === 'USER' || result.payload.user.role === 'ROLE_USER')) {
-        console.log('User authenticated, redirecting to user dashboard');
-        router.push('/dashboard/user');
-      } else if (result.payload.user && result.payload.user.role !== 'USER' && result.payload.user.role !== 'ROLE_USER') {
-        // If user has wrong role, show error
-        dispatch(clearError());
-        alert('This account is not registered as a user. Please use the correct login portal.');
-        return;
+      // Check if this is a direct login (no OTP required)
+      if (result.payload.user && !result.payload.requiresOTP) {
+        const userRole = result.payload.user.role?.toUpperCase();
+        console.log('Direct login successful, user role:', userRole);
+        
+        // Check if user has correct role for user portal
+        if (userRole === 'USER' || userRole === 'ROLE_USER' || userRole === 'user'.toUpperCase()) {
+          console.log('User authenticated, redirecting to user dashboard');
+          // Wait a bit for Redux state to update before redirecting
+          setTimeout(() => {
+            router.push('/dashboard/user');
+          }, 100);
+        } else {
+          // If user has wrong role, show error
+          dispatch(clearError());
+          alert('This account is not registered as a user. Please use the correct login portal.');
+          return;
+        }
+      } else if (result.payload.requiresOTP) {
+        console.log('OTP required, waiting for OTP form to show');
+        // OTP form will be shown automatically based on Redux state
       }
-      // For regular users, OTP form will be shown automatically based on Redux state
-      console.log('🔄 Login completed, waiting for Redux state update...');
     } else if (login.rejected.match(result)) {
       console.log('❌ Login rejected with payload:', result.payload);
       // Just show the error, don't automatically go to OTP form
@@ -92,9 +104,13 @@ export default function UserLoginPage() {
       if (verifyOtp.fulfilled.match(result)) {
         console.log('✅ OTP verification successful!');
         // Check user role after OTP verification
-        if (result.payload.user && (result.payload.user.role === 'USER' || result.payload.user.role === 'ROLE_USER')) {
-          console.log('🎯 Redirecting to user dashboard');
-          router.push('/dashboard/user');
+        const userRole = result.payload.user?.role?.toUpperCase();
+        if (result.payload.user && (userRole === 'USER' || userRole === 'ROLE_USER' || userRole === 'user'.toUpperCase())) {
+          console.log('🎯 User authenticated via OTP, redirecting to user dashboard');
+          // Wait a bit for Redux state to update before redirecting
+          setTimeout(() => {
+            router.push('/dashboard/user');
+          }, 100);
         } else {
           console.error('❌ User role mismatch:', result.payload.user?.role);
           alert('This account is not registered as a user. Please use the correct login portal.');
@@ -146,7 +162,7 @@ export default function UserLoginPage() {
           
           // Email belongs to user, proceed with OTP
           console.log('✅ Email belongs to user, sending OTP');
-          const result = await dispatch(sendForgotPasswordOtp({ email }));
+          const result = await dispatch(sendForgotPasswordOtp(email));
           if (sendForgotPasswordOtp.fulfilled.match(result)) {
             dispatch(setTempCredentials(formData));
             setShowLoginWithOtp(true);
@@ -226,19 +242,14 @@ export default function UserLoginPage() {
   // Show forgot password component
   if (showForgotPassword) {
     return (
-      <>
-        <AuthRedirect />
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-          <ForgotPassword onBackToLogin={handleBackToLogin} />
-        </div>
-      </>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <ForgotPassword onBackToLogin={handleBackToLogin} />
+      </div>
     );
   }
 
   return (
-    <>
-      <AuthRedirect />
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -324,7 +335,6 @@ export default function UserLoginPage() {
             </div>
           </form>
         </div>
-      </div>
-    </>
+    </div>
   );
 }

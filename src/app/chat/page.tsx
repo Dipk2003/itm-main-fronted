@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import ChatList from '@/components/chat/ChatList';
+import { ChatList } from '@/modules/support';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { redirect } from 'next/navigation';

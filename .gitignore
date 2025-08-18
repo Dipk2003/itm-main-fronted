@@ -39,3 +39,28 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Performance optimization
+node_modules/.cache/
+.next/
+dist/
+build/
+*.tsbuildinfo
+
+# Environment files
+.env.development.local
+.env.production.local
+
+# VSCode
+.vscode/settings.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Bundle analyzer
+bundle-analyzer-report.html

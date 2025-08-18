@@ -1,9 +1,6 @@
-import { Footer } from '@/components/shared/Footer'
-import { Navbar } from '@/components/shared/Navbar'
-import { ChatbotToggle } from '@/components/shared/Chatbot'
-import ClientProviders from '@/components/providers/ClientProviders'
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
+import { Footer, Navbar, ChatbotToggle, ClientProviders } from '@/shared/components'
 
 const inter = Inter({ subsets: ['latin'] })
 

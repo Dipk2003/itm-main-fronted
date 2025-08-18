@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { login, verifyOtp, clearError } from '@/features/auth/authSlice';
 import { RootState, AppDispatch } from '@/store';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import AuthRedirect from '@/components/auth/AuthRedirect';
+import { Button } from '@/shared/components/Button';
+import { Input } from '@/shared/components/Input';
+import AuthRedirect from '@/modules/core/components/AuthRedirect';
 
 export default function AdminLoginPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
       console.log('✅ Admin login successful');
       if (result.payload.user && result.payload.token) {
         // Check if user is admin
-        if (result.payload.user.role === 'ADMIN' || result.payload.user.role === 'ROLE_ADMIN') {
+        if (result.payload.user.role === 'admin') {
           router.push('/dashboard/admin');
         } else {
           alert('This account is not registered as an admin. Access denied.');
@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
     if (verifyOtp.fulfilled.match(result)) {
       console.log('✅ Admin OTP verification successful');
       // Check user role after OTP verification
-      if (result.payload.user && (result.payload.user.role === 'ADMIN' || result.payload.user.role === 'ROLE_ADMIN')) {
+      if (result.payload.user && result.payload.user.role === 'admin') {
         router.push('/dashboard/admin');
       } else {
         alert('This account is not registered as an admin. Access denied.');
@@ -122,7 +122,9 @@ export default function AdminLoginPage() {
 
   return (
     <>
-      <AuthRedirect />
+      <AuthRedirect>
+        <div>Redirecting...</div>
+      </AuthRedirect>
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>

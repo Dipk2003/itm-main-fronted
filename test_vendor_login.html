@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vendor Login Test</title>
+</head>
+<body>
+    <h1>Vendor Login Test - Fixed Endpoints</h1>
+    
+    <div>
+        <button onclick="clearAllAuth()">1. Clear All Auth Data</button>
+        <button onclick="testDirectLogin()">2. Test Direct Login</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function clearAllAuth() {
+            localStorage.clear();
+            sessionStorage.clear();
+            document.getElementById('result').innerHTML = '<p style="color: green;">✅ All auth data cleared</p>';
+        }
+
+        async function testDirectLogin() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>🔄 Testing vendor login...</p>';
+            
+            try {
+                // Clear any existing data first
+                localStorage.clear();
+                
+                const response = await fetch('http://localhost:8080/auth/vendor/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Origin': 'http://localhost:3000' // Add explicit origin
+                    },
+                    body: JSON.stringify({
+                        emailOrPhone: 'mishra@gmail.com',
+                        password: 'password123'
+                    })
+                });
+
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (response.ok && data.token) {
+                    resultDiv.innerHTML = `
+                        <h3>✅ Login Successful!</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>User:</strong> ${data.user.name} (${data.user.email})</p>
+                        <p><strong>Role:</strong> ${data.user.role}</p>
+                        <p><strong>Token:</strong> ${data.token.substring(0, 50)}...</p>
+                        <p><strong>Message:</strong> ${data.message}</p>
+                    `;
+                    
+                    // Test storing the token
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3>❌ Login Failed</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Error:</strong> ${JSON.stringify(data)}</p>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <h3>❌ Network Error</h3>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                    <p>Make sure the backend server is running on port 8080</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

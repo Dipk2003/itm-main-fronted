@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { getFinanceOverview } from '@/lib/api/financeApi';
+import { financePaymentAPI } from '@/shared/services';
 
 const FinanceDashboard = () => {
     // Placeholder for finance data fetching and state management
@@ -9,8 +9,13 @@ const FinanceDashboard = () => {
 
     React.useEffect(() => {
         async function fetchFinanceOverview() {
-            const data = await getFinanceOverview();
-            setOverview(data);
+            try {
+                // Using financePaymentAPI instead of the old getFinanceOverview
+                const data = await financePaymentAPI.getPaymentOrders();
+                setOverview(data);
+            } catch (error) {
+                console.error('Failed to fetch finance overview:', error);
+            }
         }
         fetchFinanceOverview();
     }, []);

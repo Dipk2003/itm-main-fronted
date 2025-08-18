@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import ForgotPassword from '@/components/auth/ForgotPassword';
+import ForgotPassword from '@/modules/core/components/ForgotPassword';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <ForgotPassword onBackToLogin={handleBackToLogin} />
+      <ForgotPassword onBack={handleBackToLogin} />
     </div>
   );
 }

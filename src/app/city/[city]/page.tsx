@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
+import { Navbar, Footer } from '@/shared/components';
 import { Search, Filter, MapPin, ArrowLeft, Grid, List, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';

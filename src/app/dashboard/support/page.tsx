@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import SupportDashboardTabs from "@/components/dashboard/support/SupportDashboardTabs";
-import SupportStatsPanel from "@/components/dashboard/support/SupportStatsPanel";
-import SLATrackingPanel from "@/components/dashboard/support/SLATrackingPanel";
-import KnowledgeBasePanel from "@/components/dashboard/support/KnowledgeBasePanel";
-import TicketManagement from "@/components/dashboard/support/TicketManagement";
-import SupportAnalytics from "@/components/dashboard/support/SupportAnalytics";
-import AuthGuard from "@/components/auth/AuthGuard";
+import {
+  SupportDashboardTabs,
+  SupportStatsPanel,
+  SLATrackingPanel,
+  KnowledgeBasePanel,
+  TicketManagement,
+  SupportAnalytics
+} from '@/modules/support';
+import { AuthGuard } from '@/modules/core';
 
 export default function SupportDashboard() {
   const [activeTab, setActiveTab] = useState('overview');

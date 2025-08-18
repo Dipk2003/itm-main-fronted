@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
+import { Navbar, Footer } from '@/shared/components';
 import { Search, Filter, MapPin, Star, Building, Users, Package, Phone, Mail, Globe, CheckCircle, Award, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { vendorApi, Vendor } from '@/services/vendorApi';
+import { vendorAPI, type Vendor } from '@/shared/services';
 
 const CityVendorsPage: React.FC = () => {
   const params = useParams();
@@ -24,8 +23,8 @@ const CityVendorsPage: React.FC = () => {
         try {
           setLoading(true);
           const data = filter === 'verified' 
-            ? await vendorApi.getVerifiedVendorsByCity(city)
-            : await vendorApi.getVendorsByCity(city);
+            ? await vendorAPI.getVerifiedVendorsByCity(city)
+            : await vendorAPI.getVendorsByCity(city);
           setVendors(data);
         } catch (err) {
           setError('Error fetching vendors. Please try again later.');

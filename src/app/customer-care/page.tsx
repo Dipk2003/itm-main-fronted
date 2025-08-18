@@ -1,6 +1,5 @@
 import React from 'react';
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
+import { Navbar, Footer } from '@/shared/components';
 import { Phone, Mail, MapPin, FileText, MessageCircle, Clock, Users, Star } from 'lucide-react';
 
 const CustomerCarePage = () => {

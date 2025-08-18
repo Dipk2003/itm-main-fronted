@@ -1,0 +1,1 @@
+localStorage.removeItem("authToken"); localStorage.removeItem("user"); localStorage.removeItem("token"); localStorage.removeItem("userRole"); localStorage.removeItem("userData"); localStorage.removeItem("vendorId"); localStorage.removeItem("userId"); console.log("Cleared all auth tokens");

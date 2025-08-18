@@ -1,6 +1,5 @@
 import React from 'react';
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
+import { Navbar, Footer } from '@/shared/components';
 import { Search, Filter, MapPin, Star, Building, Users, Package, Phone, Mail, Globe, CheckCircle, Award } from 'lucide-react';
 
 const SearchSuppliersPage = () => {

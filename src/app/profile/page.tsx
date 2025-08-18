@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
+import { Navbar, Footer } from '@/shared/components';
 import { useAuth } from '@/contexts/AuthContext';
 import { User, Mail, Phone, MapPin, Building, Calendar, Edit2, Save, X, Lock, Shield } from 'lucide-react';
 

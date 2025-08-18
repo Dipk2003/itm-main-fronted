@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { register, verifyOtp, clearError, setTempCredentials } from '@/features/auth/authSlice';
 import { RootState, AppDispatch } from '@/store';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import AuthRedirect from '@/components/auth/AuthRedirect';
+import { Button } from '@/shared/components/Button';
+import { Input } from '@/shared/components/Input';
+import AuthRedirect from '@/modules/core/components/AuthRedirect';
 
 export default function VendorRegisterPage() {
   const dispatch = useDispatch<AppDispatch>();

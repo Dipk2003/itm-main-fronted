@@ -1,5 +1,4 @@
-import { Navbar } from '@/components/shared/Navbar';
-import { Footer } from '@/components/shared/Footer';
+import { Navbar, Footer } from '@/shared/components';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 
 export default function ContactUs() {

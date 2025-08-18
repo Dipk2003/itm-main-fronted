@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import AdminDashboardTabs from "@/components/dashboard/admin/AdminDashboardTabs"
-import AdminStatsPanel from "@/components/dashboard/admin/AdminStatsPanel"
-import TopSellingProductList from "@/components/dashboard/admin/TopSellingProductList"
-import TicketList from "@/components/dashboard/admin/TicketList"
-import LiveChatSupport from "@/components/dashboard/admin/LiveChatSupport"
-import UserManagement from "@/components/dashboard/admin/UserManagement"
-import VendorManagement from "@/components/dashboard/admin/VendorManagement"
-import ProductManagement from "@/components/dashboard/admin/ProductManagement"
-import AuthGuard from "@/components/auth/AuthGuard"
+import {
+  AdminDashboardTabs,
+  AdminStatsPanel,
+  TopSellingProductList,
+  TicketList,
+  LiveChatSupport,
+  UserManagement,
+  VendorManagement,
+  ProductManagement
+} from '@/modules/admin';
+import { AuthGuard } from '@/modules/core';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');

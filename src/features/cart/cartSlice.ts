@@ -1,292 +1,296 @@
-import { cartWishlistAPI } from '@/lib/cartWishlistApi';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-// Cart Item Interface
+// Define CartItem interface
 export interface CartItem {
   id: string;
   name: string;
-  price: string;
-  img_src: string;
-  desc: string;
-  company: string;
-  rating: string;
-  discount?: string;
-  delear_name?: string;
-  qty: string;
-  user_name: string;
-  user_email: string;
-  date: string;
-  message?: string;
+  price: number;
+  quantity: number;
+  image?: string;
+  vendorId: string;
+  vendorName: string;
+  category: string;
+  description?: string;
+  sku?: string;
+  unit?: string;
+  minOrderQuantity?: number;
+  maxOrderQuantity?: number;
+  inStock?: boolean;
+  stockQuantity?: number;
 }
 
-// Cart State Interface
-interface CartState {
+// Define Cart state interface
+export interface CartState {
   items: CartItem[];
   totalItems: number;
   totalAmount: number;
   isLoading: boolean;
   error: string | null;
+  lastUpdated: string | null;
 }
 
-// Initial State
+// Initial state
 const initialState: CartState = {
   items: [],
   totalItems: 0,
   totalAmount: 0,
   isLoading: false,
   error: null,
+  lastUpdated: null,
 };
 
-// Async thunks for backend integration
-export const fetchCart = createAsyncThunk(
-  'cart/fetchCart',
-  async (_, { rejectWithValue }) => {
-    try {
-      const cart = await cartWishlistAPI.cart.get();
-      return cart;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch cart');
-    }
-  }
-);
+// Helper functions
+const calculateTotals = (items: CartItem[]) => {
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  return { totalItems, totalAmount };
+};
 
-export const addToCartAsync = createAsyncThunk(
+// Async thunks
+export const addToCart = createAsyncThunk(
   'cart/addToCart',
-  async (data: { productId: number; quantity: number }, { rejectWithValue }) => {
-    try {
-      const cartItem = await cartWishlistAPI.cart.addItem(data);
-      return cartItem;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to add item to cart');
-    }
+  async (item: Omit<CartItem, 'quantity'> & { quantity?: number }) => {
+    // Mock API call - replace with actual API
+    return new Promise<CartItem>((resolve) => {
+      setTimeout(() => {
+        resolve({
+          ...item,
+          quantity: item.quantity || 1,
+        } as CartItem);
+      }, 300);
+    });
   }
 );
 
-export const updateCartItemAsync = createAsyncThunk(
-  'cart/updateCartItem',
-  async (data: { cartItemId: number; quantity: number }, { rejectWithValue }) => {
-    try {
-      const cartItem = await cartWishlistAPI.cart.updateItem(data.cartItemId, { quantity: data.quantity });
-      return cartItem;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update cart item');
-    }
-  }
-);
-
-export const removeFromCartAsync = createAsyncThunk(
+export const removeFromCart = createAsyncThunk(
   'cart/removeFromCart',
-  async (cartItemId: number, { rejectWithValue }) => {
-    try {
-      await cartWishlistAPI.cart.removeItem(cartItemId);
-      return cartItemId;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to remove item from cart');
-    }
+  async (itemId: string) => {
+    // Mock API call
+    return new Promise<string>((resolve) => {
+      setTimeout(() => resolve(itemId), 300);
+    });
   }
 );
 
-export const clearCartAsync = createAsyncThunk(
-  'cart/clearCart',
-  async (_, { rejectWithValue }) => {
-    try {
-      await cartWishlistAPI.cart.clear();
-      return true;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to clear cart');
-    }
+export const updateCartItemQuantity = createAsyncThunk(
+  'cart/updateQuantity',
+  async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
+    // Mock API call
+    return new Promise<{ itemId: string; quantity: number }>((resolve) => {
+      setTimeout(() => resolve({ itemId, quantity }), 300);
+    });
   }
 );
 
-// Helper function to calculate total amount
-const calculateTotalAmount = (items: CartItem[]): number => {
-  return items.reduce((total, item) => {
-    const price = parseFloat(item.price.replace(/[^\d.]/g, '')) || 0;
-    const quantity = parseInt(item.qty) || 0;
-    return total + (price * quantity);
-  }, 0);
-};
+export const clearCart = createAsyncThunk('cart/clearCart', async () => {
+  // Mock API call
+  return new Promise<boolean>((resolve) => {
+    setTimeout(() => resolve(true), 300);
+  });
+});
 
-// Cart Slice
+export const loadCartFromStorage = createAsyncThunk(
+  'cart/loadFromStorage',
+  async () => {
+    // Load cart from localStorage or API
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      return JSON.parse(savedCart) as CartItem[];
+    }
+    return [];
+  }
+);
+
+export const syncCartToStorage = createAsyncThunk(
+  'cart/syncToStorage',
+  async (items: CartItem[]) => {
+    // Save cart to localStorage or API
+    localStorage.setItem('cart', JSON.stringify(items));
+    return items;
+  }
+);
+
+// Create cart slice
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    // Add item to cart
+    // Synchronous reducers for immediate updates
     addCartItem: (state, action: PayloadAction<CartItem>) => {
-      const existingItem = state.items.find(item => 
-        item.id === action.payload.id && 
-        item.user_email === action.payload.user_email
-      );
-
+      const existingItem = state.items.find(item => item.id === action.payload.id);
+      
       if (existingItem) {
-        // Update quantity if item already exists
-        const newQty = parseInt(existingItem.qty) + parseInt(action.payload.qty);
-        existingItem.qty = newQty.toString();
+        existingItem.quantity += action.payload.quantity;
       } else {
-        // Add new item
         state.items.push(action.payload);
       }
-
-      // Update totals
-      state.totalItems = state.items.length;
-      state.totalAmount = calculateTotalAmount(state.items);
-      state.error = null;
+      
+      const totals = calculateTotals(state.items);
+      state.totalItems = totals.totalItems;
+      state.totalAmount = totals.totalAmount;
+      state.lastUpdated = new Date().toISOString();
     },
 
-    // Remove item from cart
     removeCartItem: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter(item => item.id !== action.payload);
-      state.totalItems = state.items.length;
-      state.totalAmount = calculateTotalAmount(state.items);
+      
+      const totals = calculateTotals(state.items);
+      state.totalItems = totals.totalItems;
+      state.totalAmount = totals.totalAmount;
+      state.lastUpdated = new Date().toISOString();
     },
 
-    // Update item quantity
-    updateCartItemQuantity: (state, action: PayloadAction<{ id: string; qty: string }>) => {
-      const item = state.items.find(item => item.id === action.payload.id);
+    updateCartItem: (state, action: PayloadAction<{ itemId: string; quantity: number }>) => {
+      const { itemId, quantity } = action.payload;
+      const item = state.items.find(item => item.id === itemId);
+      
       if (item) {
-        item.qty = action.payload.qty;
-        state.totalAmount = calculateTotalAmount(state.items);
+        if (quantity <= 0) {
+          state.items = state.items.filter(item => item.id !== itemId);
+        } else {
+          item.quantity = quantity;
+        }
+        
+        const totals = calculateTotals(state.items);
+        state.totalItems = totals.totalItems;
+        state.totalAmount = totals.totalAmount;
+        state.lastUpdated = new Date().toISOString();
       }
     },
 
-    // Clear entire cart
-    clearCart: (state) => {
+    clearCartItems: (state) => {
       state.items = [];
       state.totalItems = 0;
       state.totalAmount = 0;
+      state.lastUpdated = new Date().toISOString();
+    },
+
+    clearError: (state) => {
       state.error = null;
-    },
-
-    // Set loading state
-    setCartLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
-
-    // Set error state
-    setCartError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
-    },
-
-    // Get cart items by user email
-    getCartItemsByUser: (state, action: PayloadAction<string>) => {
-      // This is handled by selector, but we can use it to filter if needed
-      const userItems = state.items.filter(item => item.user_email === action.payload);
-      // You can add any additional logic here if needed
     },
   },
   extraReducers: (builder) => {
+    // Add to cart
     builder
-      // Fetch cart
-      .addCase(fetchCart.pending, (state) => {
+      .addCase(addToCart.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchCart.fulfilled, (state, action) => {
+      .addCase(addToCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Convert backend cart format to local format if needed
-        if (action.payload.items) {
-          state.items = action.payload.items.map((item: any) => ({
-            id: item.id.toString(),
-            name: item.product.name,
-            price: item.price.toString(),
-            img_src: item.product.imageUrls || '',
-            desc: item.product.description,
-            company: item.product.vendor?.companyName || '',
-            rating: '0',
-            qty: item.quantity.toString(),
-            user_name: '',
-            user_email: '',
-            date: new Date().toISOString(),
-          }));
-          state.totalItems = action.payload.totalItems;
-          state.totalAmount = action.payload.totalAmount;
+        const existingItem = state.items.find(item => item.id === action.payload.id);
+        
+        if (existingItem) {
+          existingItem.quantity += action.payload.quantity;
+        } else {
+          state.items.push(action.payload);
         }
+        
+        const totals = calculateTotals(state.items);
+        state.totalItems = totals.totalItems;
+        state.totalAmount = totals.totalAmount;
+        state.lastUpdated = new Date().toISOString();
       })
-      .addCase(fetchCart.rejected, (state, action) => {
+      .addCase(addToCart.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      // Add to cart
-      .addCase(addToCartAsync.pending, (state) => {
+        state.error = action.error.message || 'Failed to add item to cart';
+      });
+
+    // Remove from cart
+    builder
+      .addCase(removeFromCart.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
-      .addCase(addToCartAsync.fulfilled, (state, action) => {
+      .addCase(removeFromCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Add the new item to local state
-        const newItem: CartItem = {
-          id: action.payload.id.toString(),
-          name: action.payload.product.name,
-          price: action.payload.price.toString(),
-          img_src: action.payload.product.imageUrls || '',
-          desc: action.payload.product.description,
-          company: action.payload.product.vendor?.companyName || '',
-          rating: '0',
-          qty: action.payload.quantity.toString(),
-          user_name: '',
-          user_email: '',
-          date: new Date().toISOString(),
-        };
-        state.items.push(newItem);
-        state.totalItems = state.items.length;
-        state.totalAmount = calculateTotalAmount(state.items);
+        state.items = state.items.filter(item => item.id !== action.payload);
+        
+        const totals = calculateTotals(state.items);
+        state.totalItems = totals.totalItems;
+        state.totalAmount = totals.totalAmount;
+        state.lastUpdated = new Date().toISOString();
       })
-      .addCase(addToCartAsync.rejected, (state, action) => {
+      .addCase(removeFromCart.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || 'Failed to remove item from cart';
+      });
+
+    // Update quantity
+    builder
+      .addCase(updateCartItemQuantity.pending, (state) => {
+        state.isLoading = true;
       })
-      // Update cart item
-      .addCase(updateCartItemAsync.fulfilled, (state, action) => {
-        const itemIndex = state.items.findIndex(item => item.id === action.payload.id.toString());
-        if (itemIndex !== -1) {
-          state.items[itemIndex].qty = action.payload.quantity.toString();
-          state.totalAmount = calculateTotalAmount(state.items);
+      .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { itemId, quantity } = action.payload;
+        const item = state.items.find(item => item.id === itemId);
+        
+        if (item) {
+          if (quantity <= 0) {
+            state.items = state.items.filter(item => item.id !== itemId);
+          } else {
+            item.quantity = quantity;
+          }
+          
+          const totals = calculateTotals(state.items);
+          state.totalItems = totals.totalItems;
+          state.totalAmount = totals.totalAmount;
+          state.lastUpdated = new Date().toISOString();
         }
       })
-      // Remove from cart
-      .addCase(removeFromCartAsync.fulfilled, (state, action) => {
-        state.items = state.items.filter(item => item.id !== action.payload.toString());
-        state.totalItems = state.items.length;
-        state.totalAmount = calculateTotalAmount(state.items);
+      .addCase(updateCartItemQuantity.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to update item quantity';
+      });
+
+    // Clear cart
+    builder
+      .addCase(clearCart.pending, (state) => {
+        state.isLoading = true;
       })
-      // Clear cart
-      .addCase(clearCartAsync.fulfilled, (state) => {
+      .addCase(clearCart.fulfilled, (state) => {
+        state.isLoading = false;
         state.items = [];
         state.totalItems = 0;
         state.totalAmount = 0;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(clearCart.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Failed to clear cart';
+      });
+
+    // Load from storage
+    builder
+      .addCase(loadCartFromStorage.fulfilled, (state, action) => {
+        state.items = action.payload;
+        const totals = calculateTotals(state.items);
+        state.totalItems = totals.totalItems;
+        state.totalAmount = totals.totalAmount;
+      });
+
+    // Sync to storage
+    builder
+      .addCase(syncCartToStorage.fulfilled, (state, action) => {
+        state.lastUpdated = new Date().toISOString();
       });
   },
 });
 
-// Export actions
+// Export actions and selectors
 export const {
   addCartItem,
   removeCartItem,
-  updateCartItemQuantity,
-  clearCart,
-  setCartLoading,
-  setCartError,
-  getCartItemsByUser,
+  updateCartItem,
+  clearCartItems,
+  clearError,
 } = cartSlice.actions;
-
-// Export action creators for compatibility with old code
-export const ADD_Cart_item = addCartItem;
-export const REMOVE_Cart_item = removeCartItem;
-export const UPDATE_Cart_item = updateCartItemQuantity;
-export const CLEAR_Cart = clearCart;
 
 // Selectors
 export const selectCartItems = (state: { cart: CartState }) => state.cart.items;
 export const selectCartTotalItems = (state: { cart: CartState }) => state.cart.totalItems;
 export const selectCartTotalAmount = (state: { cart: CartState }) => state.cart.totalAmount;
-export const selectCartLoading = (state: { cart: CartState }) => state.cart.isLoading;
+export const selectCartIsLoading = (state: { cart: CartState }) => state.cart.isLoading;
 export const selectCartError = (state: { cart: CartState }) => state.cart.error;
 
-// Selector to get cart items by user
-export const selectCartItemsByUser = (userEmail: string) => 
-  (state: { cart: CartState }) => 
-    state.cart.items.filter(item => item.user_email === userEmail);
-
-// Export reducer
 export default cartSlice.reducer;

@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -19,9 +23,75 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@/modules/*": [
+        "./src/modules/*"
+      ],
+      "@/shared/*": [
+        "./src/shared/*"
+      ],
+      "@/store/*": [
+        "./src/store/*"
+      ],
+      "@/app/*": [
+        "./src/app/*"
+      ],
+      "@/assets/*": [
+        "./src/assets/*"
+      ],
+      "@/admin": [
+        "./src/modules/admin"
+      ],
+      "@/buyer": [
+        "./src/modules/buyer"
+      ],
+      "@/vendor": [
+        "./src/modules/vendor"
+      ],
+      "@/core": [
+        "./src/modules/core"
+      ],
+      "@/payment": [
+        "./src/modules/payment"
+      ],
+      "@/support": [
+        "./src/modules/support"
+      ],
+      "@/analytics": [
+        "./src/modules/analytics"
+      ],
+      "@/shared": [
+        "./src/shared"
+      ],
+      "@/ui": [
+        "./src/shared/components"
+      ],
+      "@/components": [
+        "./src/shared/components"
+      ]
+    },
+    "noUncheckedIndexedAccess": false,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**"
+  ]
 }

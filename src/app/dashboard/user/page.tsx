@@ -4,17 +4,19 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'next/navigation';
 import { RootState } from '@/store';
-import UserActions from "@/components/dashboard/user/UserActions"
-import SearchBar from "@/components/shared/SearchBar"
-import RecentOrders from "@/components/dashboard/user/RecentOrders"
-import CategorySidebar from "@/components/dashboard/user/CategorySidebar"
-import UserProductGrid from "@/components/dashboard/user/UserProductGrid"
-import AccountActions from "@/components/dashboard/user/AccountActions"
-import AuthGuard from "@/components/auth/AuthGuard"
-import UserProfile from "@/components/dashboard/user/UserProfile"
-import UserOrders from "@/components/dashboard/user/UserOrders"
-import UserWishlist from "@/components/dashboard/user/UserWishlist"
-import UserSupport from "@/components/dashboard/user/UserSupport"
+import {
+  UserActions,
+  RecentOrders,
+  CategorySidebar,
+  UserProductGrid,
+  AccountActions,
+  UserProfile,
+  UserOrders,
+  UserWishlist,
+  UserSupport
+} from '@/modules/buyer';
+import { SearchBar } from '@/shared/components';
+import { AuthGuard } from '@/modules/core';
 
 function UserDashboardContent() {
   const searchParams = useSearchParams();
