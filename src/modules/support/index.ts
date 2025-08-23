@@ -12,4 +12,4 @@ export { default as TicketManagement } from './components/TicketManagement';
 
 // Services
 export * from './services/supportApi';
-export * from './services/chatApi';
+// Note: chatApi is re-exported from shared/services - avoid duplicate exports

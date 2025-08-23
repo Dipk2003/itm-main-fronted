@@ -119,7 +119,7 @@ export default function KycReviewDashboard({ onNavigate }: KycReviewDashboardPro
                   <div className="text-sm text-gray-600 space-y-1">
                     <p><strong>File:</strong> {document.originalFileName}</p>
                     <p><strong>Submitted:</strong> {new Date(document.createdAt).toLocaleDateString()}</p>
-                    <p><strong>Vendor ID:</strong> {document.vendorId || 'N/A'}</p>
+                    <p><strong>Document ID:</strong> {document.id}</p>
                   </div>
 
                   {document.rejectionReason && (

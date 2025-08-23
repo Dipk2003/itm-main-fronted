@@ -35,8 +35,8 @@ export default function VendorStatsPanel() {
         
         // Load products and orders in parallel
         const [productsResponse, ordersResponse] = await Promise.all([
-          getVendorProducts(user.id, 0, 1000).catch(() => ({ data: { content: [] } })),
-          getVendorOrders(user.id, 0, 1000).catch(() => ({ data: { content: [] } }))
+          getVendorProducts(Number(user.id), 0, 1000).catch(() => ({ data: { content: [] } })),
+          getVendorOrders(Number(user.id), 0, 1000).catch(() => ({ data: { content: [] } }))
         ]);
 
         const products = productsResponse.data.content || productsResponse.data || [];

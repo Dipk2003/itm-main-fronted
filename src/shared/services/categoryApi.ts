@@ -41,7 +41,7 @@ export const categoryAPI = {
     if (MOCK_MODE) {
       console.log('Mock mode: Getting categories');
       await mockDelay(500);
-      return mockResponses.categories;
+      return mockResponses.categories.all;
     }
     
     try {
@@ -51,7 +51,7 @@ export const categoryAPI = {
       // If API endpoint doesn't exist (404) or other errors, fallback to mock data
       if (error.response?.status === 404 || error.request) {
         console.warn('Categories API not available, using fallback data');
-        return mockResponses.categories;
+        return mockResponses.categories.all;
       }
       throw error;
     }

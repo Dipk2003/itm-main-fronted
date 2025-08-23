@@ -7,7 +7,7 @@ import MegaMenuContent from './MegaMenuContent';
 import { Search, User, LogOut, Settings, ShoppingCart, BarChart, Menu, ChevronDown } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { RootState } from '@/store';
+import { RootState, AppDispatch } from '@/store';
 import { useDispatch } from 'react-redux';
 import { logout } from '@/features/auth/authSlice';
 
@@ -16,7 +16,7 @@ export default function Navbar() {
   const [vendorDropdownOpen, setVendorDropdownOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   // Make role checking case-insensitive and flexible

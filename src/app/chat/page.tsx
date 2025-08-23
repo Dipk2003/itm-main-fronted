@@ -24,7 +24,7 @@ export default function ChatPage() {
         </div>
         
         <ChatList 
-          currentUserId={user.id} 
+          currentUserId={parseInt(user.id)} 
           currentUserName={user.name} 
         />
       </div>

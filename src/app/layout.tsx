@@ -5,8 +5,20 @@ import { Footer, Navbar, ChatbotToggle, ClientProviders } from '@/shared/compone
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Indian Trade Mart',
-  description: 'B2B tech marketplace',
+  title: 'Indian Trade Mart - B2B Marketplace',
+  description: 'India\'s leading B2B tech marketplace connecting buyers and suppliers across industries',
+  keywords: 'B2B marketplace, India, trade, suppliers, buyers, technology, industrial',
+  authors: [{ name: 'Indian Trade Mart' }],
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

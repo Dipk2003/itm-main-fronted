@@ -13,19 +13,20 @@ export const metadata: Metadata = {
 };
 
 interface DirectoryPageProps {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     location?: string;
     category?: string;
-  };
+  }>;
 }
 
-export default function Directory({ searchParams }: DirectoryPageProps) {
+export default async function Directory({ searchParams }: DirectoryPageProps) {
+  const resolvedSearchParams = await searchParams;
   return (
     <DirectoryPage
-      initialQuery={searchParams.q || ''}
-      initialLocation={searchParams.location || ''}
-      initialCategory={searchParams.category || ''}
+      initialQuery={resolvedSearchParams.q || ''}
+      initialLocation={resolvedSearchParams.location || ''}
+      initialCategory={resolvedSearchParams.category || ''}
     />
   );
 }

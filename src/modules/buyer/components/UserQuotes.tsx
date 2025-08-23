@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { quoteAPI } from '@/shared/services';
+import { inquiryQuoteAPI, type Quote } from '@/shared/services/inquiryQuoteApi';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Button } from '@/shared/components/Button';
 
@@ -15,8 +15,8 @@ export default function UserQuotes() {
   const fetchQuotes = async () => {
     try {
       setLoading(true);
-      const userQuotes = await quoteAPI.getUserQuotes(0); // You'll need to get userId from auth context
-      setQuotes(userQuotes);
+      const response = await inquiryQuoteAPI.quotes.getUserQuotes();
+      setQuotes(response.content);
     } catch (error) {
       console.error('Error fetching quotes:', error);
     } finally {
@@ -31,7 +31,7 @@ export default function UserQuotes() {
 
     try {
       setAcceptingQuote(quoteId);
-      await quoteAPI.acceptQuote(quoteId);
+      await inquiryQuoteAPI.quotes.accept(quoteId);
       fetchQuotes(); // Refresh quotes
       alert('Quote accepted successfully! The vendor has been notified.');
     } catch (error) {
@@ -85,7 +85,7 @@ export default function UserQuotes() {
         <div className="space-y-4">
           {quotes.map((quote) => (
             <Card key={quote.id} className={`border-l-4 ${
-              quote.isAccepted 
+              quote.status === 'ACCEPTED' 
                 ? 'border-l-green-500 bg-green-50' 
                 : 'border-l-blue-500'
             }`}>
@@ -93,10 +93,10 @@ export default function UserQuotes() {
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-lg">
-                      {quote.inquiry?.productName || 'Product Quote'}
+                      Quote #{quote.id}
                     </CardTitle>
                     <p className="text-sm text-gray-600">
-                      From: {quote.vendor?.businessName || quote.vendor?.name}
+                      From: {quote.vendor?.companyName}
                     </p>
                     <p className="text-xs text-gray-500">
                       Received: {formatDate(quote.createdAt)}
@@ -104,11 +104,11 @@ export default function UserQuotes() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      quote.isAccepted 
+                      quote.status === 'ACCEPTED' 
                         ? 'bg-green-100 text-green-800' 
                         : 'bg-blue-100 text-blue-800'
                     }`}>
-                      {quote.isAccepted ? 'Accepted' : 'Pending'}
+                      {quote.status === 'ACCEPTED' ? 'Accepted' : quote.status}
                     </span>
                   </div>
                 </div>
@@ -117,14 +117,14 @@ export default function UserQuotes() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-md">
-                    <p className="text-sm font-medium text-gray-700 mb-2">Vendor Response:</p>
-                    <p className="text-sm text-gray-800">{quote.response}</p>
+                    <p className="text-sm font-medium text-gray-700 mb-2">Quote Details:</p>
+                    <p className="text-sm text-gray-800">{quote.terms}</p>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
                       <p className="font-medium text-gray-700">Price:</p>
-                      <p className="text-gray-900">{formatPrice(quote.price, quote.currency)}</p>
+                      <p className="text-gray-900">{formatPrice(quote.price)}</p>
                     </div>
                     {quote.quantity && (
                       <div>
@@ -138,29 +138,15 @@ export default function UserQuotes() {
                         <p className="text-gray-900">{quote.deliveryTime}</p>
                       </div>
                     )}
-                    {quote.validityPeriod && (
+                    {quote.validUntil && (
                       <div>
                         <p className="font-medium text-gray-700">Valid Until:</p>
-                        <p className="text-gray-900">{quote.validityPeriod}</p>
+                        <p className="text-gray-900">{formatDate(quote.validUntil)}</p>
                       </div>
                     )}
                   </div>
 
-                  {quote.paymentTerms && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">Payment Terms:</p>
-                      <p className="text-sm text-gray-800">{quote.paymentTerms}</p>
-                    </div>
-                  )}
-
-                  {quote.additionalNotes && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">Additional Notes:</p>
-                      <p className="text-sm text-gray-800">{quote.additionalNotes}</p>
-                    </div>
-                  )}
-
-                  {!quote.isAccepted && (
+                  {quote.status !== 'ACCEPTED' && (
                     <div className="flex space-x-2 pt-4 border-t">
                       <Button
                         onClick={() => handleAcceptQuote(quote.id)}
@@ -171,7 +157,7 @@ export default function UserQuotes() {
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => window.open(`mailto:${quote.vendor?.email}`, '_blank')}
+                        onClick={() => window.open(`mailto:${quote.vendor?.contactEmail}`, '_blank')}
                       >
                         Contact Vendor
                       </Button>
@@ -181,7 +167,7 @@ export default function UserQuotes() {
                     </div>
                   )}
 
-                  {quote.isAccepted && (
+                  {quote.status === 'ACCEPTED' && (
                     <div className="pt-4 border-t bg-green-50 p-3 rounded-md">
                       <p className="text-green-800 font-medium">✓ Quote Accepted</p>
                       <p className="text-green-700 text-sm">
@@ -190,7 +176,7 @@ export default function UserQuotes() {
                       <div className="mt-2">
                         <Button
                           size="sm"
-                          onClick={() => window.open(`mailto:${quote.vendor?.email}`, '_blank')}
+                          onClick={() => window.open(`mailto:${quote.vendor?.contactEmail}`, '_blank')}
                         >
                           Contact Vendor
                         </Button>

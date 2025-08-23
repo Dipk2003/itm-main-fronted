@@ -1,6 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { authService } from '@/modules/core/services/authService';
-import { LoginRequestDto, VerifyOtpRequestDto, RegisterRequestDto } from '@/shared/types/api';
+import { LoginCredentials, RegisterRequestDto as SharedRegisterRequestDto } from '@/shared/types/index';
+import { LoginRequestDto as ApiLoginRequestDto } from '@/shared/types/api';
+
+// Define request types (local alias for backward compatibility)
+export interface LoginRequestDto {
+  emailOrPhone: string;
+  password: string;
+  userType?: string;
+}
+
+export interface VerifyOtpRequestDto {
+  email?: string;
+  emailOrPhone?: string;
+  otp: string;
+}
+
+export interface RegisterRequestDto {
+  name: string;
+  email: string;
+  password: string;
+  userType: string;
+  phone?: string;
+}
 
 // Define User interface
 export interface User {
@@ -50,7 +72,14 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials: LoginRequestDto & { userType?: string }, { rejectWithValue }) => {
     try {
-      const result = await authService.login(credentials);
+      // Convert to the format expected by authService
+      const authCredentials: ApiLoginRequestDto = {
+        email: credentials.emailOrPhone,
+        password: credentials.password,
+        userType: credentials.userType as 'user' | 'admin' | 'vendor',
+        emailOrPhone: credentials.emailOrPhone
+      };
+      const result = await authService.login(authCredentials);
       
       if (result.requiresOTP) {
         return {
@@ -63,10 +92,10 @@ export const login = createAsyncThunk(
       
       return {
         user: {
-          id: result.user?.id?.toString() || result.userId?.toString(),
-          email: result.user?.email || result.email,
-          name: result.user?.name || result.userInfo?.firstName || 'User',
-          role: result.user?.role || result.roles?.[0]?.replace('ROLE_', '').toLowerCase() || 'user',
+          id: result.user?.id?.toString() || '1',
+          email: result.user?.email || result.email || '',
+          name: result.user?.name || 'User',
+          role: (result.user?.role || result.roles?.[0]?.replace('ROLE_', '').toLowerCase() || 'user') as 'user' | 'vendor' | 'admin',
           roles: result.user?.role ? [result.user.role] : result.roles,
           isVerified: result.user?.isVerified || true
         },
@@ -86,10 +115,10 @@ export const verifyOtp = createAsyncThunk(
       
       return {
         user: {
-          id: result.user?.id?.toString() || result.userId?.toString(),
-          email: result.user?.email || result.email,
-          name: result.user?.name || result.userInfo?.firstName || 'User',
-          role: result.user?.role || result.roles?.[0]?.replace('ROLE_', '').toLowerCase() || 'user',
+          id: result.user?.id?.toString() || '1',
+          email: result.user?.email || result.email || '',
+          name: result.user?.name || 'User',
+          role: (result.user?.role || result.roles?.[0]?.replace('ROLE_', '').toLowerCase() || 'user') as 'user' | 'vendor' | 'admin',
           roles: result.user?.role ? [result.user.role] : result.roles,
           isVerified: result.user?.isVerified || true
         },
@@ -105,7 +134,18 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (userData: RegisterRequestDto, { rejectWithValue }) => {
     try {
-      const result = await authService.register(userData);
+      // Convert local RegisterRequestDto to SharedRegisterRequestDto
+      const sharedUserData: SharedRegisterRequestDto = {
+        firstName: userData.name.split(' ')[0] || userData.name,
+        lastName: userData.name.split(' ').slice(1).join(' ') || '',
+        email: userData.email,
+        phoneNumber: userData.phone || '',
+        password: userData.password,
+        confirmPassword: userData.password, // For registration, assume they match
+        role: userData.userType,
+        userType: userData.userType as 'user' | 'admin' | 'vendor'
+      };
+      const result = await authService.register(sharedUserData);
       return result;
     } catch (error: any) {
       return rejectWithValue(error.message);

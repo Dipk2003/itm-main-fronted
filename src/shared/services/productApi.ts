@@ -156,10 +156,11 @@ export const productAPI = {
       console.log('Mock mode: Adding product', productDto);
       await mockDelay(1500); // Simulate network delay
       return {
-        ...mockResponses.products.add,
         ...productDto,
         id: Math.floor(Math.random() * 1000),
         vendorId: 1,
+        images: [],
+        isActive: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -299,6 +300,37 @@ export const productAPI = {
     return response.data;
   },
 
+  updateProductPrice: async (id: string, price: number): Promise<Product> => {
+    try {
+      console.log(`💰 Updating price for product ${id} to ${price}`);
+      const response = await api.patch(`/api/products/${id}/price`, null, {
+        params: { price }
+      });
+      console.log(`✅ Successfully updated price for product ${id}`);
+      return response.data;
+    } catch (error: any) {
+      console.error(`❌ Error updating price for product ${id}:`, error);
+      // Fallback: Try using the update product endpoint with just the price field
+      try {
+        console.log(`🔄 Trying fallback update for product ${id}...`);
+        const productData = {
+          name: '', // Will be ignored by backend if empty
+          description: '',
+          price: price,
+          stock: 0,
+          categoryId: 0,
+          isActive: true
+        };
+        const fallbackResponse = await api.put(`/api/products/${id}`, productData);
+        console.log(`✅ Fallback price update successful for product ${id}`);
+        return fallbackResponse.data;
+      } catch (fallbackError: any) {
+        console.error(`❌ Fallback price update also failed for product ${id}:`, fallbackError);
+        throw error; // Throw original error
+      }
+    }
+  },
+
   // Admin endpoints
   approveProduct: async (id: number): Promise<Product> => {
     const response = await api.patch(`/api/products/${id}/approve`);
@@ -336,7 +368,7 @@ export const productAPI = {
     return response.data;
   },
 
-  getFeaturedProducts: async (page = 0, size = 12): Promise<ProductsResponse> => {
+  getFeaturedProductsPaginated: async (page = 0, size = 12): Promise<ProductsResponse> => {
     const response = await api.get('/api/products/search/featured', {
       params: { page, size }
     });

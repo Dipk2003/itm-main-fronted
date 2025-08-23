@@ -60,6 +60,7 @@ export default function SearchPage() {
         ...filters
       };
       
+      console.log('🔍 Starting product search for:', query);
       const response = await dynamicDataService.products.searchProducts(query, searchData);
       
       if (page === 1) {
@@ -72,22 +73,8 @@ export default function SearchPage() {
     } catch (err) {
       console.error('Search failed:', err);
       setError('Failed to search products. Please try again.');
-      
-      // Fallback search results
-      setProducts([
-        {
-          id: 1,
-          name: `Search result for "${query}"`,
-          description: 'Sample product matching your search criteria',
-          price: 15000,
-          category: 'General',
-          rating: 4.2,
-          reviewCount: 15,
-          vendor: { name: 'Search Vendor', location: 'India' },
-          inStock: true
-        }
-      ]);
-      setTotalResults(1);
+      setProducts([]);
+      setTotalResults(0);
     } finally {
       setLoading(false);
     }

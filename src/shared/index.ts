@@ -53,7 +53,6 @@ export * from './components/SurveySoilInvestigationMenu';
 
 // Providers
 export * from './components/ClientProviders';
-export * from './components/ReduxProvider';
 
 // Utils
 export * from './utils/apiClient';

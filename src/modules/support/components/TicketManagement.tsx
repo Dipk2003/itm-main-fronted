@@ -21,7 +21,7 @@ interface SupportTicket {
 }
 
 interface TicketUpdate {
-  status?: string;
+  status?: 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
   assignedTo?: string;
   response?: string;
 }
@@ -331,7 +331,10 @@ const TicketManagement: React.FC = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Update Status:</label>
                     <select
-                      onChange={(e) => updateTicket(selectedTicket.id, { status: e.target.value })}
+                      onChange={(e) => {
+                        const value = e.target.value as 'OPEN' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+                        if (value) updateTicket(selectedTicket.id, { status: value });
+                      }}
                       disabled={isUpdating}
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >

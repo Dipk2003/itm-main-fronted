@@ -9,6 +9,10 @@ interface User {
   role: 'user' | 'vendor' | 'admin';
   isVerified: boolean;
   userType?: string;
+  phone?: string;
+  address?: string;
+  companyName?: string;
+  createdAt?: string;
 }
 
 interface AuthState {

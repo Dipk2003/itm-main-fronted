@@ -380,12 +380,12 @@ class IntegratedApiClient {
   }
 
   async getSubCategories(categoryId: string) {
-    const response = await this.client.get(API_ENDPOINTS.CATEGORIES.SUB_CATEGORIES(categoryId));
+    const response = await this.client.get(API_ENDPOINTS.CATEGORIES.SUBCATEGORIES(categoryId));
     return response.data;
   }
 
   async getMicroCategories(subCategoryId: string) {
-    const response = await this.client.get(API_ENDPOINTS.CATEGORIES.MICRO_CATEGORIES(subCategoryId));
+    const response = await this.client.get(API_ENDPOINTS.CATEGORIES.MICROCATEGORIES(subCategoryId));
     return response.data;
   }
 

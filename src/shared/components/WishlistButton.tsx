@@ -31,7 +31,7 @@ export default function WishlistButton({
 
   const checkWishlistStatus = async () => {
     try {
-      const inWishlist = await wishlistApi.isInWishlist(userId, productId);
+      const inWishlist = await wishlistApi.isInWishlist(productId.toString());
       setIsInWishlist(inWishlist);
     } catch (error) {
       console.error('Error checking wishlist status:', error);
@@ -43,8 +43,13 @@ export default function WishlistButton({
 
     setLoading(true);
     try {
-      const newStatus = await wishlistApi.toggleWishlist(userId, productId);
-      setIsInWishlist(newStatus);
+      if (isInWishlist) {
+        await wishlistApi.removeFromWishlist(productId.toString());
+        setIsInWishlist(false);
+      } else {
+        await wishlistApi.addToWishlist(productId.toString());
+        setIsInWishlist(true);
+      }
     } catch (error) {
       console.error('Error toggling wishlist:', error);
     } finally {

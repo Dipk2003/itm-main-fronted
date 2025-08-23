@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { productAPI, ProductDto } from '@/lib/productApi';
-import { categoryAPI, Category } from '@/lib/categoryApi';
+import { productAPI, ProductDto } from '@/shared/services/productApi';
+import { categoryAPI, Category } from '@/shared/services/categoryApi';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Select } from '@/shared/components';
@@ -22,7 +22,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSuccess, onCancel }) 
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const [formData, setFormData] = useState<ProductDto>({
+  const [formData, setFormData] = useState<Omit<ProductDto, 'id' | 'images' | 'vendorId' | 'createdAt' | 'updatedAt'>>({
     name: '',
     description: '',
     price: 0,
@@ -86,7 +86,8 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSuccess, onCancel }) 
     setFormData(prev => ({
       ...prev,
       [name]: type === 'number' ? parseFloat(value) || 0 : 
-              type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+              type === 'checkbox' ? (e.target as HTMLInputElement).checked :
+              name === 'categoryId' ? parseInt(value) || 0 : value
     }));
 
     // Clear error for this field
@@ -243,7 +244,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSuccess, onCancel }) 
   };
 
   const categoryOptions = categories.map(cat => ({
-    value: cat.id,
+    value: cat.id.toString(),
     label: cat.name
   }));
 
@@ -297,7 +298,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSuccess, onCancel }) 
           <Select
             label="Category *"
             name="categoryId"
-            value={formData.categoryId}
+            value={formData.categoryId.toString()}
             onChange={handleInputChange}
             options={categoryOptions}
             error={errors.categoryId}
@@ -427,7 +428,6 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ onSuccess, onCancel }) 
           value={formData.tags}
           onChange={handleInputChange}
           placeholder="Enter tags separated by commas"
-          helperText="Use commas to separate multiple tags"
         />
 
         {/* Dimensions */}

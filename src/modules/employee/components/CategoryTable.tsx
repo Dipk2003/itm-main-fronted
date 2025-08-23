@@ -75,22 +75,22 @@ export default function CategoryTable({
                         <div className="flex items-center space-x-2">
                           <span className="text-sm">📂</span>
                           <span className="text-sm font-medium">{subCategory.name}</span>
-                          <Badge size="sm" variant={subCategory.isActive ? 'success' : 'secondary'}>
+                          <Badge variant={subCategory.isActive ? 'success' : 'secondary'}>
                             {subCategory.isActive ? 'Active' : 'Inactive'}
                           </Badge>
                         </div>
                         <div className="flex space-x-1">
-                          <Button size="xs" variant="outline" onClick={() => onEdit(subCategory)}>
+                          <Button size="sm" variant="outline" onClick={() => onEdit(subCategory)}>
                             ✏️
                           </Button>
                           <Button 
-                            size="xs" 
+                            size="sm" 
                             variant={subCategory.isActive ? 'secondary' : 'default'}
                             onClick={() => onToggleStatus(subCategory.id)}
                           >
                             {subCategory.isActive ? '🚫' : '✅'}
                           </Button>
-                          <Button size="xs" variant="destructive" onClick={() => onDelete(subCategory.id)}>
+                          <Button size="sm" variant="destructive" onClick={() => onDelete(subCategory.id)}>
                             🗑️
                           </Button>
                         </div>

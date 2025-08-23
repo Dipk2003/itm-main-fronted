@@ -14,6 +14,7 @@ export { default as VendorStatsPanel } from './components/VendorStatsPanel';
 export { default as AddProductForm } from './components/AddProductForm';
 export { default as ExcelImport } from './components/ExcelImport';
 export { default as ImageManager } from './components/ImageManager';
+export { default as PriceUpdateModal } from './components/PriceUpdateModal';
 export { default as ProductDetails } from './components/ProductDetails';
 export { default as ProductList } from './components/ProductList';
 

@@ -46,97 +46,118 @@ export default function CategoryGrid() {
   // Fetch categories from backend
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        console.log('🔄 Fetching categories from:', '/api/categories');
-        
-        // Use fetch directly to avoid authentication issues
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/categories`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    try {
+      setLoading(true);
+      console.log('🔄 Fetching categories from:', '/api/categories');
+      
+      // Use fetch directly to avoid authentication issues
+      // Add a small delay to avoid API rate limiting issues
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // Try to fetch categories from API
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/categories`;
+      console.log(`Fetching from: ${apiUrl}`);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
-        
-        const data = await response.json();
+      }).catch(error => {
+        console.error('Network error when fetching categories:', error);
+        throw new Error('Network error when fetching categories');
+      });
+      
+      if (!response.ok) {
+        console.error(`API Error: HTTP ${response.status} when fetching categories`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText || 'Unknown error'}`);
+      }
+      
+      const data = await response.json();
         console.log('✅ Categories fetched:', data);
         
         // Transform backend data to frontend format
-        if (Array.isArray(data) && data.length > 0) {
+        if (data && Array.isArray(data) && data.length > 0) {
           const transformedCategories: Category[] = data.slice(0, 6).map((cat: any, index: number) => ({
-            id: cat.id,
-            title: cat.name || cat.title,
+            id: cat.id || index + 1,
+            title: cat.name || cat.title || 'Category',
             description: cat.description || 'Explore products in this category',
             icon: iconMap.factory, // Default icon, can be made dynamic
             color: colorMap[index % colorMap.length],
             productCount: cat.productCount || 0,
-            href: `/categories/${cat.id}`
+            href: `/categories/${cat.id || index + 1}`
           }));
           
           setCategories(transformedCategories);
           setError(null);
         } else {
-          throw new Error('No categories found');
+          console.warn('⚠️ Backend returned no categories, showing fallback categories');
+          // Provide fallback categories instead of error
+          const fallbackCategories: Category[] = [
+            {
+              id: 1,
+              title: 'Manufacturing',
+              description: 'Industrial manufacturing solutions',
+              icon: iconMap.factory,
+              color: colorMap[0],
+              productCount: 120,
+              href: '/categories/1'
+            },
+            {
+              id: 2,
+              title: 'Electronics',
+              description: 'Electronic components and devices',
+              icon: iconMap.zap,
+              color: colorMap[1],
+              productCount: 85,
+              href: '/categories/2'
+            },
+            {
+              id: 3,
+              title: 'Food & Beverage',
+              description: 'Food processing and beverages',
+              icon: iconMap.coffee,
+              color: colorMap[2],
+              productCount: 65,
+              href: '/categories/3'
+            },
+            {
+              id: 4,
+              title: 'Healthcare',
+              description: 'Medical and healthcare products',
+              icon: iconMap.heart,
+              color: colorMap[3],
+              productCount: 95,
+              href: '/categories/4'
+            },
+            {
+              id: 5,
+              title: 'Textiles',
+              description: 'Textile and apparel solutions',
+              icon: iconMap.shirt,
+              color: colorMap[4],
+              productCount: 75,
+              href: '/categories/5'
+            },
+            {
+              id: 6,
+              title: 'Security',
+              description: 'Security and safety equipment',
+              icon: iconMap.shield,
+              color: colorMap[5],
+              productCount: 45,
+              href: '/categories/6'
+            }
+          ];
+          setCategories(fallbackCategories);
+          setError(null);
         }
       } catch (err) {
         console.error('❌ Failed to fetch categories:', err);
-        // Fallback to static categories
-        setCategories([
-          {
-            id: 1,
-            title: 'Advanced Farming',
-            icon: Factory,
-            description: 'Modern agricultural solutions',
-            color: 'bg-green-50 text-green-600 border-green-200',
-            href: '/categories/agriculture'
-          },
-          {
-            id: 2,
-            title: 'IT Services',
-            icon: Monitor,
-            description: 'Technology solutions',
-            color: 'bg-blue-50 text-blue-600 border-blue-200',
-            href: '/categories/it-services'
-          },
-          {
-            id: 3,
-            title: 'Electronics',
-            icon: Zap,
-            description: 'Electronic components',
-            color: 'bg-yellow-50 text-yellow-600 border-yellow-200',
-            href: '/categories/electronics'
-          },
-          {
-            id: 4,
-            title: 'Industrial Plant',
-            icon: Factory,
-            description: 'Industrial machinery',
-            color: 'bg-gray-50 text-gray-600 border-gray-200',
-            href: '/categories/industrial'
-          },
-          {
-            id: 5,
-            title: 'Food Products',
-            icon: Coffee,
-            description: 'Food & beverages',
-            color: 'bg-orange-50 text-orange-600 border-orange-200',
-            href: '/categories/food'
-          },
-          {
-            id: 6,
-            title: 'Safety & Security',
-            icon: Shield,
-            description: 'Security solutions',
-            color: 'bg-red-50 text-red-600 border-red-200',
-            href: '/categories/safety'
-          }
-        ]);
-        setError(`Failed to load categories: ${err}`);
+        // Show error message without fallback categories
+        setCategories([]);
+        setError('Unable to load categories. Please try again later.');
       } finally {
         setLoading(false);
       }

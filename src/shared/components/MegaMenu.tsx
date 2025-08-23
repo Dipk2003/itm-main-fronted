@@ -384,7 +384,7 @@ const MegaMenu: React.FC = () => {
                 return (
                   <div 
                     key={category.id} 
-                    ref={el => (containerRefs.current[idx] = el)}
+                    ref={el => { containerRefs.current[idx] = el; }}
                     className="group relative h-full" 
                     onMouseEnter={() => handleMouseEnter(category.id, idx)}
                   >

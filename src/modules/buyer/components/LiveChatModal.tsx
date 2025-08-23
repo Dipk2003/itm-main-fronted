@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { liveChatAPI, ChatMessage, LiveChatSession } from '@/lib/supportApi';
+import { liveChatAPI } from '@/lib/supportApi';
+import { ChatMessage, LiveChatSession } from '@/shared/types/index';
 import { Button } from '@/shared/components/Button';
 
 interface LiveChatModalProps {
@@ -20,8 +21,8 @@ const LiveChatModal: React.FC<LiveChatModalProps> = ({ session, onClose }) => {
 
   const loadMessages = async () => {
     try {
-      const chatMessages = await liveChatAPI.getChatMessages(session.id);
-      setMessages(chatMessages);
+      const response = await liveChatAPI.getMessages(session.id);
+      setMessages(response.data);
     } catch (error) {
       console.error('Error loading chat messages:', error);
     }
@@ -33,8 +34,8 @@ const LiveChatModal: React.FC<LiveChatModalProps> = ({ session, onClose }) => {
     setIsSending(true);
 
     try {
-      const message = await liveChatAPI.sendChatMessage(session.id, newMessage);
-      setMessages((prev) => [...prev, message]);
+      const response = await liveChatAPI.sendMessage(session.id, newMessage);
+      setMessages((prev) => [...prev, response.data]);
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -53,11 +54,12 @@ const LiveChatModal: React.FC<LiveChatModalProps> = ({ session, onClose }) => {
 
         <div className="overflow-y-auto max-h-72 mb-4 border-t border-gray-200">
           {messages.map((msg) => (
-            <div key={msg.id} className={`p-2 ${msg.senderType === 'USER' ? 'text-right' : 'text-left'}`}>
+            <div key={msg.id} className={`p-2 ${msg.senderId === session.participants?.[0] ? 'text-right' : 'text-left'}`}>
               <p className="text-sm">
-                <span className="font-semibold">{msg.senderName}: </span>
+                <span className="font-semibold">{msg.senderId === session.participants?.[0] ? 'You' : 'Agent'}: </span>
                 {msg.message}
               </p>
+              <span className="text-xs text-gray-500">{new Date(msg.timestamp).toLocaleTimeString()}</span>
             </div>
           ))}
         </div>

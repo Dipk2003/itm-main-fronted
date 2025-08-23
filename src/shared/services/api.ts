@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleApiError } from './errorHandler';
 
 // Get the backend URL from environment variables
 const getBackendUrl = () => {

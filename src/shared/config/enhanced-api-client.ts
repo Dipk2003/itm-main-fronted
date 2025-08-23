@@ -13,7 +13,7 @@
  * - Rate limiting protection
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // =============================================================================
 // TYPES & INTERFACES
@@ -110,7 +110,7 @@ class EnhancedApiClient {
     );
   }
 
-  private handleRequest(config: AxiosRequestConfig): AxiosRequestConfig {
+  private handleRequest(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
     // Check network status
     if (!this.networkStatus) {
       throw new Error('No internet connection');
@@ -210,7 +210,7 @@ class EnhancedApiClient {
 
   private shouldRetry(error: AxiosError): boolean {
     const { retry } = this.config;
-    const retryCount = error.config?.metadata?.retryCount ?? 0;
+    const retryCount = (error.config as any)?._retryCount ?? 0;
 
     // Don't retry if max attempts reached
     if (retryCount >= retry.attempts) {
@@ -229,7 +229,7 @@ class EnhancedApiClient {
 
   private async retryRequest(error: AxiosError): Promise<any> {
     const { retry } = this.config;
-    const retryCount = (error.config?.metadata?.retryCount ?? 0) + 1;
+    const retryCount = ((error.config as any)?._retryCount ?? 0) + 1;
     
     // Calculate delay with exponential backoff
     const delay = Math.min(
@@ -242,11 +242,8 @@ class EnhancedApiClient {
     // Wait for delay
     await new Promise(resolve => setTimeout(resolve, delay));
 
-    // Add retry metadata
-    if (!error.config?.metadata) {
-      error.config!.metadata = {};
-    }
-    error.config!.metadata.retryCount = retryCount;
+    // Add retry count to config
+    (error.config as any)._retryCount = retryCount;
 
     // Retry the request
     return this.axiosInstance.request(error.config!);

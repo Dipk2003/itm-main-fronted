@@ -41,7 +41,7 @@ const ServiceProviderList: React.FC<ServiceProviderListProps> = ({
   const [sortBy, setSortBy] = useState(filters.sortBy || 'relevance');
 
   const handleSortChange = (newSortBy: string) => {
-    setSortBy(newSortBy);
+    setSortBy(newSortBy as any);
     onFilterChange({
       ...filters,
       sortBy: newSortBy as any,

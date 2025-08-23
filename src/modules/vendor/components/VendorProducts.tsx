@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { AddProductForm, ProductList, ExcelImport } from '@/modules/vendor';
-import { productAPI } from '@/lib/productApi';
+import { productAPI } from '@/shared/services/productApi';
+import PriceUpdateModal from './PriceUpdateModal';
 
 interface VendorProductsProps {
   initialView?: 'list' | 'add' | 'excel';
@@ -26,6 +27,27 @@ export default function VendorProducts({ initialView = 'list' }: VendorProductsP
   const [loadingStats, setLoadingStats] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [showAddPriceModal, setShowAddPriceModal] = useState(false);
+  const [productsNeedingPrice, setProductsNeedingPrice] = useState([]);
+
+  const handleAddPriceAction = async () => {
+    try {
+      console.log('💰 Fetching products that need pricing...');
+      const response = await productAPI.getMyProducts(0, 1000);
+      const products = response.content || [];
+      
+      // Filter products without price or with price = 0
+      const needsPricing = products.filter(p => !p.price || p.price === 0 || p.price === null);
+      
+      console.log(`Found ${needsPricing.length} products that need pricing`);
+      setProductsNeedingPrice(needsPricing);
+      setShowAddPriceModal(true);
+    } catch (error) {
+      console.error('❌ Error fetching products for pricing:', error);
+      // Fallback: show modal anyway to allow manual entry
+      setShowAddPriceModal(true);
+    }
+  };
 
   const fetchProductStats = async () => {
     try {
@@ -119,7 +141,10 @@ export default function VendorProducts({ initialView = 'list' }: VendorProductsP
             <span>📊</span>
             <span>Bulk Import</span>
           </button>
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-all">
+          <button 
+            onClick={() => handleAddPriceAction()}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition-all"
+          >
             <span>💰</span>
             <span>Add Price Now</span>
           </button>
@@ -313,6 +338,22 @@ export default function VendorProducts({ initialView = 'list' }: VendorProductsP
           </div>
         </div>
       </div>
+
+      {/* Price Update Modal */}
+      <PriceUpdateModal
+        isOpen={showAddPriceModal}
+        onClose={() => setShowAddPriceModal(false)}
+        products={productsNeedingPrice}
+        onProductsUpdated={() => {
+          // Refresh stats after price updates
+          fetchProductStats();
+          // If we're on list view, also refresh the product list
+          if (activeView === 'list') {
+            // Force a re-render of the ProductList component
+            window.location.reload();
+          }
+        }}
+      />
     </div>
   );
 }

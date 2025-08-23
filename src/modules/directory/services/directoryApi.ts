@@ -28,7 +28,7 @@ export class DirectoryApiService {
       const response = await api.get<DirectorySearchResponse>('/api/directory/search', {
         params: filters
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.searchServiceProviders(filters);
@@ -45,7 +45,7 @@ export class DirectoryApiService {
     
     try {
       const response = await api.get<ServiceProvider>(`/api/directory/providers/${id}`);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.getServiceProvider(id);
@@ -62,7 +62,7 @@ export class DirectoryApiService {
     
     try {
       const response = await api.get<ServiceCategory[]>('/api/directory/categories');
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.getServiceCategories();
@@ -75,7 +75,7 @@ export class DirectoryApiService {
   async getLocations(): Promise<Location[]> {
     try {
       const response = await api.get<Location[]>('/api/directory/locations');
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get locations');
     }
@@ -92,7 +92,7 @@ export class DirectoryApiService {
       const response = await api.get<ServiceProvider[]>('/api/directory/providers', {
         params
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get providers');
     }
@@ -104,7 +104,7 @@ export class DirectoryApiService {
   async getDirectoryStats(): Promise<DirectoryStats> {
     try {
       const response = await api.get<DirectoryStats>('/api/directory/stats');
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get directory stats');
     }
@@ -120,7 +120,7 @@ export class DirectoryApiService {
     
     try {
       const response = await api.post<{ success: boolean; message: string }>('/api/directory/quote-request', quoteRequest);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.submitQuoteRequest(quoteRequest);
@@ -137,7 +137,7 @@ export class DirectoryApiService {
     
     try {
       const response = await api.post<{ success: boolean; message: string }>('/api/directory/contact-supplier', contactRequest);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.contactSupplier(contactRequest);
@@ -154,7 +154,7 @@ export class DirectoryApiService {
     
     try {
       const response = await api.get<ServiceProvider[]>(`/api/directory/featured?limit=${limit}`);
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.getFeaturedProviders(limit);
@@ -169,7 +169,7 @@ export class DirectoryApiService {
       const response = await api.get<ServiceProvider[]>(`/api/directory/top-rated`, {
         params: { category, limit }
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get top rated providers');
     }
@@ -183,7 +183,7 @@ export class DirectoryApiService {
       const response = await api.get<ServiceProvider[]>(`/api/directory/city/${city}`, {
         params: { limit }
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get providers by city');
     }
@@ -201,7 +201,7 @@ export class DirectoryApiService {
       const response = await api.get<string[]>(`/api/directory/suggestions`, {
         params: { query }
       });
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.getSearchSuggestions(query);
@@ -218,7 +218,7 @@ export class DirectoryApiService {
     
     try {
       const response = await api.get<string[]>('/api/directory/popular-searches');
-      return response.data;
+      return response;
     } catch (error: any) {
       console.warn('Directory API not available, falling back to mock data');
       return mockDirectoryApi.getPopularSearches();

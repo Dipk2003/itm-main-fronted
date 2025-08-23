@@ -34,6 +34,15 @@ export type { CreateOrderDto, Order, OrderFilters, OrderItem, OrderStatusUpdate 
 export { chatAPI, chatbotAPI } from './chatApi';
 export type { ChatMessage, ChatbotMessage, ChatbotSession, Conversation, CreateConversationDto, SendMessageDto } from './chatApi';
 
+// Enhanced Chatbot API
+export { chatbotAPI as enhancedChatbotAPI } from './chatbotApi';
+export type { 
+  ChatbotRequest, 
+  ChatbotResponse, 
+  VendorRecommendation, 
+  LeadRecommendation 
+} from './chatbotApi';
+
 // Support System
 export { liveChatAPI, supportAPI } from './supportApi';
 export type { CreateTicketData, LiveChatSession, ChatMessage as SupportChatMessage, SupportTicket } from './supportApi';

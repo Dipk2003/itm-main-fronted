@@ -28,7 +28,7 @@ export default function VendorRecentOrders() {
 
       try {
         setLoading(true);
-        const response = await getVendorOrders(user.id, 0, 5); // Get last 5 orders
+        const response = await getVendorOrders(Number(user.id), 0, 5); // Get last 5 orders
         const ordersData = response.data.content || response.data || [];
         
         const transformedOrders = ordersData.slice(0, 5).map((order: any) => ({

@@ -145,15 +145,19 @@ export default function UserLoginPage() {
         const roleCheckResult = await dispatch(checkEmailRole(email));
         
         if (checkEmailRole.fulfilled.match(roleCheckResult)) {
-          const { exists, role } = roleCheckResult.payload;
+          const payload = roleCheckResult.payload as any;
           
-          if (!exists || exists === 'false') {
+          // Handle different response formats
+          const exists = payload?.exists !== undefined ? payload.exists : true;
+          const role = payload?.role || 'user';
+          
+          if (exists === false || exists === 'false') {
             alert('Email not found. Please check your email address.');
             return;
           }
           
           // Check if email belongs to USER role
-          if (role !== 'ROLE_USER' && role !== 'USER') {
+          if (role !== 'ROLE_USER' && role !== 'USER' && role !== 'user') {
             const roleType = role === 'ROLE_VENDOR' ? 'vendor' : 
                            role === 'ROLE_ADMIN' ? 'admin' : 'different';
             alert(`This email is registered as a ${roleType}. Please use the correct login portal.`);

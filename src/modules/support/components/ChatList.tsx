@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Badge } from '@/shared/components';
-import { chatAPI as chatApi } from '@/shared/services';
-import { User, ChatSummary } from '@/shared/types/api';
+import { chatApi } from '@/shared/services/api/chatApi';
+import { User, ChatSummary } from '@/shared/services/api/chatApi';
 import { ChatBubbleLeftIcon, UserIcon } from '@heroicons/react/24/outline';
 import ChatWindow from './ChatWindow';
 

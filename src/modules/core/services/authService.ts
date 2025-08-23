@@ -30,20 +30,20 @@ export class AuthService {
       
       const response = await api.post<any>(endpoint, loginPayload);
       
-      console.log('📥 Login response:', response.data);
+      console.log('📥 Login response:', response);
       
       // Handle both direct login response and OTP required response
-      if (response.data.token) {
+      if (response.token) {
         // Direct login successful
         console.log('✅ Direct login successful, storing auth data');
-        this.storeAuthData(response.data);
-        return response.data;
-      } else if (typeof response.data === 'string' && response.data.includes('OTP sent')) {
+        this.storeAuthData(response);
+        return response;
+      } else if (typeof response === 'string' && response.includes('OTP sent')) {
         // OTP required - return special response
         console.log('📱 OTP required, returning OTP response');
         return {
           requiresOTP: true,
-          message: response.data,
+          message: response,
           email: loginPayload.emailOrPhone,
           userType
         } as any;
@@ -92,15 +92,15 @@ export class AuthService {
       const response = await api.post<any>(endpoint, loginPayload);
       
       // Handle both direct login response and OTP required response
-      if (response.data.token) {
+      if (response.token) {
         // Direct login successful
-        this.storeAuthData(response.data);
-        return response.data;
-      } else if (typeof response.data === 'string' && response.data.includes('OTP sent')) {
+        this.storeAuthData(response);
+        return response;
+      } else if (typeof response === 'string' && response.includes('OTP sent')) {
         // OTP required - return special response
         return {
           requiresOTP: true,
-          message: response.data,
+          message: response,
           email: loginPayload.emailOrPhone,
           userType
         } as any;
@@ -152,7 +152,7 @@ export class AuthService {
         `/auth/register`,
         registerData
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }
@@ -167,7 +167,7 @@ export class AuthService {
         `/auth/forgot-password`,
         { email } as ForgotPasswordRequestDto
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to send OTP');
     }
@@ -182,7 +182,7 @@ export class AuthService {
         `/auth/verify-forgot-password-otp`,
         otpData
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'OTP verification failed');
     }
@@ -197,7 +197,7 @@ export class AuthService {
         `/auth/set-password`,
         passwordData
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Password reset failed');
     }
@@ -208,7 +208,7 @@ export class AuthService {
    */
   async verifyOtp(otpData: VerifyOtpRequestDto): Promise<JwtResponse> {
     try {
-      const response = await api.post<JwtResponse>(
+      const jwtResponse = await api.post<JwtResponse>(
         `/auth/verify-otp`,
         {
           emailOrPhone: otpData.email || otpData.emailOrPhone,
@@ -217,11 +217,11 @@ export class AuthService {
       );
       
       // Store auth data if verification successful
-      if (response.data.token) {
-        this.storeAuthData(response.data);
+      if (jwtResponse.token) {
+        this.storeAuthData(jwtResponse);
       }
       
-      return response.data;
+      return jwtResponse;
     } catch (error: any) {
       throw new Error(error.response?.data || error.message || 'OTP verification failed');
     }
@@ -236,7 +236,7 @@ export class AuthService {
         `/auth/verify-email-otp`,
         otpData
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Email verification failed');
     }
@@ -251,7 +251,7 @@ export class AuthService {
         `/auth/resend-email-otp`,
         { email }
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to resend OTP');
     }
@@ -265,7 +265,7 @@ export class AuthService {
       const response = await api.get<any>(
         `/api/users/profile`
       );
-      return response.data.data;
+      return response.data || response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to get user profile');
     }
@@ -327,7 +327,7 @@ export class AuthService {
         `/auth/check-email-role`,
         { email }
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.error || error.response?.data || 'Failed to check email role');
     }
@@ -346,7 +346,7 @@ export class AuthService {
           newPassword: resetData.newPassword
         }
       );
-      return response.data;
+      return response;
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Password reset failed');
     }

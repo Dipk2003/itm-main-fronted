@@ -5,7 +5,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
-import { supportAPI, liveChatAPI, SupportTicket, CreateTicketData, LiveChatSession } from '@/lib/supportApi';
+import { supportAPI, liveChatAPI } from '@/lib/supportApi';
+import { SupportTicket, CreateTicketData } from '@/modules/support/services/supportApi';
+import { LiveChatSession } from '@/shared/types/index';
 import LiveChatModal from './LiveChatModal';
 import UserTicketList from './UserTicketList';
 

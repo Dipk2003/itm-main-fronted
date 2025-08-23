@@ -3,15 +3,23 @@
 import React from 'react';
 import { financePaymentAPI } from '@/shared/services';
 
+interface FinanceOverview {
+    totalRevenue?: number;
+    monthlyRevenue?: number;
+    pendingPayments?: number;
+    completedPayments?: number;
+    refundedAmount?: number;
+}
+
 const FinanceDashboard = () => {
     // Placeholder for finance data fetching and state management
-    const [overview, setOverview] = React.useState({});
+    const [overview, setOverview] = React.useState<FinanceOverview>({});
 
     React.useEffect(() => {
         async function fetchFinanceOverview() {
             try {
-                // Using financePaymentAPI instead of the old getFinanceOverview
-                const data = await financePaymentAPI.getPaymentOrders();
+                // Get vendor financial summary
+                const data = await financePaymentAPI.analytics.getVendorSummary();
                 setOverview(data);
             } catch (error) {
                 console.error('Failed to fetch finance overview:', error);

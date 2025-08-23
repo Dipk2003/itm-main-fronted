@@ -17,32 +17,63 @@ const NotificationCenter: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<Socket | null>(null);
 
-  // Initialize WebSocket connection
+  // Initialize WebSocket connection with error handling
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      socketRef.current = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080', {
-        auth: { token }
-      });
-
-      // Listen for new notifications
-      socketRef.current.on('notification', (notification: INotification) => {
-        setNotifications(prev => [notification, ...prev]);
-        fetchNotificationSummary();
+    // Check if we're in the browser environment
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+      if (token) {
+        console.log('🔌 Attempting to connect to WebSocket...');
         
-        // Show browser notification if permission granted
-        if (Notification.permission === 'granted') {
-          new Notification(notification.title, {
-            body: notification.message,
-            icon: '/logo.png'
-          });
-        }
-      });
+        socketRef.current = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080', {
+          auth: { token },
+          timeout: 5000,
+          autoConnect: true,
+          forceNew: true
+        });
 
-      return () => {
-        socketRef.current?.disconnect();
-      };
+        // Connection event handlers
+        socketRef.current.on('connect', () => {
+          console.log('✅ WebSocket connected successfully');
+        });
+        
+        socketRef.current.on('connect_error', (error) => {
+          console.warn('⚠️ WebSocket connection failed:', error.message);
+        });
+        
+        socketRef.current.on('disconnect', (reason) => {
+          console.log('🔌 WebSocket disconnected:', reason);
+        });
+
+        // Listen for new notifications
+        socketRef.current.on('notification', (notification: INotification) => {
+          console.log('🔔 New notification received:', notification);
+          setNotifications(prev => [notification, ...prev]);
+          fetchNotificationSummary();
+          
+          // Show browser notification if permission granted
+          if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+            new Notification(notification.title, {
+              body: notification.message,
+              icon: '/logo.png'
+            });
+          }
+        });
+      } else {
+        console.log('⚠️ No auth token found, skipping WebSocket connection');
+      }
+    } catch (error) {
+      console.error('❌ Failed to initialize WebSocket:', error);
     }
+
+    return () => {
+      if (socketRef.current) {
+        console.log('🔌 Disconnecting WebSocket...');
+        socketRef.current.disconnect();
+      }
+    };
   }, []);
 
   // Request notification permission
@@ -52,22 +83,48 @@ const NotificationCenter: React.FC = () => {
     }
   }, []);
 
-  // Fetch notifications and summary
+  // Fetch notifications and summary with better error handling
   const fetchNotifications = async (pageNum: number = 0) => {
     try {
       setLoading(true);
+      console.log('🔄 Fetching notifications, page:', pageNum);
+      
       const response = await notificationApi.getUserNotifications(pageNum, 10);
       
-      if (pageNum === 0) {
-        setNotifications(response.content);
+      if (response && response.content && Array.isArray(response.content)) {
+        if (pageNum === 0) {
+          setNotifications(response.content);
+        } else {
+          setNotifications(prev => [...prev, ...response.content]);
+        }
+        
+        setHasMore(response.content.length === 10);
+        setPage(pageNum);
+        console.log('✅ Successfully fetched', response.content.length, 'notifications');
       } else {
-        setNotifications(prev => [...prev, ...response.content]);
+        console.warn('⚠️ Invalid response format for notifications');
+        if (pageNum === 0) {
+          setNotifications([]);
+        }
+        setHasMore(false);
+      }
+    } catch (error: any) {
+      console.error('❌ Failed to fetch notifications:', error);
+      
+      // Handle specific error cases
+      if (error?.response?.status === 401) {
+        console.warn('⚠️ Unauthorized access to notifications');
+      } else if (error?.response?.status === 500) {
+        console.warn('⚠️ Server error when fetching notifications');
+      } else if (error?.code === 'ECONNREFUSED' || error?.message?.includes('Network Error')) {
+        console.warn('⚠️ Network error - backend may be offline');
       }
       
-      setHasMore(response.content.length === 10);
-      setPage(pageNum);
-    } catch (error) {
-      console.error('Failed to fetch notifications:', error);
+      // Set empty state on first page load error
+      if (pageNum === 0) {
+        setNotifications([]);
+      }
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
@@ -75,17 +132,50 @@ const NotificationCenter: React.FC = () => {
 
   const fetchNotificationSummary = async () => {
     try {
+      console.log('🔄 Fetching notification summary...');
       const summaryData = await notificationApi.getNotificationSummary();
-      setSummary(summaryData);
-    } catch (error) {
-      console.error('Failed to fetch notification summary:', error);
+      
+      if (summaryData && typeof summaryData.unreadCount === 'number') {
+        setSummary(summaryData);
+        console.log('✅ Successfully fetched notification summary:', summaryData);
+      } else {
+        console.warn('⚠️ Invalid summary data format');
+        setSummary({ unreadCount: 0, totalCount: 0, unreadByType: {} });
+      }
+    } catch (error: any) {
+      console.error('❌ Failed to fetch notification summary:', error);
+      
+      // Provide fallback summary
+      setSummary({ unreadCount: 0, totalCount: 0, unreadByType: {} });
+      
+      // Handle specific error cases
+      if (error?.response?.status === 401) {
+        console.warn('⚠️ Unauthorized access to notification summary');
+      } else if (error?.response?.status === 500) {
+        console.warn('⚠️ Server error when fetching notification summary');
+      } else if (error?.code === 'ECONNREFUSED' || error?.message?.includes('Network Error')) {
+        console.warn('⚠️ Network error - backend may be offline');
+      }
     }
   };
 
-  // Load initial data
+  // Load initial data safely
   useEffect(() => {
-    fetchNotifications();
-    fetchNotificationSummary();
+    // Only attempt to load data if we're in the browser and have a token
+    if (typeof window !== 'undefined') {
+      const hasToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+      
+      if (hasToken) {
+        console.log('🔄 Loading initial notification data...');
+        fetchNotifications();
+        fetchNotificationSummary();
+      } else {
+        console.log('⚠️ No auth token found, skipping notification data load');
+        // Set empty state for unauthenticated users
+        setNotifications([]);
+        setSummary({ unreadCount: 0, totalCount: 0, unreadByType: {} });
+      }
+    }
   }, []);
 
   // Close dropdown when clicking outside

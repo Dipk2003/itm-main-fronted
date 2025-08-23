@@ -170,7 +170,7 @@ const AnalyticsDashboard: React.FC = () => {
             {(['7d', '30d', '90d', '1y'] as const).map((range) => (
               <Button
                 key={range}
-                variant={timeRange === range ? 'primary' : 'outline'}
+                variant={timeRange === range ? 'default' : 'outline'}
                 onClick={() => setTimeRange(range)}
                 className="text-sm"
               >

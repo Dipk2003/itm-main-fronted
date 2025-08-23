@@ -38,7 +38,7 @@ export default function VendorOrders() {
       try {
         setLoading(true);
         console.log('Loading orders for vendor:', user.id);
-        const response = await getVendorOrders(user.id, currentPage, 10);
+        const response = await getVendorOrders(Number(user.id), currentPage, 10);
         console.log('Orders response:', response.data);
         
         // Handle both array and paginated response formats

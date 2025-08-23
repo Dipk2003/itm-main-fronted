@@ -1,40 +1,82 @@
 /**
- * Enhanced API Client Integration
- * ==============================
+ * Simple and Robust API Client
+ * ============================
  * 
- * This file integrates the enhanced API client with backward compatibility
- * for existing code while providing advanced features like retry logic,
- * monitoring, and improved error handling.
+ * A straightforward API client with error handling and fallback mechanisms
  */
 
-import { api as enhancedApi, checkApiHealth } from '../config/enhanced-api-client';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ApiResponse, ApiError } from '../types/api';
+import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
+import { API_BASE_URL } from '@/lib/api-config';
 
-// Helper function to handle API errors (enhanced)
+// Create axios instance
+const apiClient: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+});
+
+// Request interceptor
+apiClient.interceptors.request.use(
+  (config) => {
+    // Add auth token if available
+    const token = typeof window !== 'undefined' 
+      ? localStorage.getItem('authToken') || localStorage.getItem('token')
+      : null;
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`);
+    return config;
+  },
+  (error) => {
+    console.error('❌ Request Error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor
+apiClient.interceptors.response.use(
+  (response) => {
+    console.log(`✅ ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
+    return response;
+  },
+  (error: AxiosError) => {
+    console.error(`❌ ${error.config?.method?.toUpperCase()} ${error.config?.url} - ${error.response?.status || 'Network Error'}`);
+    
+    // Handle 401/403 errors
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userRole');
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// Helper function to handle API errors
 export const handleApiError = (error: any) => {
   if (error.response) {
-    // Server responded with error status
     return {
       message: error.response.data?.message || error.response.data || 'An error occurred',
       status: error.response.status,
       data: error.response.data,
       timestamp: new Date().toISOString(),
-      url: error.config?.url,
-      method: error.config?.method
     };
   } else if (error.request) {
-    // Request was made but no response received
     return {
       message: 'Network error. Please check your internet connection.',
       status: 0,
       data: null,
       timestamp: new Date().toISOString(),
-      url: error.config?.url,
-      method: error.config?.method
     };
   } else {
-    // Something else happened
     return {
       message: error.message || 'An unexpected error occurred',
       status: 0,
@@ -44,73 +86,47 @@ export const handleApiError = (error: any) => {
   }
 };
 
-// Enhanced API object with additional features
+// Simple API wrapper
 export const api = {
-  // Core HTTP methods
-  get: <T>(url: string, config?: AxiosRequestConfig) => 
-    enhancedApi.get<T>(url, config),
+  get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+    return apiClient.get(url, config).then(response => response.data);
+  },
   
-  post: <T>(url: string, data?: any, config?: AxiosRequestConfig) => 
-    enhancedApi.post<T>(url, data, config),
+  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+    return apiClient.post(url, data, config).then(response => response.data);
+  },
   
-  put: <T>(url: string, data?: any, config?: AxiosRequestConfig) => 
-    enhancedApi.put<T>(url, data, config),
+  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+    return apiClient.put(url, data, config).then(response => response.data);
+  },
   
-  delete: <T>(url: string, config?: AxiosRequestConfig) => 
-    enhancedApi.delete<T>(url, config),
+  delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+    return apiClient.delete(url, config).then(response => response.data);
+  },
   
-  patch: <T>(url: string, data?: any, config?: AxiosRequestConfig) => 
-    enhancedApi.patch<T>(url, data, config),
-
-  // Enhanced features
-  isOnline: () => enhancedApi.isOnline(),
-  getMetrics: () => enhancedApi.getMetrics(),
-  checkHealth: checkApiHealth,
+  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+    return apiClient.patch(url, data, config).then(response => response.data);
+  },
 
   // Utility methods
   handleError: handleApiError,
   
-  // Batch operations
-  batch: async (requests: Array<() => Promise<any>>) => {
+  // Health check
+  healthCheck: async (): Promise<boolean> => {
     try {
-      return await Promise.allSettled(requests.map(req => req()));
+      await apiClient.get('/api/health');
+      return true;
     } catch (error) {
-      throw handleApiError(error);
+      console.warn('❌ Health check failed:', error);
+      return false;
     }
   },
-
-  // Timeout wrapper
-  withTimeout: <T>(promise: Promise<T>, timeout: number = 30000): Promise<T> => {
-    return Promise.race([
-      promise,
-      new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), timeout)
-      )
-    ]);
-  }
-};
-
-// Legacy compatibility - create axios-like instance
-const apiClient = {
-  get: api.get,
-  post: api.post,
-  put: api.put,
-  delete: api.delete,
-  patch: api.patch,
-  interceptors: {
-    request: {
-      use: () => {} // No-op for compatibility
-    },
-    response: {
-      use: () => {} // No-op for compatibility
-    }
-  }
 };
 
 // Health check utility
 export const testConnection = async (): Promise<boolean> => {
   try {
-    return await checkApiHealth();
+    return await api.healthCheck();
   } catch (error) {
     console.error('Connection test failed:', error);
     return false;
@@ -118,5 +134,4 @@ export const testConnection = async (): Promise<boolean> => {
 };
 
 // Export for different import styles
-export { enhancedApi };
 export default apiClient;

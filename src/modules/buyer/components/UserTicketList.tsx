@@ -1,5 +1,5 @@
 import React from 'react';
-import { SupportTicket } from '@/lib/supportApi';
+import { SupportTicket } from '@/modules/support/services/supportApi';
 
 interface UserTicketListProps {
   tickets: SupportTicket[];

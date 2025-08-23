@@ -7,7 +7,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { User, Mail, Phone, MapPin, Building, Calendar, Edit2, Save, X, Lock, Shield } from 'lucide-react';
 
 const ProfilePage = () => {
-  const { user, updateProfile, isVendor, isUser, isAdmin, loading, isAuthenticated } = useAuth();
+  const { user, updateUser, isLoading, isAuthenticated } = useAuth();
+  const isVendor = user?.role === 'vendor';
+  const isUser = user?.role === 'user';
+  const isAdmin = user?.role === 'admin';
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
@@ -106,8 +109,8 @@ const ProfilePage = () => {
       
       console.log('Update data being sent:', updateData);
       
-      const updatedUser = await updateProfile(updateData);
-      console.log('✅ Profile update successful:', updatedUser);
+      updateUser(updateData);
+      console.log('✅ Profile update successful');
       
       setIsEditing(false);
       alert('Profile updated successfully!');
@@ -166,10 +169,10 @@ const ProfilePage = () => {
       // Import authAPI at the top and use it here
       const { authAPI } = await import('@/lib/auth');
       
-      await authAPI.changePassword({
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
-      });
+      await authAPI.changePassword(
+        passwordData.currentPassword,
+        passwordData.newPassword
+      );
       
       alert('Password changed successfully!');
       setPasswordData({
@@ -200,7 +203,7 @@ const ProfilePage = () => {
   };
 
   // Handle loading state
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -212,7 +215,7 @@ const ProfilePage = () => {
   }
 
   // Handle unauthenticated user
-  if (!loading && (!isAuthenticated || !user)) {
+  if (!isLoading && (!isAuthenticated || !user)) {
     console.log('User not authenticated, redirecting to login');
     console.log('isAuthenticated:', isAuthenticated, 'user:', user);
     router.push('/login');
@@ -220,7 +223,7 @@ const ProfilePage = () => {
   }
 
   // Show error message if there's an issue loading user data
-  if (!loading && !user) {
+  if (!isLoading && !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

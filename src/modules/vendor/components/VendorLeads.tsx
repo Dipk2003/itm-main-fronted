@@ -43,7 +43,7 @@ export default function VendorLeads() {
       try {
         setLoading(true);
         console.log('Loading leads for vendor:', user.id);
-        const response = await getVendorLeads(user.id);
+        const response = await getVendorLeads(Number(user.id));
         console.log('Leads response:', response.data);
         
         // Transform API data to match our interface

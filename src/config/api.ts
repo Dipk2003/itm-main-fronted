@@ -2,28 +2,173 @@
 export const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080',
   ENDPOINTS: {
-    // Data Entry API endpoints
-    CATEGORIES: '/api/dataentry/categories',
-    SUBCATEGORIES: '/api/dataentry/subcategories',
-    MICROCATEGORIES: '/api/dataentry/microcategories',
-    PRODUCTS: '/api/dataentry/products',
-    DASHBOARD_ANALYTICS: '/api/dataentry/analytics',
-    CATEGORY_STATS: '/api/dataentry/categories/stats',
+    // Health check
+    HEALTH: '/health',
+    API_HEALTH: '/api/health',
+    ACTUATOR_HEALTH: '/actuator/health',
     
     // Authentication endpoints
     AUTH: {
       LOGIN: '/auth/login',
       REGISTER: '/auth/register',
       REFRESH: '/auth/refresh',
-      LOGOUT: '/auth/logout'
+      LOGOUT: '/auth/logout',
+      PROFILE: '/auth/profile',
+      FORGOT_PASSWORD: '/auth/forgot-password',
+      RESET_PASSWORD: '/auth/reset-password',
+      VERIFY_EMAIL: '/auth/verify-email',
+      VERIFY_OTP: '/auth/verify-otp',
+      // Role-specific auth endpoints
+      ADMIN: {
+        LOGIN: '/auth/admin/login',
+        REGISTER: '/auth/admin/register'
+      },
+      VENDOR: {
+        LOGIN: '/auth/vendor/login',
+        REGISTER: '/auth/vendor/register'
+      },
+      BUYER: {
+        LOGIN: '/auth/buyer/login',
+        REGISTER: '/auth/buyer/register'
+      },
+      EMPLOYEE: {
+        LOGIN: '/auth/employee/login',
+        REGISTER: '/auth/employee/register'
+      }
     },
     
-    // Vendor endpoints
-    VENDORS: '/api/vendors',
+    // Core API endpoints
+    USERS: '/api/users',
+    COMPANIES: '/api/companies',
     
-    // Product search endpoints
-    SEARCH: '/api/search',
-    PRODUCTS_SEARCH: '/api/products/search'
+    // Buyer Module endpoints
+    BUYERS: {
+      BASE: '/api/buyers',
+      PROFILE: '/api/buyers/profile',
+      ORDERS: '/api/buyers/orders',
+      CART: '/api/buyers/cart',
+      WISHLIST: '/api/buyers/wishlist',
+      INQUIRIES: '/api/buyers/inquiries',
+      QUOTES: '/api/buyers/quotes',
+      REVIEWS: '/api/buyers/reviews'
+    },
+    
+    // Vendor Module endpoints
+    VENDORS: {
+      BASE: '/api/vendors',
+      PROFILE: '/api/vendors/profile',
+      PRODUCTS: '/api/vendors/products',
+      ORDERS: '/api/vendors/orders',
+      ANALYTICS: '/api/vendors/analytics',
+      LEADS: '/api/vendors/leads',
+      DASHBOARD: '/api/vendors/dashboard'
+    },
+    
+    // Product Management endpoints
+    PRODUCTS: {
+      BASE: '/api/products',
+      SEARCH: '/api/products/search',
+      CATEGORIES: '/api/products/categories',
+      BY_VENDOR: '/api/products/vendor',
+      BY_CATEGORY: '/api/products/category',
+      FEATURED: '/api/products/featured',
+      TRENDING: '/api/products/trending'
+    },
+    
+    // Category Management endpoints
+    CATEGORIES: {
+      BASE: '/api/categories',
+      HIERARCHICAL: '/api/categories/hierarchy',
+      STATS: '/api/categories/stats',
+      SUBCATEGORIES: '/api/categories/subcategories',
+      MICROCATEGORIES: '/api/categories/microcategories'
+    },
+    
+    // Data Entry API endpoints (Employee module)
+    DATA_ENTRY: {
+      CATEGORIES: '/api/dataentry/categories',
+      SUBCATEGORIES: '/api/dataentry/subcategories',
+      MICROCATEGORIES: '/api/dataentry/microcategories',
+      PRODUCTS: '/api/dataentry/products',
+      ANALYTICS: '/api/dataentry/analytics',
+      CATEGORY_STATS: '/api/dataentry/categories/stats'
+    },
+    
+    // Order Management endpoints
+    ORDERS: {
+      BASE: '/api/orders',
+      BY_BUYER: '/api/orders/buyer',
+      BY_VENDOR: '/api/orders/vendor',
+      STATUS_UPDATE: '/api/orders/status',
+      TRACKING: '/api/orders/tracking'
+    },
+    
+    // Payment endpoints
+    PAYMENTS: {
+      BASE: '/api/payments',
+      RAZORPAY: '/api/payments/razorpay',
+      WEBHOOK: '/api/payments/webhook',
+      SUBSCRIPTIONS: '/api/payments/subscriptions',
+      INVOICES: '/api/payments/invoices'
+    },
+    
+    // Support endpoints
+    SUPPORT: {
+      TICKETS: '/api/support/tickets',
+      CHAT: '/api/support/chat',
+      CHATBOT: '/api/support/chatbot',
+      KNOWLEDGE_BASE: '/api/support/knowledge-base'
+    },
+    
+    // Analytics endpoints
+    ANALYTICS: {
+      DASHBOARD: '/api/analytics/dashboard',
+      ADMIN: '/api/analytics/admin',
+      VENDOR: '/api/analytics/vendor',
+      BUYER: '/api/analytics/buyer'
+    },
+    
+    // Admin endpoints
+    ADMIN: {
+      USERS: '/api/admin/users',
+      VENDORS: '/api/admin/vendors',
+      BUYERS: '/api/admin/buyers',
+      PRODUCTS: '/api/admin/products',
+      ORDERS: '/api/admin/orders',
+      ANALYTICS: '/api/admin/analytics',
+      CONTENT: '/api/admin/content',
+      SETTINGS: '/api/admin/settings',
+      KYC: '/api/admin/kyc',
+      LEADS: '/api/admin/leads'
+    },
+    
+    // File Upload endpoints
+    FILES: {
+      UPLOAD: '/api/files/upload',
+      DELETE: '/api/files/delete',
+      DOWNLOAD: '/api/files/download'
+    },
+    
+    // Directory/Service Provider endpoints
+    DIRECTORY: {
+      PROVIDERS: '/api/directory/providers',
+      SEARCH: '/api/directory/search',
+      INQUIRIES: '/api/directory/inquiries'
+    },
+    
+    // Location endpoints
+    LOCATIONS: {
+      CITIES: '/api/locations/cities',
+      STATES: '/api/locations/states',
+      COUNTRIES: '/api/locations/countries'
+    },
+    
+    // Excel Import endpoints
+    EXCEL: {
+      IMPORT: '/api/excel/import',
+      TEMPLATE: '/api/excel/template',
+      STATUS: '/api/excel/status'
+    }
   }
 };
 
@@ -73,13 +218,17 @@ export const apiRequest = async <T>(
   const baseUrl = API_CONFIG.BASE_URL;
   const fullEndpoint = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
   
+  // Create abort controller for timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+  
   const config: RequestInit = {
     ...options,
     headers: {
       ...getHeaders(includeAuth),
       ...options.headers,
     },
-    timeout: 15000, // 15 second timeout
+    signal: controller.signal,
   };
   
   // Try HTTPS first, then fallback to HTTP
@@ -105,8 +254,8 @@ export const apiRequest = async <T>(
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status} from ${url}`);
       }
-      
-      console.log(`✅ API call successful to: ${url}`);
+      console.log(`\u2705 API call successful to: ${url}`);
+      clearTimeout(timeoutId); // Clear timeout on successful response
       
       // Handle empty responses (like 204 No Content from DELETE operations)
       if (response.status === 204 || response.headers.get('content-length') === '0') {

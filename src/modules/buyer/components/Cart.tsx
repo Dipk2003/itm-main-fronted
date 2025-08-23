@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store';
-import { removeCartItem, updateCartItemQuantity, clearCart } from '@/features/cart/cartSlice';
+import { removeCartItem, updateCartItem, clearCartItems } from '@/features/cart/cartSlice';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
@@ -22,12 +22,12 @@ const Cart: React.FC = () => {
 
   const handleUpdateQuantity = (id: string, quantity: string) => {
     if (parseInt(quantity) > 0) {
-      dispatch(updateCartItemQuantity({ id, qty: quantity }));
+      dispatch(updateCartItem({ itemId: id, quantity: parseInt(quantity) }));
     }
   };
 
   const handleClearCart = () => {
-    dispatch(clearCart());
+    dispatch(clearCartItems());
   };
 
   if (isLoading) {
@@ -74,13 +74,13 @@ const Cart: React.FC = () => {
       {/* Cart Items */}
       <div className="space-y-4">
         {items.map((item) => (
-          <Card key={`${item.id}-${item.user_email}`}>
+          <Card key={item.id}>
             <CardContent className="p-4">
               <div className="flex items-center space-x-4">
                 {/* Product Image */}
                 <div className="relative h-20 w-20 flex-shrink-0">
                   <Image
-                    src={item.img_src}
+                    src={item.image || '/api/placeholder/80/80'}
                     alt={item.name}
                     fill
                     className="object-contain rounded-lg"
@@ -90,12 +90,11 @@ const Cart: React.FC = () => {
                 {/* Product Details */}
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                  <p className="text-sm text-gray-600">{item.company}</p>
-                  <p className="text-sm text-gray-600">Price: {item.price}</p>
-                  <p className="text-sm text-gray-600">User: {item.user_name}</p>
-                  <p className="text-sm text-gray-600">Date: {item.date}</p>
-                  {item.message && (
-                    <p className="text-sm text-gray-600">Message: {item.message}</p>
+                  <p className="text-sm text-gray-600">{item.vendorName}</p>
+                  <p className="text-sm text-gray-600">Price: ₹{item.price}</p>
+                  <p className="text-sm text-gray-600">Category: {item.category}</p>
+                  {item.description && (
+                    <p className="text-sm text-gray-600">Description: {item.description}</p>
                   )}
                 </div>
 
@@ -104,7 +103,7 @@ const Cart: React.FC = () => {
                   <label className="text-sm font-medium text-gray-700">Qty:</label>
                   <Input
                     type="number"
-                    value={item.qty}
+                    value={item.quantity}
                     onChange={(e) => handleUpdateQuantity(item.id, e.target.value)}
                     className="w-20"
                     min="1"

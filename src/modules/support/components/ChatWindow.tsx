@@ -4,8 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
-import { chatAPI as chatApi } from '@/shared/services';
-import { ChatMessage, User } from '@/shared/types/api';
+import { chatApi, ChatMessage, User } from '@/shared/services/api/chatApi';
 import { 
   PaperAirplaneIcon, 
   XMarkIcon,

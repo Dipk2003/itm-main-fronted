@@ -2,18 +2,20 @@ import { DirectoryPage } from '@/modules/directory';
 import { Metadata } from 'next';
 
 interface CityDirectoryPageProps {
-  params: {
+  params: Promise<{
     city: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     category?: string;
     service?: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params, searchParams }: CityDirectoryPageProps): Promise<Metadata> {
-  const cityName = decodeURIComponent(params.city).replace(/-/g, ' ');
-  const service = searchParams.service || searchParams.category;
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const cityName = decodeURIComponent(resolvedParams.city).replace(/-/g, ' ');
+  const service = resolvedSearchParams.service || resolvedSearchParams.category;
   
   const title = service 
     ? `${service} in ${cityName} - Service Providers | Indian Trade Mart`
@@ -35,15 +37,17 @@ export async function generateMetadata({ params, searchParams }: CityDirectoryPa
   };
 }
 
-export default function CityDirectoryPage({ params, searchParams }: CityDirectoryPageProps) {
-  const cityName = decodeURIComponent(params.city).replace(/-/g, ' ');
-  const service = searchParams.service || searchParams.category || '';
+export default async function CityDirectoryPage({ params, searchParams }: CityDirectoryPageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const cityName = decodeURIComponent(resolvedParams.city).replace(/-/g, ' ');
+  const service = resolvedSearchParams.service || resolvedSearchParams.category || '';
 
   return (
     <DirectoryPage
       initialQuery={service}
       initialLocation={cityName}
-      initialCategory={searchParams.category}
+      initialCategory={resolvedSearchParams.category}
     />
   );
 }

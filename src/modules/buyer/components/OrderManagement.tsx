@@ -26,7 +26,7 @@ const OrderManagement: React.FC = () => {
   const loadOrders = async () => {
     try {
       setLoading(true);
-      const response = await orderAPI.getVendorOrders(page, size);
+      const response = await orderAPI.getVendorOrders({ page, size });
       setOrders(response.content);
     } catch (error) {
       console.error('Error loading orders:', error);
@@ -37,7 +37,7 @@ const OrderManagement: React.FC = () => {
 
   const updateOrderStatus = async (orderId: number, status: string) => {
     try {
-      await orderAPI.updateOrderStatus(orderId, status);
+      await orderAPI.updateStatus(orderId, { status } as any);
       loadOrders();
     } catch (error) {
       console.error('Error updating order status:', error);
@@ -74,7 +74,7 @@ const OrderManagement: React.FC = () => {
                   <td>
                     <Badge color={statusColors[order.status]}>{order.status}</Badge>
                   </td>
-                  <td>{order.grandTotal.toFixed(2)}</td>
+                  <td>₹{order.finalAmount.toFixed(2)}</td>
                   <td>
                     <Select value="" onChange={(e) => updateOrderStatus(order.id, e.target.value)}>
                       <option value="">Change Status</option>

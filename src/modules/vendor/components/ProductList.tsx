@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { productAPI, Product } from '@/lib/productApi';
+import { productAPI, Product } from '@/shared/services/productApi';
 import { Button } from '@/shared/components/Button';
 import ImageManager from './ImageManager';
 import { Edit, Trash2, Eye, ToggleLeft, ToggleRight, Plus, Image } from 'lucide-react';
@@ -412,7 +412,7 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
                   return (
                     <Button
                       key={pageNum}
-                      variant={pageNum === page ? "primary" : "outline"}
+                      variant={pageNum === page ? "default" : "outline"}
                       onClick={() => setPage(pageNum)}
                       className="rounded-none"
                     >

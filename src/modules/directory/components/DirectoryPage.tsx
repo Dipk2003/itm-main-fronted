@@ -330,7 +330,7 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
         )}
 
         {/* Contact Supplier Modal */}
-        <Dialog isOpen={showContactModal} onClose={() => setShowContactModal(false)}>
+        <Dialog open={showContactModal} onOpenChange={(open) => setShowContactModal(open)}>
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold">Contact Supplier</h3>
@@ -480,7 +480,7 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
         </Dialog>
 
         {/* Mobile Number Modal */}
-        <Dialog isOpen={showMobileModal} onClose={() => setShowMobileModal(false)}>
+        <Dialog open={showMobileModal} onOpenChange={(open) => setShowMobileModal(open)}>
           <div className="p-6 text-center">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold">Contact Details</h3>

@@ -1,5 +1,5 @@
 import { api } from '@/shared/utils/apiClient';
-import { API_ENDPOINTS } from '@/shared/constants/api';
+import { API_ENDPOINTS } from '@/lib/api-config';
 
 // ====== CATEGORY SERVICES ======
 export const categoryService = {
@@ -64,7 +64,11 @@ export const productService = {
   // Search products
   searchProducts: async (query: string, filters: any = {}) => {
     try {
-      const response = await api.post(API_ENDPOINTS.BUYER.SEARCH, {
+      // Use fallback endpoint if BUYER.SEARCH is not defined
+      const searchEndpoint = API_ENDPOINTS.BUYER?.SEARCH || '/api/search';
+      console.log('🔍 Searching products with endpoint:', searchEndpoint);
+      
+      const response = await api.post(searchEndpoint, {
         query,
         ...filters
       });

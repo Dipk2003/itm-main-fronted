@@ -36,10 +36,10 @@ export default function VendorLoginPage() {
       console.log('✅ Vendor login fulfilled with payload:', result.payload);
       
       // Check if user is authenticated and redirect to vendor dashboard
-      if (result.payload.user && (result.payload.user.role === 'VENDOR' || result.payload.user.role === 'ROLE_VENDOR')) {
+      if (result.payload.user && (result.payload.user.role === 'vendor' || (result.payload.user.role as any) === 'ROLE_VENDOR')) {
         console.log('Vendor authenticated, redirecting to vendor dashboard');
-router.push('/dashboard/vendor-panel');
-      } else if (result.payload.user && result.payload.user.role !== 'VENDOR' && result.payload.user.role !== 'ROLE_VENDOR') {
+        router.push('/dashboard/vendor-panel');
+      } else if (result.payload.user && result.payload.user.role !== 'vendor' && (result.payload.user.role as any) !== 'ROLE_VENDOR') {
         // If user has wrong role, show error
         dispatch(clearError());
         alert('This account is not registered as a vendor. Please use the correct login portal.');
@@ -71,8 +71,8 @@ router.push('/dashboard/vendor-panel');
       
       if (verifyOtp.fulfilled.match(result)) {
         // Check user role after OTP verification
-        if (result.payload.user && (result.payload.user.role === 'VENDOR' || result.payload.user.role === 'ROLE_VENDOR')) {
-router.push('/dashboard/vendor-panel');
+        if (result.payload.user && (result.payload.user.role === 'vendor' || (result.payload.user.role as any) === 'ROLE_VENDOR')) {
+          router.push('/dashboard/vendor-panel');
         } else {
           alert('This account is not registered as a vendor. Please use the correct login portal.');
         }
@@ -212,9 +212,13 @@ router.push('/dashboard/vendor-panel');
                     const roleCheckResult = await dispatch(checkEmailRole(email));
                     
                     if (checkEmailRole.fulfilled.match(roleCheckResult)) {
-                      const { exists, role } = roleCheckResult.payload;
+                      const payload = roleCheckResult.payload as any;
                       
-                      if (!exists || exists === 'false') {
+                      // Handle different response formats
+                      const exists = payload?.exists !== undefined ? payload.exists : true;
+                      const role = payload?.role || 'vendor';
+                      
+                      if (exists === false || exists === 'false') {
                         alert('Email not found. Please check your email address.');
                         return;
                       }

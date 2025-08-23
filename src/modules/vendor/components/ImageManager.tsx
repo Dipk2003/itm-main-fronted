@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { productAPI, Product } from '@/lib/productApi';
+import { productAPI, Product } from '@/shared/services/productApi';
 import { Button } from '@/shared/components/Button';
 import { Upload, X, Image as ImageIcon, RefreshCw } from 'lucide-react';
 

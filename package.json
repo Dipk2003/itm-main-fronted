@@ -32,7 +32,11 @@
     "fix-bugs": "node fix-frontend-bugs.js",
     "build:ignore-errors": "set DISABLE_ESLINT_PLUGIN=true && npm run build",
     "dev:ignore-errors": "set DISABLE_ESLINT_PLUGIN=true && npm run dev",
-    "start:prod": "NODE_ENV=production npm start"
+    "start:prod": "NODE_ENV=production npm start",
+    "test:api": "node scripts/api-validation.js",
+    "test:integration": "jest tests/integration --verbose",
+    "validate:endpoints": "node scripts/api-validation.js",
+    "test:all": "npm run test && npm run test:api"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

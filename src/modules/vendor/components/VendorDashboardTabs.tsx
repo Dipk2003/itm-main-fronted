@@ -9,15 +9,21 @@ import VendorLeads from './VendorLeads';
 import VendorProfile from './VendorProfile';
 import VendorInvoices from './VendorInvoices';
 import VendorInquiries from './VendorInquiries';
+import VendorPackagesPage from './VendorPackagesPage';
+import TransactionHistory from './TransactionHistory';
+import ProductRecommendationEngine from '../../../components/vendor/ProductRecommendationEngine';
 
 const tabs = [
   { id: 'overview', label: 'Dashboard', icon: '🏠', color: 'blue' },
+  { id: 'recommendations', label: 'Smart Insights', icon: '🧠', color: 'violet' },
   { id: 'products', label: 'Products', icon: '📦', color: 'green' },
   { id: 'inquiries', label: 'Inquiries', icon: '💬', color: 'purple' },
   { id: 'orders', label: 'Orders', icon: '🛒', color: 'orange' },
   { id: 'invoices', label: 'Invoices', icon: '📄', color: 'indigo' },
   { id: 'analytics', label: 'Analytics', icon: '📈', color: 'pink' },
   { id: 'leads', label: 'Leads', icon: '🎯', color: 'teal' },
+  { id: 'packages', label: 'Subscription', icon: '💎', color: 'yellow' },
+  { id: 'billing', label: 'Billing', icon: '💳', color: 'cyan' },
   { id: 'profile', label: 'Profile', icon: '👤', color: 'gray' }
 ];
 
@@ -36,6 +42,8 @@ export default function VendorDashboardTabs() {
     switch (activeTab) {
       case 'overview':
         return <VendorOverview onTabChange={handleTabChange} />;
+      case 'recommendations':
+        return <ProductRecommendationEngine />;
       case 'products':
         return <VendorProducts initialView={productView} />;
       case 'inquiries':
@@ -48,6 +56,10 @@ export default function VendorDashboardTabs() {
         return <VendorAnalytics />;
       case 'leads':
         return <VendorLeads />;
+      case 'packages':
+        return <VendorPackagesPage />;
+      case 'billing':
+        return <TransactionHistory />;
       case 'profile':
         return <VendorProfile />;
       default:

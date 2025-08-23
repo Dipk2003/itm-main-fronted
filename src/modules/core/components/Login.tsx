@@ -15,7 +15,7 @@ import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 
 interface LoginProps {
-  userType?: 'user' | 'vendor' | 'admin';
+  userType?: 'user' | 'vendor' | 'admin' | 'employee';
   redirectTo?: string;
 }
 
@@ -82,6 +82,8 @@ const Login: React.FC<LoginProps> = ({
         return 'Admin Login';
       case 'vendor':
         return 'Vendor Login';
+      case 'employee':
+        return 'Employee Login';
       default:
         return 'User Login';
     }
