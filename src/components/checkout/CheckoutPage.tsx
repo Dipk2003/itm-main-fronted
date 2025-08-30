@@ -1,24 +1,23 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/navigation';
-import { RootState } from '@/store';
 import { clearCartItems } from '@/features/cart/cartSlice';
-import { paymentService, CreatePaymentOrderRequest } from '@/services/paymentService';
-import { orderAPI } from '@/shared/services/orderApi';
-import { cartWishlistAPI } from '@/modules/buyer/services/cartWishlistApi';
+import { CreatePaymentOrderRequest, paymentService } from '@/services/paymentService';
 import { Button } from '@/shared/components/Button';
-import { Input } from '@/shared/components/Input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
-import { 
-  CreditCardIcon, 
-  MapPinIcon, 
-  ShoppingCartIcon, 
+import { Input } from '@/shared/components/Input';
+import { orderAPI } from '@/shared/services/orderApi';
+import { RootState } from '@/store';
+import {
   CheckCircleIcon,
+  CreditCardIcon,
   ExclamationCircleIcon,
+  MapPinIcon,
+  ShoppingCartIcon,
   TruckIcon
 } from '@heroicons/react/24/outline';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Address {
   id?: number;
@@ -202,7 +201,7 @@ const CheckoutPage: React.FC = () => {
       // Create order
       const orderData = {
         items: items.map(item => ({
-          productId: parseInt(item.productId),
+          productId: parseInt(item.id),
           quantity: item.quantity,
           price: item.price * 100 // Convert to paise
         })),

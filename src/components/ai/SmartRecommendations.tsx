@@ -15,7 +15,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Ca
 import {
   SparklesIcon,
   StarIcon,
-  TrendingUpIcon,
   LightBulbIcon,
   ShoppingCartIcon,
   MapPinIcon,
@@ -28,6 +27,7 @@ import {
   EyeIcon,
   HeartIcon
 } from '@heroicons/react/24/outline';
+import { TrendingUp } from "lucide-react";
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 interface SmartRecommendationsProps {
@@ -384,7 +384,7 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
             insight.type === 'optimization' ? 'bg-purple-100' :
             'bg-yellow-100'
           }`}>
-            {insight.type === 'trend' && <TrendingUpIcon className="h-5 w-5 text-blue-600" />}
+            {insight.type === 'trend' && <TrendingUp className="h-5 w-5 text-blue-600" />}
             {insight.type === 'opportunity' && <LightBulbIcon className="h-5 w-5 text-green-600" />}
             {insight.type === 'optimization' && <ChartBarIcon className="h-5 w-5 text-purple-600" />}
             {insight.type === 'alert' && <ExclamationTriangleIcon className="h-5 w-5 text-yellow-600" />}
