@@ -77,7 +77,7 @@ export default function VendorLeads() {
     };
 
     loadLeads();
-  }, [user?.id]);
+  }, [user?.id, mockLeads]);
 
   // Mock data as fallback
   const mockLeads = useMemo<Lead[]>(() => [

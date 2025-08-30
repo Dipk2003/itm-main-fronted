@@ -87,52 +87,33 @@ const AdvancedSearchComponent: React.FC<AdvancedSearchProps> = ({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
-  // Debounced search function
-  const debouncedSearch = useMemo(
-    () => {
-      const debounce = (func: Function, wait: number) => {
-        let timeout: NodeJS.Timeout;
-        return (...args: any[]) => {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => func.apply(null, args), wait);
-        };
-      };
-      return debounce(performSearch, 300);
-    },
-    [performSearch]
-  );
+  // Update URL with current search parameters
+  const updateURL = useCallback(() => {
+    const params = new URLSearchParams();
+    
+    if (searchState.query) params.set('q', searchState.query);
+    if (searchState.filters.category) params.set('category', searchState.filters.category);
+    if (searchState.filters.minPrice) params.set('minPrice', searchState.filters.minPrice.toString());
+    if (searchState.filters.maxPrice) params.set('maxPrice', searchState.filters.maxPrice.toString());
+    if (searchState.filters.location) params.set('location', searchState.filters.location);
+    if (searchState.sort.field !== 'relevance') params.set('sort', searchState.sort.field);
+    if (searchState.sort.order !== 'desc') params.set('order', searchState.sort.order);
+    if (searchState.page > 1) params.set('page', searchState.page.toString());
 
-  // Load initial data
-  useEffect(() => {
-    loadSavedSearches();
-    loadSearchHistory();
-    
-    // Parse URL parameters
-    if (searchParams) {
-      const urlQuery = searchParams.get('q');
-      const urlCategory = searchParams.get('category');
-      const urlMinPrice = searchParams.get('minPrice');
-      const urlMaxPrice = searchParams.get('maxPrice');
-      
-      if (urlQuery || urlCategory || urlMinPrice || urlMaxPrice) {
-        setSearchState(prev => ({
-          ...prev,
-          query: urlQuery || prev.query,
-          filters: {
-            ...prev.filters,
-            category: urlCategory || prev.filters.category,
-            minPrice: urlMinPrice ? Number(urlMinPrice) : prev.filters.minPrice,
-            maxPrice: urlMaxPrice ? Number(urlMaxPrice) : prev.filters.maxPrice
-          }
-        }));
-      }
+    const newUrl = `/search?${params.toString()}`;
+    window.history.replaceState(null, '', newUrl);
+  }, [searchState.query, searchState.filters, searchState.sort, searchState.page]);
+
+  // Get autocomplete suggestions
+  const getSuggestions = useCallback(async (query: string) => {
+    try {
+      const suggestions = await searchService.autocomplete(query, searchType);
+      setSearchState(prev => ({ ...prev, suggestions }));
+      setShowSuggestions(true);
+    } catch (error) {
+      console.warn('Failed to get suggestions:', error);
     }
-    
-    // Perform initial search if query exists
-    if (searchState.query || Object.keys(searchState.filters).length > 0) {
-      performSearch();
-    }
-  }, [searchParams, searchState.query, searchState.filters, performSearch]);
+  }, [searchType]);
 
   // Perform search
   const performSearch = useCallback(async () => {
@@ -184,7 +165,54 @@ const AdvancedSearchComponent: React.FC<AdvancedSearchProps> = ({
         error: error.message || 'Search failed'
       }));
     }
-  }, [searchState.query, searchState.filters, searchState.sort, searchState.page, searchType]);
+  }, [searchState.query, searchState.filters, searchState.sort, searchState.page, searchType, updateURL]);
+
+  // Debounced search function
+  const debouncedSearch = useMemo(
+    () => {
+      const debounce = (func: Function, wait: number) => {
+        let timeout: NodeJS.Timeout;
+        return (...args: any[]) => {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(null, args), wait);
+        };
+      };
+      return debounce(performSearch, 300);
+    },
+    [performSearch]
+  );
+
+  // Load initial data
+  useEffect(() => {
+    loadSavedSearches();
+    loadSearchHistory();
+    
+    // Parse URL parameters
+    if (searchParams) {
+      const urlQuery = searchParams.get('q');
+      const urlCategory = searchParams.get('category');
+      const urlMinPrice = searchParams.get('minPrice');
+      const urlMaxPrice = searchParams.get('maxPrice');
+      
+      if (urlQuery || urlCategory || urlMinPrice || urlMaxPrice) {
+        setSearchState(prev => ({
+          ...prev,
+          query: urlQuery || prev.query,
+          filters: {
+            ...prev.filters,
+            category: urlCategory || prev.filters.category,
+            minPrice: urlMinPrice ? Number(urlMinPrice) : prev.filters.minPrice,
+            maxPrice: urlMaxPrice ? Number(urlMaxPrice) : prev.filters.maxPrice
+          }
+        }));
+      }
+    }
+    
+    // Perform initial search if query exists
+    if (searchState.query || Object.keys(searchState.filters).length > 0) {
+      performSearch();
+    }
+  }, [searchParams, searchState.query, searchState.filters, performSearch]);
 
   // Handle search input change
   const handleQueryChange = useCallback((value: string) => {
@@ -198,18 +226,7 @@ const AdvancedSearchComponent: React.FC<AdvancedSearchProps> = ({
     }
 
     debouncedSearch();
-  }, [debouncedSearch]);
-
-  // Get autocomplete suggestions
-  const getSuggestions = async (query: string) => {
-    try {
-      const suggestions = await searchService.autocomplete(query, searchType);
-      setSearchState(prev => ({ ...prev, suggestions }));
-      setShowSuggestions(true);
-    } catch (error) {
-      console.warn('Failed to get suggestions:', error);
-    }
-  };
+  }, [debouncedSearch, getSuggestions]);
 
   // Handle filter change
   const handleFilterChange = useCallback((filterKey: keyof SearchFilters, value: any) => {
@@ -275,23 +292,6 @@ const AdvancedSearchComponent: React.FC<AdvancedSearchProps> = ({
   const loadSearchHistory = () => {
     const history = searchService.getSearchHistory();
     setSearchHistory(history.map(h => h.query));
-  };
-
-  // Update URL with current search parameters
-  const updateURL = () => {
-    const params = new URLSearchParams();
-    
-    if (searchState.query) params.set('q', searchState.query);
-    if (searchState.filters.category) params.set('category', searchState.filters.category);
-    if (searchState.filters.minPrice) params.set('minPrice', searchState.filters.minPrice.toString());
-    if (searchState.filters.maxPrice) params.set('maxPrice', searchState.filters.maxPrice.toString());
-    if (searchState.filters.location) params.set('location', searchState.filters.location);
-    if (searchState.sort.field !== 'relevance') params.set('sort', searchState.sort.field);
-    if (searchState.sort.order !== 'desc') params.set('order', searchState.sort.order);
-    if (searchState.page > 1) params.set('page', searchState.page.toString());
-
-    const newUrl = `/search?${params.toString()}`;
-    window.history.replaceState(null, '', newUrl);
   };
 
   // Render filter aggregations

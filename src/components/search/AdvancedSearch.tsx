@@ -84,8 +84,8 @@ export const AdvancedSearch: React.FC = () => {
     const sortBy = searchParams.get('sortBy') || 'relevance';
     const sortOrder = (searchParams.get('sortOrder') || 'desc') as 'asc' | 'desc';
 
-    setFilters({
-      ...filters,
+    setFilters(prevFilters => ({
+      ...prevFilters,
       query,
       categories,
       priceRange: [minPrice, maxPrice],
@@ -94,7 +94,7 @@ export const AdvancedSearch: React.FC = () => {
       inStock,
       sortBy,
       sortOrder
-    });
+    }));
   }, [searchParams]);
 
   const updateSearchParams = debounce((newFilters: SearchFilters) => {

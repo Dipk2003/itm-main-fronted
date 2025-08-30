@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Badge } from '@/shared/components/Badge';
 import { Button } from '@/shared/components/Button';
@@ -53,7 +53,7 @@ const AnalyticsDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
 
-  const fetchAnalytics = React.useCallback(async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/analytics/dashboard?range=${timeRange}`, {
@@ -107,7 +107,7 @@ const AnalyticsDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeRange]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
@@ -137,6 +137,7 @@ const AnalyticsDashboard: React.FC = () => {
       </div>
     );
   };
+  
   useEffect(() => {
     fetchAnalytics();
   }, [fetchAnalytics]);

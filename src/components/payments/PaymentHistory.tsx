@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { paymentService, TransactionHistory, PaymentAnalytics } from '@/services/paymentService';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
@@ -53,9 +53,9 @@ const PaymentHistory: React.FC = () => {
 
   useEffect(() => {
     loadTransactionHistory();
-  }, [appliedFilters]);
+  }, [appliedFilters, loadTransactionHistory]);
 
-  const loadTransactionHistory = async () => {
+  const loadTransactionHistory = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -74,7 +74,7 @@ const PaymentHistory: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [appliedFilters]);
 
   const loadAnalytics = async () => {
     try {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import EnhancedDirectorySearch from './EnhancedDirectorySearch';
 import ServiceProviderList from './ServiceProviderList';
 import LocalSellers from './LocalSellers';
@@ -57,7 +57,7 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
     if (initialQuery || initialLocation) {
       handleSearch(initialQuery, initialLocation, initialCategory);
     }
-  }, [initialQuery, initialLocation, initialCategory]);
+  }, [initialQuery, initialLocation, initialCategory, handleSearch]);
 
   // Handler for structured search (service, state, city)
   const handleStructuredSearch = async (service: string, state: string, city: string) => {
@@ -86,7 +86,7 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
   };
 
   // Handler for direct search (query, location)
-  const handleDirectSearch = async (query: string, location: string) => {
+  const handleDirectSearch = useCallback(async (query: string, location: string) => {
     setIsLoading(true);
     setError(null);
 
@@ -108,12 +108,12 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [currentFilters]);
 
   // Legacy handler for compatibility with popular categories
-  const handleSearch = async (query: string, location: string, category?: string) => {
+  const handleSearch = useCallback(async (query: string, location: string, category?: string) => {
     return handleDirectSearch(query, location);
-  };
+  }, [handleDirectSearch]);
 
   const handleFilterChange = async (newFilters: DirectorySearchFilters) => {
     setIsLoading(true);

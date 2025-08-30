@@ -226,7 +226,7 @@ export const usePerformanceMonitoring = (componentName: string) => {
 
   useEffect(() => {
     return monitor.measureComponentPerformance(componentName);
-  }, [componentName]);
+  }, [componentName, monitor]);
 
   return {
     recordInteraction: (type: string, duration: number) => {

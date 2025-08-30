@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/shared/components/Button';
 import { HeartIcon as HeartOutlineIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
@@ -21,7 +21,7 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
   const [loading, setLoading] = useState(false);
 
   // Check if product is in wishlist
-  const checkWishlistStatus = async () => {
+  const checkWishlistStatus = useCallback(async () => {
     try {
       const wishlistItems = await wishlistApi.getWishlist();
       const isInList = wishlistItems.some(item => item.productId === productId);
@@ -29,7 +29,7 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
     } catch (error) {
       console.error('Error checking wishlist status:', error);
     }
-  };
+  }, [productId]);
 
   // Toggle wishlist status
   const handleToggleWishlist = async () => {
@@ -59,7 +59,7 @@ const WishlistButton: React.FC<WishlistButtonProps> = ({
 
   useEffect(() => {
     checkWishlistStatus();
-  }, [productId]);
+  }, [productId, checkWishlistStatus]);
 
   return (
     <Button

@@ -31,7 +31,7 @@ const KnowledgeBasePanel: React.FC = () => {
 
   useEffect(() => {
     fetchKnowledgeBaseData();
-  }, [selectedCategory, searchTerm]);
+  }, [selectedCategory, searchTerm, fetchKnowledgeBaseData]);
 
   const fetchKnowledgeBaseData = useCallback(async () => {
     try {

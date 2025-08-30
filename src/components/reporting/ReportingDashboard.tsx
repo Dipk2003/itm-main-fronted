@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import axios from 'axios';
@@ -31,9 +31,9 @@ export const ReportingDashboard: React.FC<ReportingDashboardProps> = ({
 
   useEffect(() => {
     fetchReportData();
-  }, [startDate, endDate, type, vendorId]);
+  }, [startDate, endDate, type, vendorId, fetchReportData]);
 
-  const fetchReportData = async () => {
+  const fetchReportData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get(
@@ -53,7 +53,7 @@ export const ReportingDashboard: React.FC<ReportingDashboardProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [endDate, startDate, token, type, vendorId]);
 
   const renderSalesOverview = () => {
     if (!reportData) return null;

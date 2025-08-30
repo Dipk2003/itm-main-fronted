@@ -185,6 +185,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       return;
     }
 
+    const currentRef = imgRef.current;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -199,13 +200,13 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       }
     );
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [src, lazy, threshold]);

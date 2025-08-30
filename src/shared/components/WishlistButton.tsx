@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { wishlistApi } from '@/lib/wishlistApi';
 
 interface WishlistButtonProps {
@@ -27,16 +27,16 @@ export default function WishlistButton({
 
   useEffect(() => {
     checkWishlistStatus();
-  }, [productId, userId]);
+  }, [productId, userId, checkWishlistStatus]);
 
-  const checkWishlistStatus = async () => {
+  const checkWishlistStatus = useCallback(async () => {
     try {
       const inWishlist = await wishlistApi.isInWishlist(productId.toString());
       setIsInWishlist(inWishlist);
     } catch (error) {
       console.error('Error checking wishlist status:', error);
     }
-  };
+  }, [productId]);
 
   const handleToggleWishlist = async () => {
     if (loading) return;

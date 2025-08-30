@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import {
@@ -76,9 +76,9 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
     if (actualUserId || productId) {
       loadRecommendations();
     }
-  }, [actualUserId, productId, type, context]);
+  }, [actualUserId, productId, type, context, loadRecommendations]);
 
-  const loadRecommendations = async () => {
+  const loadRecommendations = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -192,7 +192,7 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [actualUserId, context, maxItems, productId, type, user?.role]);
 
   const handleProductClick = (product: ProductRecommendation) => {
     if (actualUserId) {

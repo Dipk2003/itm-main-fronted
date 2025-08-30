@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   BarChart,
   Bar,
@@ -114,9 +114,9 @@ const BusinessAnalyticsDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [selectedTimeframe]);
+  }, [selectedTimeframe, fetchAnalyticsData]);
 
-  const fetchAnalyticsData = async () => {
+  const fetchAnalyticsData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -215,7 +215,7 @@ const BusinessAnalyticsDashboard: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedTimeframe]);
 
   const MetricCard = ({ 
     title, 

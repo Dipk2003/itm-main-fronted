@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { paymentService } from '@/services/paymentService';
 import { orderAPI } from '@/shared/services/orderApi';
@@ -64,9 +64,9 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paym
       setError('Order ID not found');
       setLoading(false);
     }
-  }, [actualOrderId]);
+  }, [actualOrderId, fetchOrderAndPaymentDetails]);
 
-  const fetchOrderAndPaymentDetails = async () => {
+  const fetchOrderAndPaymentDetails = useCallback(async () => {
     const orderId = parseInt(actualOrderId, 10);
     if (isNaN(orderId)) {
       setError('Invalid order ID');
@@ -112,7 +112,7 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paym
     } finally {
       setLoading(false);
     }
-  };
+  }, [actualOrderId, razorpayOrderId, razorpayPaymentId, razorpaySignature]);
 
   const handleContinueShopping = () => {
     router.push('/');

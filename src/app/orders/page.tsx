@@ -99,7 +99,7 @@ export default function OrdersPage() {
       setOrders(sampleOrders);
       setLoading(false);
     }, 1000);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, sampleOrders]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {

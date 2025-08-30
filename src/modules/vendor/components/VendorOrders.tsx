@@ -71,7 +71,7 @@ export default function VendorOrders() {
     };
 
     loadOrders();
-  }, [user?.id, currentPage]);
+  }, [user?.id, currentPage, mockOrders]);
 
   // Mock data as fallback
   const mockOrders = useMemo<Order[]>(() => [

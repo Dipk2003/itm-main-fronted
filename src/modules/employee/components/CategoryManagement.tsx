@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/shared/components/Card';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
@@ -40,9 +40,9 @@ export default function CategoryManagement() {
   useEffect(() => {
     loadCategories();
     loadMainCategories();
-  }, [page, size, selectedLevel, selectedParentId]);
+  }, [page, size, selectedLevel, selectedParentId, viewMode, searchQuery, loadCategories, loadMainCategories]);
 
-  const loadCategories = async () => {
+  const loadCategories = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -61,16 +61,16 @@ export default function CategoryManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [viewMode, selectedLevel, page, size, selectedParentId, searchQuery]);
 
-  const loadMainCategories = async () => {
+  const loadMainCategories = useCallback(async () => {
     try {
       const data = await getMainCategories();
       setParentCategories(data);
     } catch (error) {
       console.error('Failed to load main categories:', error);
     }
-  };
+  }, []);
 
   const loadSubcategories = async (parentId: string) => {
     try {
