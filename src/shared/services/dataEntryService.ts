@@ -205,8 +205,8 @@ export class DataEntryService {
     page?: number;
     size?: number;
   }): Promise<PagedResponse<Category>> {
-    return apiRequest<PagedResponse<Category>>(
-      API_CONFIG.ENDPOINTS.CATEGORIES,
+return apiRequest<PagedResponse<Category>>(
+      API_CONFIG.ENDPOINTS.CATEGORIES.BASE,
       {
         method: 'GET',
       }
@@ -233,7 +233,7 @@ export class DataEntryService {
 
   static async createCategory(data: CreateCategoryDto): Promise<Category> {
     return apiRequest<Category>(
-      API_CONFIG.ENDPOINTS.CATEGORIES,
+      API_CONFIG.ENDPOINTS.CATEGORIES.BASE,
       {
         method: 'POST',
         body: JSON.stringify(data),
@@ -268,7 +268,7 @@ export class DataEntryService {
     size?: number;
   }): Promise<PagedResponse<SubCategory>> {
     return apiRequest<PagedResponse<SubCategory>>(
-      API_CONFIG.ENDPOINTS.SUBCATEGORIES,
+      API_CONFIG.ENDPOINTS.CATEGORIES.SUBCATEGORIES,
       {
         method: 'GET',
       }
@@ -281,7 +281,7 @@ export class DataEntryService {
 
   static async createSubCategory(data: CreateSubCategoryDto): Promise<SubCategory> {
     return apiRequest<SubCategory>(
-      API_CONFIG.ENDPOINTS.SUBCATEGORIES,
+      API_CONFIG.ENDPOINTS.CATEGORIES.SUBCATEGORIES,
       {
         method: 'POST',
         body: JSON.stringify(data),
@@ -316,7 +316,7 @@ export class DataEntryService {
     size?: number;
   }): Promise<PagedResponse<MicroCategory>> {
     return apiRequest<PagedResponse<MicroCategory>>(
-      API_CONFIG.ENDPOINTS.MICROCATEGORIES,
+      API_CONFIG.ENDPOINTS.CATEGORIES.MICROCATEGORIES,
       {
         method: 'GET',
       }
@@ -329,7 +329,7 @@ export class DataEntryService {
 
   static async createMicroCategory(data: CreateMicroCategoryDto): Promise<MicroCategory> {
     return apiRequest<MicroCategory>(
-      API_CONFIG.ENDPOINTS.MICROCATEGORIES,
+      API_CONFIG.ENDPOINTS.CATEGORIES.MICROCATEGORIES,
       {
         method: 'POST',
         body: JSON.stringify(data),
@@ -366,7 +366,7 @@ export class DataEntryService {
     size?: number;
   }): Promise<PagedResponse<Product>> {
     return apiRequest<PagedResponse<Product>>(
-      API_CONFIG.ENDPOINTS.PRODUCTS,
+      API_CONFIG.ENDPOINTS.PRODUCTS.BASE,
       {
         method: 'GET',
       }
@@ -379,7 +379,7 @@ export class DataEntryService {
 
   static async createProduct(data: CreateProductDto): Promise<Product> {
     return apiRequest<Product>(
-      API_CONFIG.ENDPOINTS.PRODUCTS,
+      API_CONFIG.ENDPOINTS.PRODUCTS.BASE,
       {
         method: 'POST',
         body: JSON.stringify(data),
@@ -408,10 +408,10 @@ export class DataEntryService {
 
   // Analytics operations
   static async getDashboardAnalytics(): Promise<DashboardAnalytics> {
-    return apiRequest<DashboardAnalytics>(API_CONFIG.ENDPOINTS.DASHBOARD_ANALYTICS);
+    return apiRequest<DashboardAnalytics>(API_CONFIG.ENDPOINTS.ANALYTICS.DASHBOARD_ANALYTICS);
   }
 
   static async getCategoryStats(): Promise<CategoryStats[]> {
-    return apiRequest<CategoryStats[]>(API_CONFIG.ENDPOINTS.CATEGORY_STATS);
+    return apiRequest<CategoryStats[]>(API_CONFIG.ENDPOINTS.ANALYTICS.CATEGORY_STATS);
   }
 }

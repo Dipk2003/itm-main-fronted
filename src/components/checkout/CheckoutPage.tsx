@@ -199,9 +199,9 @@ const CheckoutPage: React.FC = () => {
 
     try {
       // Create order
-      const orderData = {
+      const orderData: Omit<CreateOrderDto, 'shippingAddressId' | 'billingAddressId'> = {
         items: items.map(item => ({
-          productId: parseInt(item.id),
+          productId: parseInt(item.id, 10), // Convert string ID to number
           quantity: item.quantity,
           price: item.price * 100 // Convert to paise
         })),
@@ -235,7 +235,7 @@ const CheckoutPage: React.FC = () => {
             name: user?.name || 'Customer',
             email: user?.email || '',
             phone: user?.phone || ''
-          },
+          } as { name: string; email: string; phone: string; },
           notes: {
             orderId: order.id.toString(),
             customerId: user?.id || ''
@@ -251,7 +251,7 @@ const CheckoutPage: React.FC = () => {
             name: user?.name || 'Customer',
             email: user?.email || '',
             phone: user?.phone || ''
-          },
+          } as { name: string; email: string; phone: string; },
           async (response) => {
             // Payment successful
             console.log('Payment successful:', response);

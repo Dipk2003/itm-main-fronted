@@ -4,7 +4,7 @@
  * Tools for lazy loading, caching, and performance monitoring
  */
 
-import { lazy, ComponentType } from 'react';
+import React, { lazy, ComponentType, useEffect, createElement } from 'react';
 
 // 📦 Lazy Loading Utilities
 export function createLazyComponent<T extends ComponentType<any>>(
@@ -237,11 +237,11 @@ export function withPerformanceLogging<P extends object>(
     const endTimer = performanceMonitor.startTimer(`${componentName}_render`);
     
     // Record render time after component mounts
-    React.useEffect(() => {
+    useEffect(() => {
       endTimer();
     }, [endTimer]);
     
-    return React.createElement(WrappedComponent, props);
+    return createElement(WrappedComponent, props);
   };
 
   PerformanceWrapper.displayName = `withPerformanceLogging(${componentName})`;

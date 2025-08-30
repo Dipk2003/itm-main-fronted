@@ -1,6 +1,8 @@
 // API Configuration for connecting to Spring Boot backend
+export type ApiEndpointsConfig = typeof API_CONFIG.ENDPOINTS;
+
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080',
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL,
   ENDPOINTS: {
     // Health check
     HEALTH: '/health',

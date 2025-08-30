@@ -6,8 +6,30 @@ import { Client } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Button } from '@/shared/components/Button';
-import { Input } from '@/shared/components/Input';
-import { Avatar } from '@/shared/components/Avatar';
+// Temporary Avatar component until shared component is available
+interface AvatarProps {
+  src?: string;
+  alt: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 'md' }) => {
+  const sizeClasses = {
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10',
+    lg: 'w-12 h-12'
+  };
+
+  return (
+    <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gray-200 flex items-center justify-center`}>
+      {src ? (
+        <img src={src} alt={alt} className="w-full h-full object-cover" />
+      ) : (
+        <span className="text-gray-500 text-sm">{alt.charAt(0).toUpperCase()}</span>
+      )}
+    </div>
+  );
+};
 import { 
   PaperAirplaneIcon, 
   PaperClipIcon,
@@ -227,14 +249,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </button>
         </div>
         <div className="flex space-x-2">
-          <Input
+          <textarea
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
-            multiline
-            maxRows={4}
-            className="flex-1"
+            rows={1}
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            style={{ minHeight: '40px', maxHeight: '120px' }}
           />
           <Button
             onClick={sendMessage}

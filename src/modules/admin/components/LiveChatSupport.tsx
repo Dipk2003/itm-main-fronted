@@ -30,35 +30,14 @@ interface ChatMessage {
 }
 
 export default function LiveChatSupport() {
-  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [selectedSession, setSelectedSession] = useState<ChatSession | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchChatSessions();
-    const newSocket = initializeSocket();
-    
-    return () => {
-      if (newSocket) {
-        newSocket.disconnect();
-      }
-    };
-  }, [initializeSocket]);
-
-  useEffect(() => {
-    if (selectedSession) {
-      fetchChatMessages(selectedSession.id);
-    }
-  }, [selectedSession]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const initializeSocket = useCallback(() => {
     let newSocket = null;
@@ -102,7 +81,29 @@ export default function LiveChatSupport() {
       console.error('Socket connection failed:', error);
       return null;
     }
+  }, [selectedSession, setMessages, setSessions]);
+
+  useEffect(() => {
+    fetchChatSessions();
+    const newSocket = initializeSocket();
+    
+    return () => {
+      if (newSocket) {
+        newSocket.disconnect();
+      }
+    };
+  }, [initializeSocket]);
+
+  useEffect(() => {
+    if (selectedSession) {
+      fetchChatMessages(selectedSession.id);
+    }
   }, [selectedSession]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
 
   const fetchChatSessions = async () => {
     try {

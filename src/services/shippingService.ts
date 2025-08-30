@@ -104,7 +104,7 @@ export interface BulkShippingRequest {
     orderId: string;
     fromAddress: ShippingAddress;
     toAddress: ShippingAddress;
-    package: ShippingPackage;
+    packageDetails: ShippingPackage;
     provider?: ShippingProvider;
   }>;
   preferences: {
@@ -154,7 +154,7 @@ class ShippingService {
   async getShippingRates(
     fromAddress: ShippingAddress,
     toAddress: ShippingAddress,
-    package: ShippingPackage,
+    packageDetails: ShippingPackage,
     options?: {
       providers?: ShippingProvider[];
       cod?: boolean;
@@ -165,7 +165,7 @@ class ShippingService {
       const response = await api.post(`${this.baseUrl}/rates`, {
         fromAddress,
         toAddress,
-        package,
+        package: packageDetails,
         options
       });
       return response.data;
@@ -180,7 +180,7 @@ class ShippingService {
     orderId: string,
     fromAddress: ShippingAddress,
     toAddress: ShippingAddress,
-    package: ShippingPackage,
+    packageDetails: ShippingPackage,
     provider: ShippingProvider,
     serviceType?: string
   ): Promise<ShippingLabel> {
@@ -189,7 +189,7 @@ class ShippingService {
         orderId,
         fromAddress,
         toAddress,
-        package,
+        package: packageDetails,
         provider,
         serviceType
       });

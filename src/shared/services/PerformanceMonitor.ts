@@ -1,3 +1,5 @@
+import React, { useEffect } from 'react';
+
 interface PerformanceMetric {
   name: string;
   value: number;
@@ -222,7 +224,7 @@ export class PerformanceMonitor {
 export const usePerformanceMonitoring = (componentName: string) => {
   const monitor = PerformanceMonitor.getInstance();
 
-  React.useEffect(() => {
+  useEffect(() => {
     return monitor.measureComponentPerformance(componentName);
   }, [componentName]);
 

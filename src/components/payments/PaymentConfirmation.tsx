@@ -22,17 +22,22 @@ interface PaymentConfirmationProps {
   paymentId?: string;
 }
 
+interface OrderItem {
+  id: number;
+  productId: number;
+  productName: string;
+  quantity: number;
+  price: number;
+  subtotal: number;
+}
+
 interface OrderDetails {
   id: number;
   orderNumber: string;
   status: string;
   paymentStatus: string;
   totalAmount: number;
-  items: Array<{
-    productName: string;
-    quantity: number;
-    price: number;
-  }>;
+  items: OrderItem[];
   estimatedDelivery?: string;
 }
 
@@ -62,11 +67,18 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paym
   }, [actualOrderId]);
 
   const fetchOrderAndPaymentDetails = async () => {
+    const orderId = parseInt(actualOrderId, 10);
+    if (isNaN(orderId)) {
+      setError('Invalid order ID');
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       
       // Fetch order details
-      const order = await orderAPI.getById(parseInt(actualOrderId));
+      // Fetch order details
+      const order = await orderAPI.getById(orderId);
       setOrderDetails(order);
       
       // If we have payment verification parameters, verify the payment

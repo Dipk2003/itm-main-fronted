@@ -180,7 +180,7 @@ export const vendorPackageAPI = {
   },
 
   // Purchase a package
-  purchasePackage: async (purchaseData: VendorPackagePurchase): Promise<{
+  purchasePackage: async (purchaseData: VendorPackagePurchase): Promise<ApiResponse<{
     transactionId: string;
     totalAmount: number;
     status: string;
@@ -218,7 +218,7 @@ export const vendorPackageAPI = {
   },
 
   // Check permissions
-  checkPermission: async (action: string): Promise<{ allowed: boolean; action: string; message: string }> => {
+  checkPermission: async (action: string): Promise<ApiResponse<{ allowed: boolean; action: string; message: string }>> => {
     const response = await api.get<ApiResponse<any>>(`/api/vendor/packages/permissions/check/${action}`);
     return response.data;
   },

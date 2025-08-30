@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
@@ -21,7 +21,7 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const sampleCartItems = React.useMemo<CartItem[]>(() => [
+  const sampleCartItems = useMemo<CartItem[]>(() => [
     {
       id: 1,
       name: "Premium Laptop",
