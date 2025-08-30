@@ -5,6 +5,12 @@ export { Card } from './Card';
 export { Dialog } from './Dialog';
 export { Badge } from './Badge';
 export { Select } from './Select';
+export { default as Alert } from './Alert';
+export { default as Checkbox } from './Checkbox';
+export { default as MultiSelect } from './MultiSelect';
+export { default as RangeSlider } from './RangeSlider';
+export { default as Slider } from './Slider';
+export { default as Avatar } from './Avatar';
 
 // Layout Components
 export { default as Navbar } from './Navbar';

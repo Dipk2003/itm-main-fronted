@@ -31,54 +31,6 @@ export default function VendorLeads() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
 
-  // Load leads from API
-  useEffect(() => {
-    const loadLeads = async () => {
-      if (!user?.id) {
-        console.log('No user ID available');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        console.log('Loading leads for vendor:', user.id);
-        const response = await getVendorLeads(Number(user.id));
-        console.log('Leads response:', response.data);
-        
-        // Transform API data to match our interface
-        const transformedLeads = response.data.map((lead: any, index: number) => ({
-          id: lead.id || index + 1,
-          name: lead.name || lead.customerName || 'Unknown',
-          company: lead.company || lead.companyName || 'N/A',
-          email: lead.email || lead.customerEmail || '',
-          phone: lead.phone || lead.customerPhone || '',
-          product: lead.product || lead.productName || lead.requirement || 'N/A',
-          quantity: lead.quantity || 1,
-          budget: lead.budget || lead.budgetRange || '₹0',
-          status: lead.status || 'new',
-          priority: lead.priority || 'medium',
-          source: lead.source || lead.leadSource || 'website',
-          date: lead.date || lead.createdAt || new Date().toISOString().split('T')[0],
-          lastContact: lead.lastContact || lead.updatedAt || new Date().toISOString().split('T')[0]
-        }));
-        
-        setLeads(transformedLeads);
-        setError(null);
-      } catch (err: any) {
-        console.error('Error loading leads:', err);
-        setError('Failed to load leads. Using fallback data.');
-        
-        // Fallback to mock data if API fails
-        setLeads(mockLeads);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadLeads();
-  }, [user?.id, mockLeads]);
-
   // Mock data as fallback
   const mockLeads = useMemo<Lead[]>(() => [
     {
@@ -142,6 +94,54 @@ export default function VendorLeads() {
       lastContact: '2024-01-18'
     }
   ], []);
+
+  // Load leads from API
+  useEffect(() => {
+    const loadLeads = async () => {
+      if (!user?.id) {
+        console.log('No user ID available');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log('Loading leads for vendor:', user.id);
+        const response = await getVendorLeads(Number(user.id));
+        console.log('Leads response:', response.data);
+        
+        // Transform API data to match our interface
+        const transformedLeads = response.data.map((lead: any, index: number) => ({
+          id: lead.id || index + 1,
+          name: lead.name || lead.customerName || 'Unknown',
+          company: lead.company || lead.companyName || 'N/A',
+          email: lead.email || lead.customerEmail || '',
+          phone: lead.phone || lead.customerPhone || '',
+          product: lead.product || lead.productName || lead.requirement || 'N/A',
+          quantity: lead.quantity || 1,
+          budget: lead.budget || lead.budgetRange || '₹0',
+          status: lead.status || 'new',
+          priority: lead.priority || 'medium',
+          source: lead.source || lead.leadSource || 'website',
+          date: lead.date || lead.createdAt || new Date().toISOString().split('T')[0],
+          lastContact: lead.lastContact || lead.updatedAt || new Date().toISOString().split('T')[0]
+        }));
+        
+        setLeads(transformedLeads);
+        setError(null);
+      } catch (err: any) {
+        console.error('Error loading leads:', err);
+        setError('Failed to load leads. Using fallback data.');
+        
+        // Fallback to mock data if API fails
+        setLeads(mockLeads);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadLeads();
+  }, [user?.id, mockLeads]);
 
   const getStatusColor = (status: string) => {
     switch (status) {

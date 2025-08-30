@@ -72,12 +72,6 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<'recommended' | 'similar' | 'trending' | 'complementary'>('recommended');
 
-  useEffect(() => {
-    if (actualUserId || productId) {
-      loadRecommendations();
-    }
-  }, [actualUserId, productId, type, context, loadRecommendations]);
-
   const loadRecommendations = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -193,6 +187,12 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
       setLoading(false);
     }
   }, [actualUserId, context, maxItems, productId, type, user?.role]);
+
+  useEffect(() => {
+    if (actualUserId || productId) {
+      loadRecommendations();
+    }
+  }, [actualUserId, productId, type, context, loadRecommendations]);
 
   const handleProductClick = (product: ProductRecommendation) => {
     if (actualUserId) {

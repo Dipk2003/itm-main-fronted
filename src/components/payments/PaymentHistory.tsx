@@ -11,10 +11,10 @@ import {
   ArrowDownTrayIcon,
   CalendarIcon,
   CurrencyRupeeIcon,
-  TrendingUpIcon,
-  TrendingDownIcon,
+  ArrowTrendingUpIcon,
+  ArrowTrendingDownIcon,
   CreditCardIcon,
-  RefreshIcon,
+  ArrowPathIcon,
   ChartBarIcon
 } from '@heroicons/react/24/outline';
 
@@ -149,9 +149,9 @@ const PaymentHistory: React.FC = () => {
       case 'payment':
         return <CreditCardIcon className="h-5 w-5 text-green-500" />;
       case 'refund':
-        return <TrendingDownIcon className="h-5 w-5 text-red-500" />;
+        return <ArrowTrendingDownIcon className="h-5 w-5 text-red-500" />;
       case 'settlement':
-        return <TrendingUpIcon className="h-5 w-5 text-blue-500" />;
+        return <ArrowTrendingUpIcon className="h-5 w-5 text-blue-500" />;
       default:
         return <CurrencyRupeeIcon className="h-5 w-5 text-gray-500" />;
     }
@@ -231,7 +231,7 @@ const PaymentHistory: React.FC = () => {
                     <p className="text-sm font-medium text-gray-600">Success Rate</p>
                     <p className="text-2xl font-bold text-green-600">{analytics.successRate.toFixed(1)}%</p>
                   </div>
-                  <TrendingUpIcon className="h-8 w-8 text-green-500" />
+                  <ArrowTrendingUpIcon className="h-8 w-8 text-green-500" />
                 </div>
               </CardContent>
             </Card>
@@ -284,7 +284,7 @@ const PaymentHistory: React.FC = () => {
               className="flex items-center space-x-2"
               disabled={loading}
             >
-              <RefreshIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              <ArrowPathIcon className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
             </Button>
           </div>

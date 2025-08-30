@@ -26,6 +26,50 @@ export default function VendorOrders() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
 
+  // Mock data as fallback
+  const mockOrders = useMemo<Order[]>(() => [
+    {
+      id: 12345,
+      customer: 'John Doe',
+      email: 'john@example.com',
+      products: ['Laptop Stand', 'Wireless Mouse'],
+      amount: 2500,
+      status: 'pending',
+      date: '2024-01-15',
+      paymentStatus: 'paid'
+    },
+    {
+      id: 12346,
+      customer: 'Jane Smith',
+      email: 'jane@example.com',
+      products: ['USB Hub', 'Phone Case'],
+      amount: 1800,
+      status: 'processing',
+      date: '2024-01-14',
+      paymentStatus: 'paid'
+    },
+    {
+      id: 12347,
+      customer: 'Mike Johnson',
+      email: 'mike@example.com',
+      products: ['Wireless Earbuds'],
+      amount: 3200,
+      status: 'shipped',
+      date: '2024-01-13',
+      paymentStatus: 'paid'
+    },
+    {
+      id: 12348,
+      customer: 'Sarah Wilson',
+      email: 'sarah@example.com',
+      products: ['Laptop Bag', 'Mouse Pad'],
+      amount: 1500,
+      status: 'delivered',
+      date: '2024-01-12',
+      paymentStatus: 'paid'
+    }
+  ], []);
+
   // Load orders from API
   useEffect(() => {
     const loadOrders = async () => {
@@ -72,50 +116,6 @@ export default function VendorOrders() {
 
     loadOrders();
   }, [user?.id, currentPage, mockOrders]);
-
-  // Mock data as fallback
-  const mockOrders = useMemo<Order[]>(() => [
-    {
-      id: 12345,
-      customer: 'John Doe',
-      email: 'john@example.com',
-      products: ['Laptop Stand', 'Wireless Mouse'],
-      amount: 2500,
-      status: 'pending',
-      date: '2024-01-15',
-      paymentStatus: 'paid'
-    },
-    {
-      id: 12346,
-      customer: 'Jane Smith',
-      email: 'jane@example.com',
-      products: ['USB Hub', 'Phone Case'],
-      amount: 1800,
-      status: 'processing',
-      date: '2024-01-14',
-      paymentStatus: 'paid'
-    },
-    {
-      id: 12347,
-      customer: 'Mike Johnson',
-      email: 'mike@example.com',
-      products: ['Wireless Earbuds'],
-      amount: 3200,
-      status: 'shipped',
-      date: '2024-01-13',
-      paymentStatus: 'paid'
-    },
-    {
-      id: 12348,
-      customer: 'Sarah Wilson',
-      email: 'sarah@example.com',
-      products: ['Laptop Bag', 'Mouse Pad'],
-      amount: 1500,
-      status: 'delivered',
-      date: '2024-01-12',
-      paymentStatus: 'paid'
-    }
-  ], []);
 
   const getStatusColor = (status: string) => {
     switch (status) {
