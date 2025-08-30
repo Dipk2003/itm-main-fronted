@@ -201,7 +201,18 @@ export function formatPhoneNumber(phone: string | null | undefined): string {
   return phone;
 }
 
-export default {
+export interface Formatter {
+  formatCurrency: typeof formatCurrency;
+  formatNumber: typeof formatNumber;
+  formatPercentage: typeof formatPercentage;
+  formatDate: typeof formatDate;
+  formatTime: typeof formatTime;
+  formatFileSize: typeof formatFileSize;
+  truncateText: typeof truncateText;
+  formatPhoneNumber: typeof formatPhoneNumber;
+}
+
+const formatter: Formatter = {
   formatCurrency,
   formatNumber,
   formatPercentage,
@@ -209,5 +220,7 @@ export default {
   formatTime,
   formatFileSize,
   truncateText,
-  formatPhoneNumber,
+formatPhoneNumber,
 };
+
+export default formatter;

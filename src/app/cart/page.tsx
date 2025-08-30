@@ -21,8 +21,7 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Sample cart data - replace with actual cart from API/local storage
-  const sampleCartItems: CartItem[] = [
+  const sampleCartItems = React.useMemo<CartItem[]>(() => [
     {
       id: 1,
       name: "Premium Laptop",
@@ -41,7 +40,7 @@ export default function CartPage() {
       vendor: "Office Furniture Co",
       maxStock: 25
     }
-  ];
+  ], []);
 
   useEffect(() => {
     if (!isAuthenticated) {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { ServiceProvider } from '../types/directory';
 import { directoryApi } from '../services/directoryApi';
 import { Card } from '@/shared/components';
@@ -64,10 +65,12 @@ const LocalSellers: React.FC = () => {
                 {/* Provider Image */}
                 <div className="flex-shrink-0">
                   {provider.images.length > 0 ? (
-                    <img
+                    <Image
                       src={provider.images[0]}
                       alt={provider.businessName}
-                      className="w-12 h-12 object-cover rounded-lg"
+                      width={48}
+                      height={48}
+                      className="object-cover rounded-lg"
                     />
                   ) : (
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center">

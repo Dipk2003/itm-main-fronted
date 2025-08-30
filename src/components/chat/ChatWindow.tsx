@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Client } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
@@ -189,10 +190,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
               >
                 {message.type === 'TEXT' && <p>{message.content}</p>}
                 {message.type === 'IMAGE' && (
-                  <img
+                  <Image
                     src={message.attachmentUrl}
                     alt="Shared image"
-                    className="max-w-full rounded"
+                    width={300}
+                    height={300}
+                    className="max-w-full w-auto h-auto rounded"
                   />
                 )}
                 {message.type === 'PRODUCT_SHARE' && (

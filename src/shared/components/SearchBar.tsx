@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { Search, X } from 'lucide-react';
 import { api } from '@/lib/api';
 
@@ -33,9 +34,9 @@ export function SearchBar({ placeholder = "Search products, categories, vendors.
       setResults([]);
       setIsOpen(false);
     }
-  }, [query]);
+  }, [query, searchProducts]);
 
-  const searchProducts = async () => {
+  const searchProducts = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await api.get(`/api/products/search?q=${encodeURIComponent(query)}`);
@@ -119,10 +120,12 @@ export function SearchBar({ placeholder = "Search products, categories, vendors.
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center space-x-3"
                 >
                   {result.image && (
-                    <img
+                    <Image
                       src={result.image}
                       alt={result.name}
-                      className="w-10 h-10 object-cover rounded"
+                      width={40}
+                      height={40}
+                      className="object-cover rounded"
                     />
                   )}
                   <div className="flex-1">
