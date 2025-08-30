@@ -137,10 +137,9 @@ const AnalyticsDashboard: React.FC = () => {
       </div>
     );
   };
-
   useEffect(() => {
     fetchAnalytics();
-  }, [timeRange, fetchAnalytics]);
+  }, [fetchAnalytics]);
 
   if (loading || !data) {
     return (

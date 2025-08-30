@@ -95,10 +95,6 @@ const AnalyticsDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useSelector((state: RootState) => state.auth);
 
-  useEffect(() => {
-    fetchDashboardMetrics();
-  }, [timeRange, fetchDashboardMetrics]);
-
   const fetchDashboardMetrics = React.useCallback(async () => {
     try {
       setIsLoading(true);
@@ -110,7 +106,11 @@ const AnalyticsDashboard: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [timeRange]);
+
+  useEffect(() => {
+    fetchDashboardMetrics();
+  }, [fetchDashboardMetrics]);
 
   if (isLoading) {
     return (

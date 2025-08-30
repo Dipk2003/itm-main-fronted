@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { getVendorOrders } from '@/lib/api';
@@ -74,7 +74,7 @@ export default function VendorOrders() {
   }, [user?.id, currentPage]);
 
   // Mock data as fallback
-  const mockOrders: Order[] = [
+  const mockOrders = useMemo<Order[]>(() => [
     {
       id: 12345,
       customer: 'John Doe',
@@ -115,7 +115,7 @@ export default function VendorOrders() {
       date: '2024-01-12',
       paymentStatus: 'paid'
     }
-  ];
+  ], []);
 
   const getStatusColor = (status: string) => {
     switch (status) {

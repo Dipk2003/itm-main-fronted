@@ -13,12 +13,6 @@ const LiveChatModal: React.FC<LiveChatModalProps> = ({ session, onClose }) => {
   const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
 
-  useEffect(() => {
-    if (session) {
-      loadMessages();
-    }
-  }, [session, loadMessages]);
-
   const loadMessages = React.useCallback(async () => {
     try {
       const response = await liveChatAPI.getMessages(session.id);
@@ -26,7 +20,13 @@ const LiveChatModal: React.FC<LiveChatModalProps> = ({ session, onClose }) => {
     } catch (error) {
       console.error('Error loading chat messages:', error);
     }
-  };
+  }, [session.id]);
+
+  useEffect(() => {
+    if (session) {
+      loadMessages();
+    }
+  }, [session, loadMessages]);
 
   const handleSendMessage = async () => {
     if (!newMessage) return;

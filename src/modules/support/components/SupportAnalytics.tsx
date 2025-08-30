@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/api';
 import { 
   BarChart, 
@@ -74,9 +74,9 @@ const SupportAnalytics: React.FC<SupportAnalyticsProps> = ({ detailed = false })
 
   useEffect(() => {
     fetchAnalyticsData();
-  }, [timeRange]);
+  }, [fetchAnalyticsData]);
 
-  const fetchAnalyticsData = async () => {
+  const fetchAnalyticsData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -135,7 +135,7 @@ const SupportAnalytics: React.FC<SupportAnalyticsProps> = ({ detailed = false })
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [timeRange]);
 
   const formatPercentage = (value: number) => `${value.toFixed(1)}%`;
   const formatHours = (value: number) => `${value.toFixed(1)}h`;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { getVendorLeads } from '@/lib/api';
@@ -80,7 +80,7 @@ export default function VendorLeads() {
   }, [user?.id]);
 
   // Mock data as fallback
-  const mockLeads: Lead[] = [
+  const mockLeads = useMemo<Lead[]>(() => [
     {
       id: 1,
       name: 'Rajesh Kumar',
@@ -141,7 +141,7 @@ export default function VendorLeads() {
       date: '2024-01-12',
       lastContact: '2024-01-18'
     }
-  ];
+  ], []);
 
   const getStatusColor = (status: string) => {
     switch (status) {

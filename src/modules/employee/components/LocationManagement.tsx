@@ -38,15 +38,6 @@ export default function LocationManagement() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<{ id: string; type: 'state' | 'city' } | null>(null);
 
-  useEffect(() => {
-    loadAllStates();
-    loadData();
-  }, [loadAllStates, loadData]);
-
-  useEffect(() => {
-    loadData();
-  }, [activeTab, page, size, selectedStateId, loadData]);
-
   const loadAllStates = React.useCallback(async () => {
     try {
       const data = await getAllStates();
@@ -54,7 +45,7 @@ export default function LocationManagement() {
     } catch (error) {
       console.error('Failed to load states:', error);
     }
-  };
+  }, []);
 
   const loadData = React.useCallback(async () => {
     try {
@@ -76,7 +67,16 @@ export default function LocationManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab, page, size, selectedStateId, searchQuery]);
+
+  useEffect(() => {
+    loadAllStates();
+    loadData();
+  }, [loadAllStates, loadData]);
+
+  useEffect(() => {
+    loadData();
+  }, [activeTab, page, size, selectedStateId, loadData]);
 
   const handleSearch = async () => {
     try {

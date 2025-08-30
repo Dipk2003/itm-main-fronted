@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Navbar, Footer } from '@/shared/components';
 import { Search, Filter, MapPin, ArrowLeft, Grid, List, ChevronRight } from 'lucide-react';
@@ -35,7 +35,7 @@ const CityProductsPage: React.FC = () => {
   const cityName = city ? decodeURIComponent(city).charAt(0).toUpperCase() + decodeURIComponent(city).slice(1).toLowerCase() : '';
 
   // Mock data - replace with API call
-  const mockCategories: Category[] = [
+  const mockCategories = useMemo<Category[]>(() => [
     {
       name: 'Building Construction Material & Equipment',
       products: [
@@ -131,7 +131,7 @@ const CityProductsPage: React.FC = () => {
         }
       ]
     }
-  ];
+  ], []);
 
   useEffect(() => {
     // Simulate API call
@@ -139,7 +139,7 @@ const CityProductsPage: React.FC = () => {
       setCategories(mockCategories);
       setLoading(false);
     }, 1000);
-  }, [city, mockCategories]);
+  }, [city]);
 
   const filteredProducts = categories.flatMap(category => 
     category.products.filter(product => 

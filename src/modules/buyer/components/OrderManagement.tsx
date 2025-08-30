@@ -19,10 +19,6 @@ const OrderManagement: React.FC = () => {
     'CANCELLED': 'red'
   };
 
-  useEffect(() => {
-    loadOrders();
-  }, [page, size, loadOrders]);
-
   const loadOrders = React.useCallback(async () => {
     try {
       setLoading(true);
@@ -33,7 +29,11 @@ const OrderManagement: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, size]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
 
   const updateOrderStatus = async (orderId: number, status: string) => {
     try {

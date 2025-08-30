@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from '@/lib/api';
 
 interface KnowledgeBaseArticle {
@@ -33,7 +33,7 @@ const KnowledgeBasePanel: React.FC = () => {
     fetchKnowledgeBaseData();
   }, [selectedCategory, searchTerm]);
 
-  const fetchKnowledgeBaseData = async () => {
+  const fetchKnowledgeBaseData = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (selectedCategory) params.append('category', selectedCategory);
@@ -54,9 +54,9 @@ const KnowledgeBasePanel: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory, searchTerm]);
 
-  const handleArticleFeedback = async (articleId: number, helpful: boolean) => {
+  const handleArticleFeedback = useCallback(async (articleId: number, helpful: boolean) => {
     try {
       await api.post(`/api/support-dashboard/knowledge-base/articles/${articleId}/feedback`, {
         helpful
@@ -66,7 +66,7 @@ const KnowledgeBasePanel: React.FC = () => {
     } catch (error) {
       console.error('Error submitting feedback:', error);
     }
-  };
+  }, [fetchKnowledgeBaseData]);
 
   if (loading) {
     return (

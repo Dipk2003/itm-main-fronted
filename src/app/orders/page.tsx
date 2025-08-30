@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Package, Truck, CheckCircle, Clock, Eye, Download } from 'lucide-react';
@@ -32,7 +32,7 @@ export default function OrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState('all');
 
   // Sample orders data - replace with API call
-  const sampleOrders: Order[] = [
+  const sampleOrders = useMemo<Order[]>(() => [
     {
       id: 1,
       orderNumber: 'ORD-2024-001',
@@ -86,7 +86,7 @@ export default function OrdersPage() {
       ],
       shippingAddress: '789 Industrial Zone, Bangalore, Karnataka 560001'
     }
-  ];
+  ], []);
 
   useEffect(() => {
     if (!isAuthenticated) {

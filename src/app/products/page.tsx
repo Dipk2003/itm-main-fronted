@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Search, Filter, Grid, List, ShoppingCart, Star } from 'lucide-react';
@@ -27,7 +27,7 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState('name');
 
   // Sample products data - replace with API call
-  const sampleProducts: Product[] = [
+  const sampleProducts = useMemo<Product[]>(() => [
     {
       id: 1,
       name: "Premium Laptop",
@@ -72,7 +72,7 @@ export default function ProductsPage() {
       vendor: "Safety First Ltd",
       stock: 100
     }
-  ];
+  ], []);
 
   const categories = ["All", "Electronics", "Furniture", "Safety", "Tools", "Materials"];
 
@@ -83,7 +83,7 @@ export default function ProductsPage() {
       setProducts(sampleProducts);
       setLoading(false);
     }, 1000);
-  }, []);
+  }, [sampleProducts]);
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

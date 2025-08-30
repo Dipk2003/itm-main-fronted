@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Badge } from '@/shared/components';
 import { chatApi } from '@/shared/services/api/chatApi';
@@ -21,9 +21,9 @@ const ChatList: React.FC<ChatListProps> = ({ currentUserId, currentUserName }) =
 
   useEffect(() => {
     loadChatData();
-  }, [currentUserId]);
+  }, [loadChatData]);
 
-  const loadChatData = async () => {
+  const loadChatData = useCallback(async () => {
     try {
       setLoading(true);
       const [partners, summary] = await Promise.all([
@@ -37,17 +37,17 @@ const ChatList: React.FC<ChatListProps> = ({ currentUserId, currentUserName }) =
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentUserId]);
 
-  const handlePartnerSelect = (partner: User) => {
+  const handlePartnerSelect = useCallback((partner: User) => {
     setSelectedPartner(partner);
-  };
+  }, []);
 
-  const handleCloseChatWindow = () => {
+  const handleCloseChatWindow = useCallback(() => {
     setSelectedPartner(null);
     // Refresh chat data after closing chat window
     loadChatData();
-  };
+  }, [loadChatData]);
 
   if (loading) {
     return (
