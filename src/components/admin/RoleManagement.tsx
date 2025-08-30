@@ -11,9 +11,9 @@ import {
 } from '@/shared/components/Card';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
-import { Alert } from '@/shared/components/Alert';
+import Alert from '@/shared/components/Alert';
 import { Select } from '@/shared/components/Select';
-import { Checkbox } from '@/shared/components/Checkbox';
+import Checkbox from '@/shared/components/Checkbox';
 import { 
   UserGroupIcon,
   ShieldCheckIcon,

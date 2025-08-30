@@ -112,10 +112,6 @@ const BusinessAnalyticsDashboard: React.FC = () => {
   const [selectedTimeframe, setSelectedTimeframe] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, [selectedTimeframe, fetchAnalyticsData]);
-
   const fetchAnalyticsData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -217,7 +213,11 @@ const BusinessAnalyticsDashboard: React.FC = () => {
     }
   }, [selectedTimeframe]);
 
-  const MetricCard = ({ 
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [selectedTimeframe, fetchAnalyticsData]);
+
+  const MetricCard = ({
     title, 
     value, 
     unit = '', 

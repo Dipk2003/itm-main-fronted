@@ -26,6 +26,11 @@ export const API_ENDPOINTS = {
     VERIFY_OTP: '/api/auth/verify-otp',
   },
   
+  // Shared endpoints
+  SHARED: {
+    HEALTH: '/api/health',
+  },
+  
   // Product endpoints
   PRODUCTS: '/api/products',
   CATEGORIES: '/api/categories',
@@ -36,6 +41,24 @@ export const API_ENDPOINTS = {
   // User endpoints
   USERS: '/api/users',
   PROFILE: '/api/users/profile',
+  
+  // Buyer endpoints
+  BUYER: {
+    PRODUCTS: '/api/buyer/products',
+    DASHBOARD: '/api/buyer/dashboard',
+  },
+  
+  // Vendor endpoints
+  VENDOR: {
+    DASHBOARD: '/api/vendor/dashboard',
+    PRODUCTS: '/api/vendor/products',
+  },
+  
+  // Admin endpoints
+  ADMIN: {
+    USERS: '/api/admin/users',
+    DASHBOARD: '/api/admin/dashboard',
+  },
   
   // Additional endpoints
   HEALTH: '/api/health',

@@ -1,293 +1,70 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 export const handlers = [
   // Auth endpoints
-  rest.post('/api/auth/login', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        token: 'mock-jwt-token',
-        user: {
-          id: '1',
-          email: 'test@example.com',
-          name: 'Test User'
-        }
-      })
-    );
+  http.post('/api/auth/login', () => {
+    return HttpResponse.json({
+      token: 'mock-jwt-token',
+      user: {
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User'
+      }
+    });
   }),
 
-  rest.post('/api/auth/register', (req, res, ctx) => {
-    return res(
-      ctx.status(201),
-      ctx.json({
-        message: 'User registered successfully'
-      })
-    );
+  http.post('/api/auth/register', () => {
+    return HttpResponse.json({
+      message: 'User registered successfully'
+    }, { status: 201 });
   }),
 
   // Product endpoints
-  rest.get('/api/products', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        products: [
-          {
-            id: '1',
-            name: 'Test Product 1',
-            description: 'Description 1',
-            price: 100,
-            category: 'Category 1'
-          },
-          {
-            id: '2',
-            name: 'Test Product 2',
-            description: 'Description 2',
-            price: 200,
-            category: 'Category 2'
-          }
-        ],
-        total: 2,
-        page: 1,
-        perPage: 10
-      })
-    );
-  }),
-
-  rest.get('/api/products/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    return res(
-      ctx.status(200),
-      ctx.json({
-        id,
-        name: `Test Product ${id}`,
-        description: `Description ${id}`,
-        price: 100,
-        category: 'Test Category'
-      })
-    );
-  }),
-
-  // Category endpoints
-  rest.get('/api/categories', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        categories: [
-          {
-            id: '1',
-            name: 'Category 1',
-            description: 'Description 1'
-          },
-          {
-            id: '2',
-            name: 'Category 2',
-            description: 'Description 2'
-          }
-        ]
-      })
-    );
-  }),
-
-  // Order endpoints
-  rest.get('/api/orders', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        orders: [
-          {
-            id: '1',
-            total: 100,
-            status: 'PENDING',
-            createdAt: '2024-01-01T00:00:00Z'
-          },
-          {
-            id: '2',
-            total: 200,
-            status: 'COMPLETED',
-            createdAt: '2024-01-02T00:00:00Z'
-          }
-        ],
-        total: 2,
-        page: 1,
-        perPage: 10
-      })
-    );
-  }),
-
-  rest.post('/api/orders', (req, res, ctx) => {
-    return res(
-      ctx.status(201),
-      ctx.json({
-        id: '3',
-        total: 300,
-        status: 'PENDING',
-        createdAt: new Date().toISOString()
-      })
-    );
-  }),
-
-  // Cart endpoints
-  rest.get('/api/cart', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        items: [
-          {
-            productId: '1',
-            quantity: 2,
-            price: 100
-          },
-          {
-            productId: '2',
-            quantity: 1,
-            price: 200
-          }
-        ],
-        total: 400
-      })
-    );
-  }),
-
-  rest.post('/api/cart/add', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        message: 'Item added to cart'
-      })
-    );
-  }),
-
-  // User profile endpoints
-  rest.get('/api/user/profile', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        id: '1',
-        name: 'Test User',
-        email: 'test@example.com',
-        phone: '1234567890',
-        addresses: [
-          {
-            id: '1',
-            type: 'SHIPPING',
-            address: 'Test Address 1'
-          }
-        ]
-      })
-    );
-  }),
-
-  rest.put('/api/user/profile', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        message: 'Profile updated successfully'
-      })
-    );
-  }),
-
-  // Vendor endpoints
-  rest.get('/api/vendors', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        vendors: [
-          {
-            id: '1',
-            name: 'Vendor 1',
-            rating: 4.5,
-            productCount: 100
-          },
-          {
-            id: '2',
-            name: 'Vendor 2',
-            rating: 4.0,
-            productCount: 50
-          }
-        ],
-        total: 2,
-        page: 1,
-        perPage: 10
-      })
-    );
-  }),
-
-  rest.get('/api/vendors/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    return res(
-      ctx.status(200),
-      ctx.json({
-        id,
-        name: `Vendor ${id}`,
-        description: `Description for Vendor ${id}`,
-        rating: 4.5,
-        productCount: 100,
-        address: 'Test Address',
-        contact: {
-          email: 'vendor@example.com',
-          phone: '1234567890'
+  http.get('/api/products', () => {
+    return HttpResponse.json({
+      products: [
+        {
+          id: '1',
+          name: 'Test Product 1',
+          description: 'Description 1',
+          price: 100,
+          category: 'Category 1'
+        },
+        {
+          id: '2',
+          name: 'Test Product 2',
+          description: 'Description 2',
+          price: 200,
+          category: 'Category 2'
         }
-      })
-    );
+      ],
+      total: 2,
+      page: 1,
+      perPage: 10
+    });
   }),
 
-  // Search endpoints
-  rest.get('/api/search', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        products: [
-          {
-            id: '1',
-            name: 'Search Result 1',
-            price: 100
-          },
-          {
-            id: '2',
-            name: 'Search Result 2',
-            price: 200
-          }
-        ],
-        total: 2,
-        page: 1,
-        perPage: 10
-      })
-    );
+  http.get('/api/products/:id', ({ params }) => {
+    const { id } = params;
+    return HttpResponse.json({
+      id,
+      name: `Test Product ${id}`,
+      description: `Description ${id}`,
+      price: 100,
+      category: 'Test Category'
+    });
   }),
 
-  // Analytics endpoints
-  rest.get('/api/analytics/dashboard', (req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        totalOrders: 1000,
-        totalRevenue: 50000,
-        averageOrderValue: 500,
-        topProducts: [
-          {
-            id: '1',
-            name: 'Top Product 1',
-            sales: 100
-          },
-          {
-            id: '2',
-            name: 'Top Product 2',
-            sales: 80
-          }
-        ],
-        recentOrders: [
-          {
-            id: '1',
-            total: 100,
-            status: 'COMPLETED'
-          },
-          {
-            id: '2',
-            total: 200,
-            status: 'PENDING'
-          }
-        ]
-      })
-    );
-  })
+  // All other endpoints converted to http
+  http.get('/api/categories', () => HttpResponse.json({ categories: [] })),
+  http.get('/api/orders', () => HttpResponse.json({ orders: [], total: 0 })),
+  http.post('/api/orders', () => HttpResponse.json({ id: '3', status: 'PENDING' }, { status: 201 })),
+  http.get('/api/cart', () => HttpResponse.json({ items: [], total: 0 })),
+  http.post('/api/cart/add', () => HttpResponse.json({ message: 'Item added' })),
+  http.get('/api/user/profile', () => HttpResponse.json({ id: '1', name: 'Test User' })),
+  http.put('/api/user/profile', () => HttpResponse.json({ message: 'Updated' })),
+  http.get('/api/vendors', () => HttpResponse.json({ vendors: [], total: 0 })),
+  http.get('/api/vendors/:id', ({ params }) => HttpResponse.json({ id: params.id, name: `Vendor ${params.id}` })),
+  http.get('/api/search', () => HttpResponse.json({ products: [], total: 0 })),
+  http.get('/api/analytics/dashboard', () => HttpResponse.json({ totalOrders: 1000, totalRevenue: 50000 }))
 ];

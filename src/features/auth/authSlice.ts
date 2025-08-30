@@ -47,6 +47,7 @@ export interface TempCredentials {
 export interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  token: string | null;
   loading: boolean;
   error: string | null;
   otpSent: boolean;
@@ -59,6 +60,7 @@ export interface AuthState {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
+  token: null,
   loading: false,
   error: null,
   otpSent: false,
@@ -300,6 +302,7 @@ const authSlice = createSlice({
           state.error = null;
         } else {
           state.user = action.payload.user;
+          state.token = action.payload.token;
           state.isAuthenticated = true;
           state.requiresOTP = false;
           state.otpSent = false;
@@ -321,6 +324,7 @@ const authSlice = createSlice({
       .addCase(verifyOtp.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.requiresOTP = false;
         state.otpSent = false;
@@ -361,6 +365,7 @@ const authSlice = createSlice({
       .addCase(initializeAuth.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
+        state.token = action.payload.token;
         state.isAuthenticated = true;
         state.error = null;
       })

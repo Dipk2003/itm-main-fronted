@@ -5,10 +5,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/shared/components/Card';
 import { Input } from '@/shared/components/Input';
 import { Select } from '@/shared/components/Select';
-import { MultiSelect } from '@/shared/components/MultiSelect';
+import MultiSelect from '@/shared/components/MultiSelect';
 import { Button } from '@/shared/components/Button';
-import { Checkbox } from '@/shared/components/Checkbox';
-import { RangeSlider } from '@/shared/components/RangeSlider';
+import Checkbox from '@/shared/components/Checkbox';
+import RangeSlider from '@/shared/components/RangeSlider';
 import {
   ChevronDownIcon,
   ChevronUpIcon,

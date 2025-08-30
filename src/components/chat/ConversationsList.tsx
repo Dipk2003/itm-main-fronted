@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { Avatar } from '@/shared/components/Avatar';
+import Avatar from '@/shared/components/Avatar';
 import { Input } from '@/shared/components/Input';
 import { SearchIcon } from '@heroicons/react/outline';
 

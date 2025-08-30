@@ -291,7 +291,7 @@ return apiRequest<PagedResponse<Category>>(
 
   static async updateSubCategory(id: number, data: UpdateSubCategoryDto): Promise<SubCategory> {
     return apiRequest<SubCategory>(
-      `${API_CONFIG.ENDPOINTS.SUBCATEGORIES}/${id}`,
+      `${API_CONFIG.ENDPOINTS.CATEGORIES.SUBCATEGORIES}/${id}`,
       {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -301,7 +301,7 @@ return apiRequest<PagedResponse<Category>>(
 
   static async deleteSubCategory(id: number): Promise<void> {
     return apiRequest<void>(
-      `${API_CONFIG.ENDPOINTS.SUBCATEGORIES}/${id}`,
+      `${API_CONFIG.ENDPOINTS.CATEGORIES.SUBCATEGORIES}/${id}`,
       {
         method: 'DELETE',
       }
@@ -324,7 +324,7 @@ return apiRequest<PagedResponse<Category>>(
   }
 
   static async getMicroCategoriesBySubCategory(subCategoryId: number): Promise<MicroCategory[]> {
-    return apiRequest<MicroCategory[]>(`${API_CONFIG.ENDPOINTS.SUBCATEGORIES}/${subCategoryId}/microcategories`);
+    return apiRequest<MicroCategory[]>(`${API_CONFIG.ENDPOINTS.CATEGORIES.SUBCATEGORIES}/${subCategoryId}/microcategories`);
   }
 
   static async createMicroCategory(data: CreateMicroCategoryDto): Promise<MicroCategory> {
@@ -339,7 +339,7 @@ return apiRequest<PagedResponse<Category>>(
 
   static async updateMicroCategory(id: number, data: UpdateMicroCategoryDto): Promise<MicroCategory> {
     return apiRequest<MicroCategory>(
-      `${API_CONFIG.ENDPOINTS.MICROCATEGORIES}/${id}`,
+      `${API_CONFIG.ENDPOINTS.CATEGORIES.MICROCATEGORIES}/${id}`,
       {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -349,7 +349,7 @@ return apiRequest<PagedResponse<Category>>(
 
   static async deleteMicroCategory(id: number): Promise<void> {
     return apiRequest<void>(
-      `${API_CONFIG.ENDPOINTS.MICROCATEGORIES}/${id}`,
+      `${API_CONFIG.ENDPOINTS.CATEGORIES.MICROCATEGORIES}/${id}`,
       {
         method: 'DELETE',
       }

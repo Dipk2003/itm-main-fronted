@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { RootState } from '@/store';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 

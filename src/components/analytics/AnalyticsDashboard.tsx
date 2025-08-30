@@ -137,7 +137,7 @@ const AnalyticsDashboard: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
         <Select
           value={timeRange}
-          onChange={(value) => setTimeRange(value)}
+          onChange={(e) => setTimeRange(e.target.value)}
           options={[
             { label: 'Today', value: 'today' },
             { label: 'This Week', value: 'week' },

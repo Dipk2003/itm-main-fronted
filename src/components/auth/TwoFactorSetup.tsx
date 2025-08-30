@@ -7,7 +7,7 @@ import { RootState } from '@/store';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Card, CardHeader, CardContent, CardTitle } from '@/shared/components/Card';
-import { Alert } from '@/shared/components/Alert';
+import Alert from '@/shared/components/Alert';
 import { 
   CheckCircleIcon,
   ExclamationCircleIcon,

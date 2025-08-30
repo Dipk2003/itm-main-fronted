@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { RootState } from '@/store';
 import axios from 'axios';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -29,10 +29,6 @@ export const ReportingDashboard: React.FC<ReportingDashboardProps> = ({
   const [selectedMetric, setSelectedMetric] = useState('revenue');
   const token = useSelector((state: RootState) => state.auth.token);
 
-  useEffect(() => {
-    fetchReportData();
-  }, [startDate, endDate, type, vendorId, fetchReportData]);
-
   const fetchReportData = useCallback(async () => {
     try {
       setLoading(true);
@@ -54,6 +50,10 @@ export const ReportingDashboard: React.FC<ReportingDashboardProps> = ({
       setLoading(false);
     }
   }, [endDate, startDate, token, type, vendorId]);
+
+  useEffect(() => {
+    fetchReportData();
+  }, [startDate, endDate, type, vendorId, fetchReportData]);
 
   const renderSalesOverview = () => {
     if (!reportData) return null;

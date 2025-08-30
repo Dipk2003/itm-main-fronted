@@ -127,7 +127,9 @@ export const API_CONFIG = {
       DASHBOARD: '/api/analytics/dashboard',
       ADMIN: '/api/analytics/admin',
       VENDOR: '/api/analytics/vendor',
-      BUYER: '/api/analytics/buyer'
+      BUYER: '/api/analytics/buyer',
+      DASHBOARD_ANALYTICS: '/api/analytics/dashboard-analytics',
+      CATEGORY_STATS: '/api/analytics/category-stats'
     },
     
     // Admin endpoints

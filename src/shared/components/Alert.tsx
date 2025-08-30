@@ -5,8 +5,9 @@ import { ExclamationTriangleIcon, CheckCircleIcon, XMarkIcon, InformationCircleI
 
 interface AlertProps {
   type?: 'success' | 'error' | 'warning' | 'info';
+  variant?: 'success' | 'error' | 'warning' | 'info';
   title?: string;
-  message: string;
+  message?: string;
   dismissible?: boolean;
   onDismiss?: () => void;
   className?: string;
@@ -15,6 +16,7 @@ interface AlertProps {
 
 const Alert: React.FC<AlertProps> = ({
   type = 'info',
+  variant,
   title,
   message,
   dismissible = false,
@@ -22,8 +24,9 @@ const Alert: React.FC<AlertProps> = ({
   className = '',
   children
 }) => {
+  const alertType = variant || type;
   const getAlertStyles = () => {
-    switch (type) {
+    switch (alertType) {
       case 'success':
         return 'bg-green-50 border-green-200 text-green-800';
       case 'error':
@@ -36,7 +39,7 @@ const Alert: React.FC<AlertProps> = ({
   };
 
   const getIcon = () => {
-    switch (type) {
+    switch (alertType) {
       case 'success':
         return <CheckCircleIcon className="h-5 w-5 text-green-600" />;
       case 'error':
