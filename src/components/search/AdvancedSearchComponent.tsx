@@ -99,7 +99,7 @@ const AdvancedSearchComponent: React.FC<AdvancedSearchProps> = ({
       };
       return debounce(performSearch, 300);
     },
-    []
+    [performSearch]
   );
 
   // Load initial data
@@ -132,7 +132,7 @@ const AdvancedSearchComponent: React.FC<AdvancedSearchProps> = ({
     if (searchState.query || Object.keys(searchState.filters).length > 0) {
       performSearch();
     }
-  }, []);
+  }, [searchParams, searchState.query, searchState.filters, performSearch]);
 
   // Perform search
   const performSearch = useCallback(async () => {

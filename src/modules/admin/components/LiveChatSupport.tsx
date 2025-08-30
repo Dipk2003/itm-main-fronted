@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
 
@@ -41,14 +41,14 @@ export default function LiveChatSupport() {
 
   useEffect(() => {
     fetchChatSessions();
-    initializeSocket();
+    const newSocket = initializeSocket();
     
     return () => {
-      if (socket) {
-        socket.disconnect();
+      if (newSocket) {
+        newSocket.disconnect();
       }
     };
-  }, []);
+  }, [initializeSocket]);
 
   useEffect(() => {
     if (selectedSession) {
@@ -60,9 +60,10 @@ export default function LiveChatSupport() {
     scrollToBottom();
   }, [messages]);
 
-  const initializeSocket = () => {
+  const initializeSocket = useCallback(() => {
+    let newSocket = null;
     try {
-      const newSocket = io(SOCKET_URL, {
+      newSocket = io(SOCKET_URL, {
         transports: ['websocket'],
         upgrade: false
       });
@@ -96,10 +97,12 @@ export default function LiveChatSupport() {
       });
 
       setSocket(newSocket);
+      return newSocket;
     } catch (error) {
       console.error('Socket connection failed:', error);
+      return null;
     }
-  };
+  }, [selectedSession]);
 
   const fetchChatSessions = async () => {
     try {

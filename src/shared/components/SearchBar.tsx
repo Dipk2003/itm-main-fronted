@@ -24,18 +24,6 @@ export function SearchBar({ placeholder = "Search products, categories, vendors.
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (query.length > 2) {
-      const timer = setTimeout(() => {
-        searchProducts();
-      }, 500);
-      return () => clearTimeout(timer);
-    } else {
-      setResults([]);
-      setIsOpen(false);
-    }
-  }, [query, searchProducts]);
-
   const searchProducts = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -48,7 +36,19 @@ export function SearchBar({ placeholder = "Search products, categories, vendors.
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [query]);
+
+  useEffect(() => {
+    if (query.length > 2) {
+      const timer = setTimeout(() => {
+        searchProducts();
+      }, 500);
+      return () => clearTimeout(timer);
+    } else {
+      setResults([]);
+      setIsOpen(false);
+    }
+  }, [query, searchProducts]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
