@@ -140,4 +140,6 @@ export const liveChatAPI = {
     api.get(`/api/support/live-chat/queue/${sessionId}/position`),
 };
 
-export default { supportAPI, liveChatAPI };
+const supportAPI_exports = { supportAPI, liveChatAPI };
+
+export default supportAPI_exports;

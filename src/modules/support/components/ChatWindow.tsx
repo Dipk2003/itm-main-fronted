@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
@@ -8,7 +8,6 @@ import { chatApi, ChatMessage, User } from '@/shared/services/api/chatApi';
 import { 
   PaperAirplaneIcon, 
   XMarkIcon,
-  EllipsisVerticalIcon,
   TrashIcon
 } from '@heroicons/react/24/outline';
 
@@ -38,17 +37,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   useEffect(() => {
     loadMessages();
     markAsRead();
-  }, [currentUserId, partnerId]);
+  }, [loadMessages, markAsRead]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     try {
       setLoading(true);
       const conversation = inquiryId 
@@ -60,17 +59,17 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [inquiryId, currentUserId, partnerId]);
 
-  const markAsRead = async () => {
+  const markAsRead = useCallback(async () => {
     try {
       await chatApi.markConversationAsRead(currentUserId, partnerId);
     } catch (error) {
       console.error('Error marking messages as read:', error);
     }
-  };
+  }, [currentUserId, partnerId]);
 
-  const sendMessage = async () => {
+  const sendMessage = useCallback(async () => {
     if (!newMessage.trim() || sending) return;
 
     const messageData: ChatMessage = {
@@ -92,9 +91,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     } finally {
       setSending(false);
     }
-  };
+  }, [newMessage, sending, currentUserId, partnerId, inquiryId]);
 
-  const deleteMessage = async (messageId: number) => {
+  const deleteMessage = useCallback(async (messageId: number) => {
     if (!confirm('Are you sure you want to delete this message?')) return;
 
     try {
@@ -104,14 +103,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       console.error('Error deleting message:', error);
       alert('Failed to delete message.');
     }
-  };
+  }, [currentUserId]);
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
-  };
+  }, [sendMessage]);
 
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString('en-US', {

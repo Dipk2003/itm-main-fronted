@@ -21,9 +21,9 @@ const OrderManagement: React.FC = () => {
 
   useEffect(() => {
     loadOrders();
-  }, [page, size]);
+  }, [page, size, loadOrders]);
 
-  const loadOrders = async () => {
+  const loadOrders = React.useCallback(async () => {
     try {
       setLoading(true);
       const response = await orderAPI.getVendorOrders({ page, size });

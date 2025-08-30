@@ -97,9 +97,9 @@ const AnalyticsDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchDashboardMetrics();
-  }, [timeRange]);
+  }, [timeRange, fetchDashboardMetrics]);
 
-  const fetchDashboardMetrics = async () => {
+  const fetchDashboardMetrics = React.useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch(`/api/analytics/dashboard?timeRange=${timeRange}`);

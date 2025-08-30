@@ -41,13 +41,13 @@ export default function LocationManagement() {
   useEffect(() => {
     loadAllStates();
     loadData();
-  }, []);
+  }, [loadAllStates, loadData]);
 
   useEffect(() => {
     loadData();
-  }, [activeTab, page, size, selectedStateId]);
+  }, [activeTab, page, size, selectedStateId, loadData]);
 
-  const loadAllStates = async () => {
+  const loadAllStates = React.useCallback(async () => {
     try {
       const data = await getAllStates();
       setAllStates(data);
@@ -56,7 +56,7 @@ export default function LocationManagement() {
     }
   };
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
       

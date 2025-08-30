@@ -17,9 +17,9 @@ const LiveChatModal: React.FC<LiveChatModalProps> = ({ session, onClose }) => {
     if (session) {
       loadMessages();
     }
-  }, [session]);
+  }, [session, loadMessages]);
 
-  const loadMessages = async () => {
+  const loadMessages = React.useCallback(async () => {
     try {
       const response = await liveChatAPI.getMessages(session.id);
       setMessages(response.data);

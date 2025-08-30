@@ -185,7 +185,7 @@ export const vendorPackageAPI = {
     totalAmount: number;
     status: string;
     expiryDate: string;
-  }> => {
+  }>> => {
     const response = await api.post<ApiResponse<any>>('/api/vendor/packages/purchase', purchaseData);
     return response.data;
   },

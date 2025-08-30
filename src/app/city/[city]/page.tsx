@@ -139,7 +139,7 @@ const CityProductsPage: React.FC = () => {
       setCategories(mockCategories);
       setLoading(false);
     }, 1000);
-  }, [city]);
+  }, [city, mockCategories]);
 
   const filteredProducts = categories.flatMap(category => 
     category.products.filter(product => 

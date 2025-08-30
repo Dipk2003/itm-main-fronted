@@ -113,7 +113,7 @@ const CitiesPage: React.FC = () => {
   // Initial load
   useEffect(() => {
     fetchCities(0, searchQuery, majorCitiesOnly);
-  }, [majorCitiesOnly]);
+  }, [searchQuery, majorCitiesOnly]);
 
   // Handle search
   const handleSearch = (e: React.FormEvent) => {

@@ -328,7 +328,7 @@ export const adminSupportAPI = {
   },
 };
 
-export default {
+const adminAPI_exports = {
   adminStatsAPI,
   adminUserAPI,
   adminVendorAPI,
@@ -336,3 +336,5 @@ export default {
   adminOrderAPI,
   adminSupportAPI,
 };
+
+export default adminAPI_exports;
