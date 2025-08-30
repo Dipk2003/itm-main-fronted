@@ -122,4 +122,10 @@ export const chatbotAPI = {
     api.get('/api/chatbot/popular-questions'),
 };
 
-export default { chatAPI, chatbotAPI };
+export interface ChatServices {
+  chatAPI: typeof chatAPI;
+  chatbotAPI: typeof chatbotAPI;
+}
+
+const chatServices: ChatServices = { chatAPI, chatbotAPI };
+export default chatServices;

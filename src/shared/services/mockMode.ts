@@ -286,7 +286,18 @@ export const MockUtils = {
   }
 };
 
-export default {
+export interface MockServices {
+  MOCK_MODE: boolean;
+  mockDelay: typeof mockDelay;
+  mockResponses: typeof mockResponses;
+  mockAPI: typeof mockAPI;
+  mockError: typeof mockError;
+  randomMockResponse: typeof randomMockResponse;
+  mockPagination: typeof mockPagination;
+  MockUtils: typeof MockUtils;
+}
+
+const mockServices: MockServices = {
   MOCK_MODE,
   mockDelay,
   mockResponses,
@@ -296,3 +307,5 @@ export default {
   mockPagination,
   MockUtils
 };
+
+export default mockServices;

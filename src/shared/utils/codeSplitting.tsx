@@ -1,5 +1,24 @@
-import React, { Suspense, lazy, ComponentType } from 'react';
+import React, { Suspense, lazy, ComponentType, Component } from 'react';
 import { LoadingStates } from '../components/LoadingStates';
+
+class ErrorBoundary extends Component<{ fallback?: React.ReactNode }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || <div>Something went wrong.</div>;
+    }
+    return this.props.children;
+  }
+}
 
 interface LazyLoadConfig {
   fallback?: React.ReactNode;

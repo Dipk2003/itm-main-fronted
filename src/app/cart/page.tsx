@@ -54,7 +54,7 @@ export default function CartPage() {
       setCartItems(sampleCartItems);
       setLoading(false);
     }, 1000);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, sampleCartItems]);
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;

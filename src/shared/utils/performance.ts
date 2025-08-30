@@ -233,7 +233,7 @@ export function withPerformanceLogging<P extends object>(
   WrappedComponent: ComponentType<P>,
   componentName: string
 ): ComponentType<P> {
-  return (props: P) => {
+  const PerformanceWrapper = (props: P) => {
     const endTimer = performanceMonitor.startTimer(`${componentName}_render`);
     
     // Record render time after component mounts
@@ -243,6 +243,9 @@ export function withPerformanceLogging<P extends object>(
     
     return React.createElement(WrappedComponent, props);
   };
+
+  PerformanceWrapper.displayName = `withPerformanceLogging(${componentName})`;
+  return PerformanceWrapper;
 }
 
 // 📊 Performance reporting
@@ -265,7 +268,19 @@ export function generatePerformanceReport() {
   return report;
 }
 
-export default {
+export interface PerformanceUtils {
+  LazyComponents: typeof LazyComponents;
+  cache: typeof cache;
+  performanceMonitor: typeof performanceMonitor;
+  debounce: typeof debounce;
+  throttle: typeof throttle;
+  createImageLoader: typeof createImageLoader;
+  createQueryCache: typeof createQueryCache;
+  withPerformanceLogging: typeof withPerformanceLogging;
+  generatePerformanceReport: typeof generatePerformanceReport;
+}
+
+const performanceUtils: PerformanceUtils = {
   LazyComponents,
   cache,
   performanceMonitor,
@@ -276,3 +291,5 @@ export default {
   withPerformanceLogging,
   generatePerformanceReport
 };
+
+export default performanceUtils;

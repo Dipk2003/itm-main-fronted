@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { productAPI, Product } from '@/shared/services/productApi';
 import { Button } from '@/shared/components/Button';
 import { Upload, X, Image as ImageIcon, RefreshCw } from 'lucide-react';
@@ -258,15 +259,14 @@ const ImageManager: React.FC<ImageManagerProps> = ({ product, onClose, onImageUp
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {currentImages.map((url, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={url}
                       alt={`Product image ${index + 1}`}
+                      width={96}
+                      height={96}
                       className="w-full h-24 object-cover rounded-md border-2 border-gray-200"
-                      onError={(e) => {
+                      onError={() => {
                         console.log('❌ Image failed to load:', url);
-                        // Try to use a data URL placeholder if no placeholder image exists
-                        e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzlDQTNBRiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K';
-                        e.currentTarget.alt = 'No image available';
                       }}
                     />
                     <div className="absolute top-2 right-2">
@@ -328,9 +328,11 @@ const ImageManager: React.FC<ImageManagerProps> = ({ product, onClose, onImageUp
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                   {previewUrls.map((url, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={url}
                         alt={`Preview ${index + 1}`}
+                        width={96}
+                        height={96}
                         className="w-full h-24 object-cover rounded-md border-2 border-blue-200"
                       />
                       <button

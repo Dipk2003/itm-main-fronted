@@ -47,7 +47,7 @@ const CategoryVendorsPage: React.FC = () => {
 
       fetchVendors();
     }
-  }, [city, category, filter]);
+  }, [city, category, filter, categoryName]);
 
   const handleFilterChange = (newFilter: 'all' | 'verified') => {
     setFilter(newFilter);

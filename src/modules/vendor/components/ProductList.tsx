@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { productAPI, Product } from '@/shared/services/productApi';
 import { Button } from '@/shared/components/Button';
 import ImageManager from './ImageManager';
-import { Edit, Trash2, Eye, ToggleLeft, ToggleRight, Plus, Image } from 'lucide-react';
+import { Edit, Trash2, Eye, ToggleLeft, ToggleRight, Plus, Image as ImageIcon } from 'lucide-react';
 
 interface ProductListProps {
   onAddProduct?: () => void;
@@ -262,10 +263,12 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-12 w-12">
-                        <img
-                          className="h-12 w-12 rounded-lg object-cover"
+                        <Image
+                          className="rounded-lg object-cover"
                           src={getImageUrl(product)}
-                          alt={product.name}
+                          alt={product.name || 'Product Image'}
+                          width={48}
+                          height={48}
                         />
                       </div>
                       <div className="ml-4">
@@ -317,7 +320,7 @@ const ProductList: React.FC<ProductListProps> = ({ onAddProduct, onEditProduct, 
                         onClick={() => handleManageImages(product)}
                         title="Manage Images"
                       >
-                        <Image className="h-4 w-4 text-purple-600" />
+                        <ImageIcon className="h-4 w-4 text-purple-600" />
                       </Button>
                       
                       {onEditProduct && (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { api } from '@/shared/utils/apiClient';
 import { Heart, ShoppingCart, Eye, Star } from 'lucide-react';
 
@@ -196,9 +197,11 @@ export default function ProductGrid() {
             {/* Product Image */}
             <div className="h-44 bg-gray-100 rounded-md mb-4 flex items-center justify-center overflow-hidden relative">
               {product.imageUrl ? (
-                <img 
+                <Image 
                   src={product.imageUrl} 
                   alt={product.name}
+                  width={300}
+                  height={300}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               ) : (
