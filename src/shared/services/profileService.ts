@@ -1,4 +1,4 @@
-import { api, handleApiError } from '@/utils/apiClient';
+import { api, handleApiError } from '@/shared/utils/apiClient';
 
 // Profile-related API calls
 export const profileService = {

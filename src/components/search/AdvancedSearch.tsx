@@ -219,7 +219,7 @@ export const AdvancedSearch: React.FC = () => {
           <div className="flex items-center">
             <Checkbox
               checked={filters.inStock}
-              onChange={(e) => handleFilterChange('inStock', e.target.checked)}
+              onChange={(checked) => handleFilterChange('inStock', checked)}
               id="inStock"
             />
             <label htmlFor="inStock" className="ml-2 text-sm text-gray-700">
@@ -241,14 +241,15 @@ export const AdvancedSearch: React.FC = () => {
               ]}
               value={filters.sortBy}
               onChange={(value) => {
-                if (value === 'price_asc') {
+                const stringValue = typeof value === 'string' ? value : (value as any)?.target?.value;
+                if (stringValue === 'price_asc') {
                   handleFilterChange('sortBy', 'price');
                   handleFilterChange('sortOrder', 'asc');
-                } else if (value === 'price_desc') {
+                } else if (stringValue === 'price_desc') {
                   handleFilterChange('sortBy', 'price');
                   handleFilterChange('sortOrder', 'desc');
                 } else {
-                  handleFilterChange('sortBy', value);
+                  handleFilterChange('sortBy', stringValue);
                 }
               }}
             />

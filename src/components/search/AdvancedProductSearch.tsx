@@ -371,7 +371,7 @@ const AdvancedProductSearch: React.FC = () => {
               <div className="flex items-center">
                 <Checkbox
                   checked={filters.inStockOnly}
-                  onChange={(e) => handleFilterChange('inStockOnly', e.target.checked)}
+                  onChange={(checked) => handleFilterChange('inStockOnly', checked)}
                 />
                 <span className="ml-2">In Stock Only</span>
               </div>
@@ -405,14 +405,15 @@ const AdvancedProductSearch: React.FC = () => {
               ]}
               value={filters.sortBy + (filters.sortBy === 'price' ? '_' + filters.sortOrder : '')}
               onChange={(value) => {
-                if (value === 'price_asc') {
+                const stringValue = typeof value === 'string' ? value : (value as any)?.target?.value;
+                if (stringValue === 'price_asc') {
                   handleFilterChange('sortBy', 'price');
                   handleFilterChange('sortOrder', 'asc');
-                } else if (value === 'price_desc') {
+                } else if (stringValue === 'price_desc') {
                   handleFilterChange('sortBy', 'price');
                   handleFilterChange('sortOrder', 'desc');
                 } else {
-                  handleFilterChange('sortBy', value);
+                  handleFilterChange('sortBy', stringValue);
                 }
               }}
               className="w-48"

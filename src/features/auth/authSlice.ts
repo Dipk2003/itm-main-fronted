@@ -34,6 +34,7 @@ export interface User {
   isVerified?: boolean;
   roles?: string[];
   userType?: string;
+  phone?: string;
 }
 
 // Define TempCredentials interface

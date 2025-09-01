@@ -99,6 +99,7 @@ export interface VendorPackageTransaction {
   amount: number;
   discountAmount?: number;
   taxAmount?: number;
+  tax?: number;
   totalAmount: number;
   paymentMethod: string;
   status: 'PENDING' | 'SUCCESS' | 'FAILED' | 'CANCELLED' | 'REFUNDED' | 'PARTIALLY_REFUNDED';
@@ -108,11 +109,17 @@ export interface VendorPackageTransaction {
   billingCity?: string;
   billingState?: string;
   billingPincode?: string;
+  billingPeriod?: 'monthly' | 'yearly';
   gstNumber?: string;
   invoiceNumber?: string;
+  invoiceUrl?: string;
   receiptUrl?: string;
   paymentDate?: string;
   expiryDate?: string;
+  failureReason?: string;
+  subscriptionStartDate?: string;
+  subscriptionEndDate?: string;
+  autoRenew?: boolean;
   createdAt: string;
 }
 

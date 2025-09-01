@@ -5,6 +5,7 @@ import { Provider, useDispatch } from 'react-redux';
 import { store, AppDispatch } from '@/store';
 import { initializeAuth } from '@/features/auth/authSlice';
 import { initAuthCleanup } from '@/utils/auth-cleanup';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 interface ClientProvidersProps {
   children: React.ReactNode;
@@ -28,9 +29,11 @@ const AuthInitializer: React.FC<{ children: React.ReactNode }> = ({ children }) 
 const ClientProviders: React.FC<ClientProvidersProps> = ({ children }) => {
   return (
     <Provider store={store}>
-      <AuthInitializer>
-        {children}
-      </AuthInitializer>
+      <AuthProvider>
+        <AuthInitializer>
+          {children}
+        </AuthInitializer>
+      </AuthProvider>
     </Provider>
   );
 };

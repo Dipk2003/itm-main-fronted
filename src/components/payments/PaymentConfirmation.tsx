@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { paymentService } from '@/services/paymentService';
-import { orderAPI } from '@/shared/services/orderApi';
+import { orderAPI, Order } from '@/shared/services/orderApi';
 import { Button } from '@/shared/components/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { 
@@ -22,24 +22,8 @@ interface PaymentConfirmationProps {
   paymentId?: string;
 }
 
-interface OrderItem {
-  id: number;
-  productId: number;
-  productName: string;
-  quantity: number;
-  price: number;
-  subtotal: number;
-}
-
-interface OrderDetails {
-  id: number;
-  orderNumber: string;
-  status: string;
-  paymentStatus: string;
-  totalAmount: number;
-  items: OrderItem[];
-  estimatedDelivery?: string;
-}
+// Use Order interface from orderAPI
+type OrderDetails = Order;
 
 const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paymentId }) => {
   const router = useRouter();
@@ -56,15 +40,6 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paym
   const razorpayPaymentId = searchParams?.get('razorpay_payment_id') || '';
   const razorpayOrderId = searchParams?.get('razorpay_order_id') || '';
   const razorpaySignature = searchParams?.get('razorpay_signature') || '';
-
-  useEffect(() => {
-    if (actualOrderId) {
-      fetchOrderAndPaymentDetails();
-    } else {
-      setError('Order ID not found');
-      setLoading(false);
-    }
-  }, [actualOrderId, fetchOrderAndPaymentDetails]);
 
   const fetchOrderAndPaymentDetails = useCallback(async () => {
     const orderId = parseInt(actualOrderId, 10);
@@ -113,6 +88,15 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paym
       setLoading(false);
     }
   }, [actualOrderId, razorpayOrderId, razorpayPaymentId, razorpaySignature]);
+
+  useEffect(() => {
+    if (actualOrderId) {
+      fetchOrderAndPaymentDetails();
+    } else {
+      setError('Order ID not found');
+      setLoading(false);
+    }
+  }, [actualOrderId, fetchOrderAndPaymentDetails]);
 
   const handleContinueShopping = () => {
     router.push('/');
@@ -344,11 +328,11 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({ orderId, paym
                   {orderDetails.items.map((item, index) => (
                     <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">{item.productName}</p>
+                        <p className="font-medium text-gray-900">{item.product.name}</p>
                         <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">₹{(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="font-medium">₹{item.totalPrice.toFixed(2)}</p>
                       </div>
                     </div>
                   ))}

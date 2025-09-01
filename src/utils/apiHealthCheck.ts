@@ -237,8 +237,8 @@ export class ApiHealthChecker {
         message = `${name} - connectivity error`;
       } else if (statusCode && statusCode >= 400 && statusCode < 500) {
         // For auth endpoints, 400-499 might be expected (validation errors)
-        status = 'success';
-        message = `${name} is reachable (received ${statusCode})`;
+        // Keep status as 'error' but note that endpoint is reachable
+        message = `${name} is reachable but returned ${statusCode}: ${error.message}`;
       }
 
       return {

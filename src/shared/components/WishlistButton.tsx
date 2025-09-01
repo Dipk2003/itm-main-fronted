@@ -25,10 +25,6 @@ export default function WishlistButton({
     lg: 'w-7 h-7'
   };
 
-  useEffect(() => {
-    checkWishlistStatus();
-  }, [productId, userId, checkWishlistStatus]);
-
   const checkWishlistStatus = useCallback(async () => {
     try {
       const inWishlist = await wishlistApi.isInWishlist(productId.toString());
@@ -37,6 +33,10 @@ export default function WishlistButton({
       console.error('Error checking wishlist status:', error);
     }
   }, [productId]);
+
+  useEffect(() => {
+    checkWishlistStatus();
+  }, [productId, userId, checkWishlistStatus]);
 
   const handleToggleWishlist = async () => {
     if (loading) return;

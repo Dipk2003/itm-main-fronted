@@ -19,10 +19,6 @@ const ChatList: React.FC<ChatListProps> = ({ currentUserId, currentUserName }) =
   const [selectedPartner, setSelectedPartner] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadChatData();
-  }, [loadChatData]);
-
   const loadChatData = useCallback(async () => {
     try {
       setLoading(true);
@@ -38,6 +34,10 @@ const ChatList: React.FC<ChatListProps> = ({ currentUserId, currentUserName }) =
       setLoading(false);
     }
   }, [currentUserId]);
+
+  useEffect(() => {
+    loadChatData();
+  }, [loadChatData]);
 
   const handlePartnerSelect = useCallback((partner: User) => {
     setSelectedPartner(partner);

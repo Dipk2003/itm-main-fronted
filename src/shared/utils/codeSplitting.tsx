@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, ComponentType, Component } from 'react';
 import { LoadingStates } from '../components/LoadingStates';
 
-class ErrorBoundary extends Component<{ fallback?: React.ReactNode }> {
+class ErrorBoundary extends Component<{ fallback?: React.ReactNode; children?: React.ReactNode }> {
   state = { hasError: false };
 
   static getDerivedStateFromError() {
@@ -116,8 +116,8 @@ export const routes = {
 
 // Preload helper for route transitions
 export const preloadRoute = (route: RouteConfig) => {
-  if (route.component.preload) {
-    route.component.preload();
+  if ((route.component as any).preload) {
+    (route.component as any).preload();
   }
 };
 

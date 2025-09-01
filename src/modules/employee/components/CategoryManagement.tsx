@@ -37,11 +37,6 @@ export default function CategoryManagement() {
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'table' | 'hierarchy'>('table');
 
-  useEffect(() => {
-    loadCategories();
-    loadMainCategories();
-  }, [page, size, selectedLevel, selectedParentId, viewMode, searchQuery, loadCategories, loadMainCategories]);
-
   const loadCategories = useCallback(async () => {
     try {
       setLoading(true);
@@ -71,6 +66,11 @@ export default function CategoryManagement() {
       console.error('Failed to load main categories:', error);
     }
   }, []);
+
+  useEffect(() => {
+    loadCategories();
+    loadMainCategories();
+  }, [page, size, selectedLevel, selectedParentId, viewMode, searchQuery, loadCategories, loadMainCategories]);
 
   const loadSubcategories = async (parentId: string) => {
     try {

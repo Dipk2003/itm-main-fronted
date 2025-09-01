@@ -68,7 +68,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const messageEndRef = useRef<HTMLDivElement>(null);
-  const stompClient = useRef<Client>();
+  const stompClient = useRef<Client | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
         console.log('Disconnected from WebSocket');
         setIsConnected(false);
       },
-      onError: error => {
+      onStompError: error => {
         console.error('WebSocket Error:', error);
         setIsConnected(false);
       }

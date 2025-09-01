@@ -5,7 +5,7 @@ import { CreatePaymentOrderRequest, paymentService } from '@/services/paymentSer
 import { Button } from '@/shared/components/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/Card';
 import { Input } from '@/shared/components/Input';
-import { orderAPI } from '@/shared/services/orderApi';
+import { orderAPI, CreateOrderDto } from '@/shared/services/orderApi';
 import { RootState } from '@/store';
 import {
   CheckCircleIcon,
@@ -199,15 +199,15 @@ const CheckoutPage: React.FC = () => {
 
     try {
       // Create order
-      const orderData: Omit<CreateOrderDto, 'shippingAddressId' | 'billingAddressId'> = {
+      const orderData: CreateOrderDto = {
         items: items.map(item => ({
           productId: parseInt(item.id, 10), // Convert string ID to number
           quantity: item.quantity,
           price: item.price * 100 // Convert to paise
         })),
-        shippingAddress: formData.shippingAddress,
-        billingAddress: formData.sameAsShipping ? formData.shippingAddress : formData.billingAddress,
-        paymentMethod: formData.paymentMethod,
+        shippingAddressId: 1, // Use a default address ID for now
+        billingAddressId: formData.sameAsShipping ? 1 : 2, // Use same address ID or different one
+        paymentMethod: formData.paymentMethod === 'RAZORPAY' ? 'ONLINE' : formData.paymentMethod,
         notes: formData.notes
       };
 

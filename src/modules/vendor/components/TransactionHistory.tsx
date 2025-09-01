@@ -116,7 +116,7 @@ const TransactionHistory: React.FC = () => {
     return matchesSearch && matchesStatus && matchesDate;
   });
 
-  const handleDownloadReceipt = (transactionId: string) => {
+  const handleDownloadReceipt = (transactionId: number | string) => {
     // Implement receipt download logic
     console.log('Downloading receipt for transaction:', transactionId);
   };

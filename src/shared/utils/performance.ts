@@ -4,36 +4,36 @@
  * Tools for lazy loading, caching, and performance monitoring
  */
 
-import React, { lazy, ComponentType, useEffect, createElement } from 'react';
+import React, { lazy, ComponentType, useEffect, createElement, LazyExoticComponent } from 'react';
 
 // 📦 Lazy Loading Utilities
 export function createLazyComponent<T extends ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: React.ComponentType
-): T {
-  return lazy(importFunc) as T;
+): LazyExoticComponent<T> {
+  return lazy(importFunc);
 }
 
 // 🎯 Common lazy-loaded components
 export const LazyComponents = {
-  // Auth components
-  Login: createLazyComponent(() => import('@/components/auth/Login')),
-  Register: createLazyComponent(() => import('@/components/auth/Register')),
+  // Auth components (commented out until components exist)
+  // Login: createLazyComponent(() => import('@/components/auth/Login')),
+  // Register: createLazyComponent(() => import('@/components/auth/Register')),
   
-  // Dashboard components
-  AdminDashboard: createLazyComponent(() => import('@/components/dashboard/admin/AdminDashboard')),
-  UserDashboard: createLazyComponent(() => import('@/components/dashboard/UserDashboard')),
+  // Dashboard components (commented out until components exist)
+  // AdminDashboard: createLazyComponent(() => import('@/components/dashboard/admin/AdminDashboard')),
+  // UserDashboard: createLazyComponent(() => import('@/components/dashboard/UserDashboard')),
   
-  // Product components
-  ProductDetails: createLazyComponent(() => import('@/components/vendor/ProductDetails')),
-  ProductList: createLazyComponent(() => import('@/components/vendor/ProductList')),
+  // Product components (commented out until components exist)
+  // ProductDetails: createLazyComponent(() => import('@/components/vendor/ProductDetails')),
+  // ProductList: createLazyComponent(() => import('@/components/vendor/ProductList')),
   
-  // Cart components
-  Cart: createLazyComponent(() => import('@/components/Cart/Cart')),
+  // Cart components (commented out until components exist)
+  // Cart: createLazyComponent(() => import('@/components/Cart/Cart')),
   
   // Chat components
   ChatWindow: createLazyComponent(() => import('@/components/chat/ChatWindow')),
-  ChatList: createLazyComponent(() => import('@/components/chat/ChatList')),
+  // ChatList: createLazyComponent(() => import('@/components/chat/ChatList')),
 };
 
 // 💾 Simple Cache Implementation
@@ -57,7 +57,7 @@ class SimpleCache {
       return null;
     }
     
-    return item.data;
+    return item.data as T;
   }
   
   clear(): void {

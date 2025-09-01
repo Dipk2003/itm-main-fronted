@@ -3,12 +3,15 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import ProductList from '@/components/product/ProductList';
-import { productReducer } from '@/features/product/productSlice';
+import ProductList from '@/modules/vendor/components/ProductList';
+import { server } from '../../mocks/server';
+import { http, HttpResponse } from 'msw';
 
+// Create a simple mock store since we don't have a product slice
 const mockStore = configureStore({
   reducer: {
-    product: productReducer
+    // Add minimal auth state for the component
+    auth: (state = { isAuthenticated: true, user: null }, action) => state
   }
 });
 
@@ -158,8 +161,8 @@ describe('ProductList Component', () => {
   it('handles error state', async () => {
     // Mock API error
     server.use(
-      rest.get('/api/products', (req, res, ctx) => {
-        return res(ctx.status(500));
+      http.get('/api/products', () => {
+        return HttpResponse.json({ error: 'Server error' }, { status: 500 });
       })
     );
 

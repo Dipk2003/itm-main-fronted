@@ -52,6 +52,36 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
     budget: ''
   });
 
+  // Handler for direct search (query, location)
+  const handleDirectSearch = useCallback(async (query: string, location: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    const filters: DirectorySearchFilters = {
+      ...currentFilters,
+      query: query.trim(),
+      location: location.trim(),
+      page: 1
+    };
+
+    setCurrentFilters(filters);
+
+    try {
+      const results = await directoryApi.searchServiceProviders(filters);
+      setSearchResults(results);
+    } catch (err: any) {
+      setError(err.message || 'Failed to search service providers');
+      console.error('Search error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentFilters]);
+
+  // Legacy handler for compatibility with popular categories
+  const handleSearch = useCallback(async (query: string, location: string, category?: string) => {
+    return handleDirectSearch(query, location);
+  }, [handleDirectSearch]);
+
   useEffect(() => {
     // Load initial search if query or location is provided
     if (initialQuery || initialLocation) {
@@ -84,36 +114,6 @@ const DirectoryPage: React.FC<DirectoryPageProps> = ({
       setIsLoading(false);
     }
   };
-
-  // Handler for direct search (query, location)
-  const handleDirectSearch = useCallback(async (query: string, location: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    const filters: DirectorySearchFilters = {
-      ...currentFilters,
-      query: query.trim(),
-      location: location.trim(),
-      page: 1
-    };
-
-    setCurrentFilters(filters);
-
-    try {
-      const results = await directoryApi.searchServiceProviders(filters);
-      setSearchResults(results);
-    } catch (err: any) {
-      setError(err.message || 'Failed to search service providers');
-      console.error('Search error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentFilters]);
-
-  // Legacy handler for compatibility with popular categories
-  const handleSearch = useCallback(async (query: string, location: string, category?: string) => {
-    return handleDirectSearch(query, location);
-  }, [handleDirectSearch]);
 
   const handleFilterChange = async (newFilters: DirectorySearchFilters) => {
     setIsLoading(true);

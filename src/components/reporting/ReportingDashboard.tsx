@@ -255,13 +255,13 @@ export const ReportingDashboard: React.FC<ReportingDashboardProps> = ({
         <div className="flex items-center space-x-4">
           <DatePicker
             selected={startDate}
-            onChange={date => date && setStartDate(date)}
+            onChange={(date: Date | null) => date && setStartDate(date)}
             className="px-4 py-2 border rounded-lg"
             placeholderText="Start Date"
           />
           <DatePicker
             selected={endDate}
-            onChange={date => date && setEndDate(date)}
+            onChange={(date: Date | null) => date && setEndDate(date)}
             className="px-4 py-2 border rounded-lg"
             placeholderText="End Date"
           />

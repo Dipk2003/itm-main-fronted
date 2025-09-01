@@ -72,10 +72,6 @@ const SupportAnalytics: React.FC<SupportAnalyticsProps> = ({ detailed = false })
   const [error, setError] = useState<string | null>(null);
   const [timeRange, setTimeRange] = useState<string>('30');
 
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, [fetchAnalyticsData]);
-
   const fetchAnalyticsData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -136,6 +132,10 @@ const SupportAnalytics: React.FC<SupportAnalyticsProps> = ({ detailed = false })
       setIsLoading(false);
     }
   }, [timeRange]);
+
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [fetchAnalyticsData]);
 
   const formatPercentage = (value: number) => `${value.toFixed(1)}%`;
   const formatHours = (value: number) => `${value.toFixed(1)}h`;

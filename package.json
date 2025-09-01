@@ -37,7 +37,9 @@
     "test:api": "node scripts/api-validation.js",
     "test:integration": "jest tests/integration --verbose",
     "validate:endpoints": "node scripts/api-validation.js",
-    "test:all": "npm run test && npm run test:api"
+    "test:all": "npm run test && npm run test:api",
+    "verify-build": "node verify-build.js",
+    "build:verify": "npm run build && npm run verify-build"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

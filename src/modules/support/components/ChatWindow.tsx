@@ -34,15 +34,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadMessages();
-    markAsRead();
-  }, [loadMessages, markAsRead]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
-
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
@@ -68,6 +59,15 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
       console.error('Error marking messages as read:', error);
     }
   }, [currentUserId, partnerId]);
+
+  useEffect(() => {
+    loadMessages();
+    markAsRead();
+  }, [loadMessages, markAsRead]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
   const sendMessage = useCallback(async () => {
     if (!newMessage.trim() || sending) return;

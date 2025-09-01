@@ -126,7 +126,7 @@ const PackagePurchaseModal: React.FC<PackagePurchaseModalProps> = ({
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
-        return formData.billingPeriod !== '';
+        return formData.billingPeriod === 'monthly' || formData.billingPeriod === 'yearly';
       case 2:
         if (formData.paymentMethod === 'card') {
           return formData.cardNumber.length >= 16 && 
@@ -188,7 +188,7 @@ const PackagePurchaseModal: React.FC<PackagePurchaseModalProps> = ({
 
       const response = await vendorPackageAPI.purchasePackage(purchaseRequest);
       
-      onSuccess?.(response.transactionId);
+      onSuccess?.(response.data?.transactionId || 'unknown');
       onClose();
     } catch (error) {
       console.error('Purchase error:', error);

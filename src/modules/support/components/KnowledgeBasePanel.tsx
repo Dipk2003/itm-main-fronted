@@ -29,10 +29,6 @@ const KnowledgeBasePanel: React.FC = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchKnowledgeBaseData();
-  }, [selectedCategory, searchTerm, fetchKnowledgeBaseData]);
-
   const fetchKnowledgeBaseData = useCallback(async () => {
     try {
       const params = new URLSearchParams();
@@ -55,6 +51,10 @@ const KnowledgeBasePanel: React.FC = () => {
       setLoading(false);
     }
   }, [selectedCategory, searchTerm]);
+
+  useEffect(() => {
+    fetchKnowledgeBaseData();
+  }, [selectedCategory, searchTerm, fetchKnowledgeBaseData]);
 
   const handleArticleFeedback = useCallback(async (articleId: number, helpful: boolean) => {
     try {

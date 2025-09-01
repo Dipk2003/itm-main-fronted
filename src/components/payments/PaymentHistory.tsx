@@ -51,10 +51,6 @@ const PaymentHistory: React.FC = () => {
     dateTo: ''
   });
 
-  useEffect(() => {
-    loadTransactionHistory();
-  }, [appliedFilters, loadTransactionHistory]);
-
   const loadTransactionHistory = useCallback(async () => {
     try {
       setLoading(true);
@@ -75,6 +71,10 @@ const PaymentHistory: React.FC = () => {
       setLoading(false);
     }
   }, [appliedFilters]);
+
+  useEffect(() => {
+    loadTransactionHistory();
+  }, [appliedFilters, loadTransactionHistory]);
 
   const loadAnalytics = async () => {
     try {
