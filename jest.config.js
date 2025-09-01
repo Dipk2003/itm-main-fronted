@@ -19,5 +19,10 @@ module.exports = {
   ],
   transformIgnorePatterns: [
     'node_modules/(?!(.*\\.mjs$))'
-  ]
+  ],
+  // Add timeout and cleanup configuration
+  testTimeout: 10000,
+  forceExit: true,
+  detectOpenHandles: true,
+  clearMocks: true
 };

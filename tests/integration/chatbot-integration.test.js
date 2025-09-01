@@ -172,15 +172,15 @@ describe('Chatbot Integration Tests', () => {
 
     test('should handle suggested actions correctly', () => {
       const actionHandlers = {
-        'LOGIN': () => '/auth/user/login',
-        'REGISTER_OR_LOGIN': () => '/auth/user/login',
-        'VIEW_LEADS': () => '/dashboard/vendor-panel?tab=leads',
-        'EXPLORE_VENDOR_DASHBOARD': () => '/dashboard/vendor-panel',
-        'EXPLORE_MARKETPLACE': () => '/products'
+        'LOGIN': '/auth/user/login',
+        'REGISTER_OR_LOGIN': '/auth/user/login',
+        'VIEW_LEADS': '/dashboard/vendor-panel?tab=leads',
+        'EXPLORE_VENDOR_DASHBOARD': '/dashboard/vendor-panel',
+        'EXPLORE_MARKETPLACE': '/products'
       };
 
       Object.entries(actionHandlers).forEach(([action, expectedPath]) => {
-        const result = actionHandlers[action]();
+        const result = actionHandlers[action];
         expect(result).toBe(expectedPath);
       });
     });
