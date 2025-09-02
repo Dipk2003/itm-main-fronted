@@ -60,8 +60,9 @@
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
     "lucide-react": "^0.525.0",
-    "next": "15.3.5",
+    "next": "^15.5.2",
     "postcss": "^8.5.6",
+    "prismjs": "^1.30.0",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-datepicker": "^8.7.0",
@@ -69,7 +70,9 @@
     "react-hot-toast": "^2.6.0",
     "react-i18next": "^15.7.3",
     "react-redux": "^9.2.0",
+    "react-syntax-highlighter": "^15.0.0",
     "recharts": "^3.1.0",
+    "refractor": "^5.0.0",
     "socket.io-client": "^4.8.1",
     "swagger-ui-react": "^5.28.0",
     "tailwind-merge": "^3.3.1",
@@ -101,5 +104,9 @@
     "typescript": "^5",
     "webpack-bundle-analyzer": "^4.10.1",
     "whatwg-fetch": "^3.6.20"
+  },
+  "overrides": {
+    "prismjs": "^1.30.0",
+    "refractor": "^5.0.0"
   }
 }
