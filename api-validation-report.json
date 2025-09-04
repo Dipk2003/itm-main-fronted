@@ -1,0 +1,429 @@
+{
+  "summary": {
+    "totalTests": 24,
+    "passedTests": 4,
+    "failedTests": 3,
+    "skippedTests": 17,
+    "startTime": "2025-09-02T17:04:04.301Z",
+    "endTime": "2025-09-02T17:04:08.279Z",
+    "duration": 3968
+  },
+  "authentication": {
+    "admin": {
+      "success": false,
+      "error": "Forbidden"
+    },
+    "vendor": {
+      "success": false,
+      "error": "Forbidden"
+    },
+    "buyer": {
+      "success": false,
+      "error": "Forbidden"
+    }
+  },
+  "results": [
+    {
+      "name": "User Registration",
+      "endpoint": "/auth/register",
+      "method": "POST",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "FAILED",
+      "response": {
+        "status": 403,
+        "statusText": "Forbidden",
+        "data": ""
+      },
+      "error": "Authorization failed - insufficient permissions",
+      "executionTime": 25,
+      "timestamp": "2025-09-02T17:04:04.698Z",
+      "category": "auth"
+    },
+    {
+      "name": "User Login",
+      "endpoint": "/auth/login",
+      "method": "POST",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "FAILED",
+      "response": {
+        "status": 403,
+        "statusText": "Forbidden",
+        "data": ""
+      },
+      "error": "Authorization failed - insufficient permissions",
+      "executionTime": 23,
+      "timestamp": "2025-09-02T17:04:04.825Z",
+      "category": "auth"
+    },
+    {
+      "name": "Get User Profile",
+      "endpoint": "/users/profile",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN",
+        "VENDOR",
+        "BUYER"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN, VENDOR, BUYER",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:04.952Z",
+      "category": "user"
+    },
+    {
+      "name": "Update User Profile",
+      "endpoint": "/users/profile",
+      "method": "PUT",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN",
+        "VENDOR",
+        "BUYER"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN, VENDOR, BUYER",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:05.063Z",
+      "category": "user"
+    },
+    {
+      "name": "Get All Products",
+      "endpoint": "/products",
+      "method": "GET",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "PASSED",
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "data": "{\"content\":[{\"id\":9,\"name\":\"Samsung Galaxy S24\",\"description\":\"Latest Samsung Galaxy smartphone with advanced features\",\"price\":75000,\"originalPrice\":80000,\"brand\":\"Samsung\",\"model\":\"Galaxy S24\",\"sku\":\"SAM-GalaxyS24-001\",\"category\":null,\"microCategory\":{\"id\":15,\"name\":\"Android Phones\",\"description\":\"Android-based smartphones\",\"displayOrder\":1,\"metaTitle\":\"Android Phones - Premium Android Phones\",\"metaDescription\":\"Shop for premium android-based smartphones\",\"slug\":\"android-phones\",\"createdAt\":\"2025-08-17T19:22:27.385405\",\"updatedAt\":\"2025-08-17T19:22:27.385405\",\"subCategory\":{\"id\":11,\"name\":\"Mobile Phones\",\"description\":\"Smartphones and mobile devices\",\"displayOrder\":1,\"metaTitle\":\"Mobile Phones - Latest Mobile Phones\",\"metaDescription\":\"Discover latest smartphones and mobile devices\",\"slug\":\"mobile-phones\",\"createdAt\":\"2025-08-17T19:22:27.360077\",\"updatedAt\":\"2025-08-17T19:22:27.360077\",\"category\":{\"id\":7,\"name\":\"Electronics\",\"description\":\"Electronic goods and devices\",\"displayOrder\"... [truncated]"
+      },
+      "error": null,
+      "executionTime": 385,
+      "timestamp": "2025-09-02T17:04:05.175Z",
+      "category": "products"
+    },
+    {
+      "name": "Get Product by ID",
+      "endpoint": "/products/1",
+      "method": "GET",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "FAILED",
+      "response": {
+        "status": 404,
+        "statusText": "Not Found",
+        "data": ""
+      },
+      "error": "Endpoint not found",
+      "executionTime": 118,
+      "timestamp": "2025-09-02T17:04:05.666Z",
+      "category": "products"
+    },
+    {
+      "name": "Create Product (Vendor)",
+      "endpoint": "/vendor/products",
+      "method": "POST",
+      "requiresAuth": true,
+      "roles": [
+        "VENDOR"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: VENDOR",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:05.889Z",
+      "category": "products"
+    },
+    {
+      "name": "Search Products",
+      "endpoint": "/products/search",
+      "method": "GET",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "PASSED",
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "data": "{\"content\":[{\"id\":9,\"name\":\"Samsung Galaxy S24\",\"description\":\"Latest Samsung Galaxy smartphone with advanced features\",\"price\":75000,\"originalPrice\":80000,\"brand\":\"Samsung\",\"model\":\"Galaxy S24\",\"sku\":\"SAM-GalaxyS24-001\",\"category\":null,\"microCategory\":{\"id\":15,\"name\":\"Android Phones\",\"description\":\"Android-based smartphones\",\"displayOrder\":1,\"metaTitle\":\"Android Phones - Premium Android Phones\",\"metaDescription\":\"Shop for premium android-based smartphones\",\"slug\":\"android-phones\",\"createdAt\":\"2025-08-17T19:22:27.385405\",\"updatedAt\":\"2025-08-17T19:22:27.385405\",\"subCategory\":{\"id\":11,\"name\":\"Mobile Phones\",\"description\":\"Smartphones and mobile devices\",\"displayOrder\":1,\"metaTitle\":\"Mobile Phones - Latest Mobile Phones\",\"metaDescription\":\"Discover latest smartphones and mobile devices\",\"slug\":\"mobile-phones\",\"createdAt\":\"2025-08-17T19:22:27.360077\",\"updatedAt\":\"2025-08-17T19:22:27.360077\",\"category\":{\"id\":7,\"name\":\"Electronics\",\"description\":\"Electronic goods and devices\",\"displayOrder\"... [truncated]"
+      },
+      "error": null,
+      "executionTime": 84,
+      "timestamp": "2025-09-02T17:04:06.002Z",
+      "category": "products"
+    },
+    {
+      "name": "Get All Categories",
+      "endpoint": "/categories",
+      "method": "GET",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "PASSED",
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "data": {
+          "pagination": {
+            "currentPage": 0,
+            "totalPages": 0,
+            "size": 10,
+            "totalElements": 0
+          },
+          "data": [],
+          "success": true,
+          "message": "Categories retrieved successfully"
+        }
+      },
+      "error": null,
+      "executionTime": 81,
+      "timestamp": "2025-09-02T17:04:06.192Z",
+      "category": "categories"
+    },
+    {
+      "name": "Create Category (Admin)",
+      "endpoint": "/admin/categories",
+      "method": "POST",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:06.383Z",
+      "category": "categories"
+    },
+    {
+      "name": "Get User Orders",
+      "endpoint": "/buyer/orders",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "BUYER"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: BUYER",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:06.496Z",
+      "category": "orders"
+    },
+    {
+      "name": "Get Vendor Orders",
+      "endpoint": "/vendor/orders",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "VENDOR"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: VENDOR",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:06.607Z",
+      "category": "orders"
+    },
+    {
+      "name": "Create Order",
+      "endpoint": "/buyer/orders",
+      "method": "POST",
+      "requiresAuth": true,
+      "roles": [
+        "BUYER"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: BUYER",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:06.718Z",
+      "category": "orders"
+    },
+    {
+      "name": "Get Support Tickets",
+      "endpoint": "/support/tickets",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN",
+        "VENDOR",
+        "BUYER"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN, VENDOR, BUYER",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:06.830Z",
+      "category": "support"
+    },
+    {
+      "name": "Create Support Ticket",
+      "endpoint": "/support/tickets",
+      "method": "POST",
+      "requiresAuth": true,
+      "roles": [
+        "VENDOR",
+        "BUYER"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: VENDOR, BUYER",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:06.941Z",
+      "category": "support"
+    },
+    {
+      "name": "Chatbot Interaction",
+      "endpoint": "/chatbot/support/chat",
+      "method": "POST",
+      "requiresAuth": false,
+      "roles": [],
+      "status": "PASSED",
+      "response": {
+        "status": 200,
+        "statusText": "OK",
+        "data": {
+          "response": "I can help you find vendors and products! Try asking me about:\n\n• Electronics, machinery, textiles\n• Industrial supplies and equipment\n• Manufacturing services\n\nWhat are you looking for today?",
+          "sessionId": "test-session-1756832644301",
+          "recommendations": [],
+          "hasRecommendations": false,
+          "leadRecommendations": [],
+          "hasLeadRecommendations": false,
+          "responseType": "GENERAL",
+          "userRole": "NON_LOGGED",
+          "requiresLogin": false,
+          "suggestedAction": null
+        }
+      },
+      "error": null,
+      "executionTime": 220,
+      "timestamp": "2025-09-02T17:04:07.053Z",
+      "category": "support"
+    },
+    {
+      "name": "Get Vendor Analytics",
+      "endpoint": "/vendor/analytics/dashboard",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "VENDOR"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: VENDOR",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:07.388Z",
+      "category": "vendor"
+    },
+    {
+      "name": "Get Vendor Products",
+      "endpoint": "/vendor/products",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "VENDOR"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: VENDOR",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:07.497Z",
+      "category": "vendor"
+    },
+    {
+      "name": "Get Vendor Leads",
+      "endpoint": "/vendor/leads",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "VENDOR"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: VENDOR",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:07.609Z",
+      "category": "vendor"
+    },
+    {
+      "name": "Get Business Metrics (Admin)",
+      "endpoint": "/analytics/business-metrics",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:07.721Z",
+      "category": "analytics"
+    },
+    {
+      "name": "Get Support Analytics",
+      "endpoint": "/support-dashboard/analytics/dashboard",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:07.832Z",
+      "category": "analytics"
+    },
+    {
+      "name": "Get All States",
+      "endpoint": "/dataentry/states",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:07.944Z",
+      "category": "dataentry"
+    },
+    {
+      "name": "Get All Cities",
+      "endpoint": "/dataentry/cities",
+      "method": "GET",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:08.055Z",
+      "category": "dataentry"
+    },
+    {
+      "name": "Create State",
+      "endpoint": "/dataentry/states",
+      "method": "POST",
+      "requiresAuth": true,
+      "roles": [
+        "ADMIN"
+      ],
+      "status": "SKIPPED",
+      "response": null,
+      "error": "No authentication available for roles: ADMIN",
+      "executionTime": 0,
+      "timestamp": "2025-09-02T17:04:08.167Z",
+      "category": "dataentry"
+    }
+  ]
+}

@@ -42,7 +42,46 @@ export default function VendorLoginPage() {
       } else if (result.payload.user && result.payload.user.role !== 'vendor' && (result.payload.user.role as any) !== 'ROLE_VENDOR') {
         // If user has wrong role, show error
         dispatch(clearError());
-        alert('This account is not registered as a vendor. Please use the correct login portal.');
+        // Show detailed error message instead of alert
+        const userRole = result.payload.user.role.toLowerCase();
+        const roleType = userRole.includes('user') ? 'User' :
+                        userRole.includes('admin') ? 'Admin' : 'different';
+        
+        setFormData(prev => ({ ...prev, emailOrPhone: '', password: '' }));
+        
+        // Create a more helpful error message
+        const errorElement = document.createElement('div');
+        errorElement.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        errorElement.innerHTML = `
+          <div class="bg-white p-6 rounded-lg max-w-md mx-4 text-center">
+            <div class="text-red-500 text-6xl mb-4">⚠️</div>
+            <h3 class="text-xl font-bold mb-2">Account Role Mismatch</h3>
+            <p class="text-gray-600 mb-4">
+              This email is registered as a <strong>${roleType}</strong>, not a Vendor.
+            </p>
+            <div class="space-y-2 text-sm text-left bg-gray-50 p-3 rounded mb-4">
+              <p><strong>Solutions:</strong></p>
+              <p>• Use the correct login portal for ${roleType.toLowerCase()}s</p>
+              <p>• Register a new vendor account with different email</p>
+              <p>• Contact admin to convert your account to vendor</p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="window.location.href='/auth/user/login'" 
+                      class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                ${roleType} Login
+              </button>
+              <button onclick="window.location.href='/auth/vendor/register'" 
+                      class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                Register as Vendor
+              </button>
+              <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                      class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                Close
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(errorElement);
         return;
       }
       // For regular vendors, OTP form will be shown automatically based on Redux state

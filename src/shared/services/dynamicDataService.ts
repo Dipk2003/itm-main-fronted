@@ -7,7 +7,7 @@ export const categoryService = {
   getCategories: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.BUYER.CATEGORIES);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch categories:', error);
       throw error;
@@ -18,7 +18,7 @@ export const categoryService = {
   getCategoryById: async (id: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.CATEGORIES}/${id}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch category:', error);
       throw error;
@@ -29,7 +29,7 @@ export const categoryService = {
   getSubCategories: async (categoryId: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.CATEGORIES}/${categoryId}/subcategories`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch subcategories:', error);
       throw error;
@@ -43,7 +43,7 @@ export const productService = {
   getFeaturedProducts: async (limit: number = 6) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.PRODUCTS}/featured?limit=${limit}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch featured products:', error);
       throw error;
@@ -54,7 +54,7 @@ export const productService = {
   getProductsByCategory: async (categoryId: number, page: number = 1, limit: number = 20) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.PRODUCTS}/category/${categoryId}?page=${page}&limit=${limit}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch products by category:', error);
       throw error;
@@ -72,7 +72,7 @@ export const productService = {
         query,
         ...filters
       });
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to search products:', error);
       throw error;
@@ -83,7 +83,7 @@ export const productService = {
   getProductById: async (id: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.PRODUCTS}/${id}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch product details:', error);
       throw error;
@@ -97,7 +97,7 @@ export const vendorService = {
   getFeaturedVendors: async (limit: number = 10) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.VENDOR.BASE}/featured?limit=${limit}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch featured vendors:', error);
       throw error;
@@ -108,7 +108,7 @@ export const vendorService = {
   getVendorsByCity: async (city: string) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.VENDOR.BASE}/city/${city}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch vendors by city:', error);
       throw error;
@@ -119,7 +119,7 @@ export const vendorService = {
   getVendorById: async (id: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.VENDOR.BASE}/${id}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch vendor details:', error);
       throw error;
@@ -133,7 +133,7 @@ export const cartService = {
   getCartItems: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.BUYER.CART);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch cart items:', error);
       throw error;
@@ -147,7 +147,7 @@ export const cartService = {
         productId,
         quantity
       });
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to add to cart:', error);
       throw error;
@@ -160,7 +160,7 @@ export const cartService = {
       const response = await api.put(`${API_ENDPOINTS.BUYER.CART}/update/${cartItemId}`, {
         quantity
       });
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to update cart item:', error);
       throw error;
@@ -171,7 +171,7 @@ export const cartService = {
   removeFromCart: async (cartItemId: number) => {
     try {
       const response = await api.delete(`${API_ENDPOINTS.BUYER.CART}/remove/${cartItemId}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to remove from cart:', error);
       throw error;
@@ -185,7 +185,7 @@ export const wishlistService = {
   getWishlistItems: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.BUYER.WISHLIST);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch wishlist items:', error);
       throw error;
@@ -198,7 +198,7 @@ export const wishlistService = {
       const response = await api.post(`${API_ENDPOINTS.BUYER.WISHLIST}/add`, {
         productId
       });
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to add to wishlist:', error);
       throw error;
@@ -209,7 +209,7 @@ export const wishlistService = {
   removeFromWishlist: async (productId: number) => {
     try {
       const response = await api.delete(`${API_ENDPOINTS.BUYER.WISHLIST}/remove/${productId}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to remove from wishlist:', error);
       throw error;
@@ -223,7 +223,7 @@ export const orderService = {
   getUserOrders: async (page: number = 1, limit: number = 10) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.ORDERS}?page=${page}&limit=${limit}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch user orders:', error);
       throw error;
@@ -234,7 +234,7 @@ export const orderService = {
   getOrderById: async (orderId: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.ORDERS}/${orderId}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch order details:', error);
       throw error;
@@ -245,7 +245,7 @@ export const orderService = {
   createOrder: async (orderData: any) => {
     try {
       const response = await api.post(API_ENDPOINTS.BUYER.ORDERS, orderData);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to create order:', error);
       throw error;
@@ -266,7 +266,7 @@ export const analyticsService = {
       }
       
       const response = await api.get(endpoint);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch analytics:', error);
       throw error;
@@ -277,7 +277,7 @@ export const analyticsService = {
   getVendorAnalytics: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.VENDOR.ANALYTICS);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch vendor analytics:', error);
       throw error;
@@ -291,7 +291,7 @@ export const inquiryService = {
   createInquiry: async (inquiryData: any) => {
     try {
       const response = await api.post(API_ENDPOINTS.BUYER.INQUIRIES, inquiryData);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to create inquiry:', error);
       throw error;
@@ -302,7 +302,7 @@ export const inquiryService = {
   getUserInquiries: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.BUYER.INQUIRIES);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch inquiries:', error);
       throw error;
@@ -313,7 +313,7 @@ export const inquiryService = {
   getQuotesForInquiry: async (inquiryId: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.BUYER.QUOTES}/inquiry/${inquiryId}`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch quotes:', error);
       throw error;
@@ -327,7 +327,7 @@ export const supportService = {
   createTicket: async (ticketData: any) => {
     try {
       const response = await api.post(API_ENDPOINTS.SUPPORT.TICKETS, ticketData);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to create ticket:', error);
       throw error;
@@ -338,7 +338,7 @@ export const supportService = {
   getUserTickets: async () => {
     try {
       const response = await api.get(API_ENDPOINTS.SUPPORT.TICKETS);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch tickets:', error);
       throw error;
@@ -349,7 +349,7 @@ export const supportService = {
   getChatMessages: async (chatId: number) => {
     try {
       const response = await api.get(`${API_ENDPOINTS.SUPPORT.CHAT}/${chatId}/messages`);
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to fetch chat messages:', error);
       throw error;

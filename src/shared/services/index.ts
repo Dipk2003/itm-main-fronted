@@ -15,7 +15,7 @@ export type { CreateGstNumberDto, GstNumber, KycDocument, VendorDashboardData, V
 
 // Product Management
 export { productAPI } from './productApi';
-export type { Category, Product, ProductDto, ProductImage, ProductSearchParams, ProductsResponse, SubCategory } from './productApi';
+export type { ProductDto } from './productApi';
 
 // Cart & Wishlist
 // export { cartWishlistAPI } from './cartWishlistApi';

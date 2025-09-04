@@ -1,0 +1,904 @@
+{
+  "timestamp": "2025-09-02T17:07:02.116Z",
+  "testSuite": "Frontend Validation",
+  "summary": {
+    "totalPages": 40,
+    "passedPages": 0,
+    "failedPages": 77,
+    "totalErrors": 81,
+    "overallStatus": "NEEDS_ATTENTION"
+  },
+  "pages": [
+    {
+      "path": "/health",
+      "url": "http://localhost:3000/health",
+      "status": 200,
+      "loadTime": 9619,
+      "success": true,
+      "contentLength": 247,
+      "hasContent": true,
+      "hasTitle": false,
+      "hasReactRoot": false,
+      "hasJavaScript": false,
+      "hasCSS": false,
+      "errors": [
+        "Missing React root element - page may not be rendering properly"
+      ]
+    },
+    {
+      "path": "/api/health",
+      "url": "http://localhost:3000/api/health",
+      "status": 503,
+      "loadTime": 1926,
+      "success": false,
+      "contentLength": 598,
+      "hasContent": true,
+      "hasTitle": false,
+      "hasReactRoot": false,
+      "hasJavaScript": false,
+      "hasCSS": false,
+      "errors": []
+    },
+    {
+      "path": "/",
+      "url": "http://localhost:3000/",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/about-us",
+      "url": "http://localhost:3000/about-us",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/api-docs",
+      "url": "http://localhost:3000/api-docs",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/auth/admin/login",
+      "url": "http://localhost:3000/auth/admin/login",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/auth/employee/login",
+      "url": "http://localhost:3000/auth/employee/login",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/auth/employee/login",
+      "url": "http://localhost:3000/auth/employee/login",
+      "status": 0,
+      "loadTime": 30013,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/auth/admin/login",
+      "url": "http://localhost:3000/auth/admin/login",
+      "status": 0,
+      "loadTime": 30015,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/api-docs",
+      "url": "http://localhost:3000/api-docs",
+      "status": 0,
+      "loadTime": 30017,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/about-us",
+      "url": "http://localhost:3000/about-us",
+      "status": 0,
+      "loadTime": 30017,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/",
+      "url": "http://localhost:3000/",
+      "status": 0,
+      "loadTime": 30019,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/auth/user/login",
+      "url": "http://localhost:3000/auth/user/login",
+      "status": 200,
+      "loadTime": 27969,
+      "success": true,
+      "contentLength": 37876,
+      "hasContent": true,
+      "hasTitle": true,
+      "hasReactRoot": true,
+      "hasJavaScript": true,
+      "hasCSS": true,
+      "errors": [
+        "Server/Application error detected in page content",
+        "404 Not Found error detected"
+      ]
+    },
+    {
+      "path": "/auth/vendor/login",
+      "url": "http://localhost:3000/auth/vendor/login",
+      "status": 200,
+      "loadTime": 27969,
+      "success": true,
+      "contentLength": 37761,
+      "hasContent": true,
+      "hasTitle": true,
+      "hasReactRoot": true,
+      "hasJavaScript": true,
+      "hasCSS": true,
+      "errors": [
+        "Server/Application error detected in page content",
+        "404 Not Found error detected"
+      ]
+    },
+    {
+      "path": "/auth/vendor/register",
+      "url": "http://localhost:3000/auth/vendor/register",
+      "status": 200,
+      "loadTime": 27971,
+      "success": true,
+      "contentLength": 46622,
+      "hasContent": true,
+      "hasTitle": true,
+      "hasReactRoot": true,
+      "hasJavaScript": true,
+      "hasCSS": true,
+      "errors": [
+        "Server/Application error detected in page content",
+        "404 Not Found error detected"
+      ]
+    },
+    {
+      "path": "/auth/user/register",
+      "url": "http://localhost:3000/auth/user/register",
+      "status": 200,
+      "loadTime": 27978,
+      "success": true,
+      "contentLength": 40497,
+      "hasContent": true,
+      "hasTitle": true,
+      "hasReactRoot": true,
+      "hasJavaScript": true,
+      "hasCSS": true,
+      "errors": [
+        "Server/Application error detected in page content",
+        "404 Not Found error detected"
+      ]
+    },
+    {
+      "path": "/auth/forgot-password",
+      "url": "http://localhost:3000/auth/forgot-password",
+      "status": 200,
+      "loadTime": 27985,
+      "success": true,
+      "contentLength": 35712,
+      "hasContent": true,
+      "hasTitle": true,
+      "hasReactRoot": true,
+      "hasJavaScript": true,
+      "hasCSS": true,
+      "errors": [
+        "Server/Application error detected in page content",
+        "404 Not Found error detected"
+      ]
+    },
+    {
+      "path": "/cart",
+      "url": "http://localhost:3000/cart",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/categories",
+      "url": "http://localhost:3000/categories",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/chat",
+      "url": "http://localhost:3000/chat",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/cities",
+      "url": "http://localhost:3000/cities",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/complaints",
+      "url": "http://localhost:3000/complaints",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/complaints",
+      "url": "http://localhost:3000/complaints",
+      "status": 0,
+      "loadTime": 30010,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/cities",
+      "url": "http://localhost:3000/cities",
+      "status": 0,
+      "loadTime": 30010,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/chat",
+      "url": "http://localhost:3000/chat",
+      "status": 0,
+      "loadTime": 30012,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/categories",
+      "url": "http://localhost:3000/categories",
+      "status": 0,
+      "loadTime": 30012,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/cart",
+      "url": "http://localhost:3000/cart",
+      "status": 0,
+      "loadTime": 30014,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/contact-us",
+      "url": "http://localhost:3000/contact-us",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/customer-care",
+      "url": "http://localhost:3000/customer-care",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard",
+      "url": "http://localhost:3000/dashboard",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/admin",
+      "url": "http://localhost:3000/dashboard/admin",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/analytics",
+      "url": "http://localhost:3000/dashboard/analytics",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/analytics",
+      "url": "http://localhost:3000/dashboard/analytics",
+      "status": 0,
+      "loadTime": 30019,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/admin",
+      "url": "http://localhost:3000/dashboard/admin",
+      "status": 0,
+      "loadTime": 30021,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard",
+      "url": "http://localhost:3000/dashboard",
+      "status": 0,
+      "loadTime": 30024,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/customer-care",
+      "url": "http://localhost:3000/customer-care",
+      "status": 0,
+      "loadTime": 30027,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/contact-us",
+      "url": "http://localhost:3000/contact-us",
+      "status": 0,
+      "loadTime": 30029,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/cto",
+      "url": "http://localhost:3000/dashboard/cto",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/employee",
+      "url": "http://localhost:3000/dashboard/employee",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/finance",
+      "url": "http://localhost:3000/dashboard/finance",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/support",
+      "url": "http://localhost:3000/dashboard/support",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/user",
+      "url": "http://localhost:3000/dashboard/user",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/dashboard/user",
+      "url": "http://localhost:3000/dashboard/user",
+      "status": 0,
+      "loadTime": 30016,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/support",
+      "url": "http://localhost:3000/dashboard/support",
+      "status": 0,
+      "loadTime": 30017,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/finance",
+      "url": "http://localhost:3000/dashboard/finance",
+      "status": 0,
+      "loadTime": 30020,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/employee",
+      "url": "http://localhost:3000/dashboard/employee",
+      "status": 0,
+      "loadTime": 30022,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/cto",
+      "url": "http://localhost:3000/dashboard/cto",
+      "status": 0,
+      "loadTime": 30025,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/vendor-panel",
+      "url": "http://localhost:3000/dashboard/vendor-panel",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/directory",
+      "url": "http://localhost:3000/directory",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/help",
+      "url": "http://localhost:3000/help",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/integration-test",
+      "url": "http://localhost:3000/integration-test",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/orders",
+      "url": "http://localhost:3000/orders",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/orders",
+      "url": "http://localhost:3000/orders",
+      "status": 0,
+      "loadTime": 30012,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/integration-test",
+      "url": "http://localhost:3000/integration-test",
+      "status": 0,
+      "loadTime": 30013,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/help",
+      "url": "http://localhost:3000/help",
+      "status": 0,
+      "loadTime": 30013,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/directory",
+      "url": "http://localhost:3000/directory",
+      "status": 0,
+      "loadTime": 30013,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/dashboard/vendor-panel",
+      "url": "http://localhost:3000/dashboard/vendor-panel",
+      "status": 0,
+      "loadTime": 30014,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/post-requirement",
+      "url": "http://localhost:3000/post-requirement",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/privacy-policy",
+      "url": "http://localhost:3000/privacy-policy",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/products",
+      "url": "http://localhost:3000/products",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/products-you-buy",
+      "url": "http://localhost:3000/products-you-buy",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/profile",
+      "url": "http://localhost:3000/profile",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/profile",
+      "url": "http://localhost:3000/profile",
+      "status": 0,
+      "loadTime": 30014,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/products-you-buy",
+      "url": "http://localhost:3000/products-you-buy",
+      "status": 0,
+      "loadTime": 30015,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/products",
+      "url": "http://localhost:3000/products",
+      "status": 0,
+      "loadTime": 30016,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/privacy-policy",
+      "url": "http://localhost:3000/privacy-policy",
+      "status": 0,
+      "loadTime": 30017,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/post-requirement",
+      "url": "http://localhost:3000/post-requirement",
+      "status": 0,
+      "loadTime": 30019,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/search",
+      "url": "http://localhost:3000/search",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/search-suppliers",
+      "url": "http://localhost:3000/search-suppliers",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/settings",
+      "url": "http://localhost:3000/settings",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/terms-of-use",
+      "url": "http://localhost:3000/terms-of-use",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/unauthorized",
+      "url": "http://localhost:3000/unauthorized",
+      "status": 0,
+      "loadTime": 30000,
+      "success": false,
+      "error": "Request timeout (30s)",
+      "errors": [
+        "Request timeout after 30 seconds"
+      ]
+    },
+    {
+      "path": "/unauthorized",
+      "url": "http://localhost:3000/unauthorized",
+      "status": 0,
+      "loadTime": 30020,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/terms-of-use",
+      "url": "http://localhost:3000/terms-of-use",
+      "status": 0,
+      "loadTime": 30021,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/settings",
+      "url": "http://localhost:3000/settings",
+      "status": 0,
+      "loadTime": 30021,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/search-suppliers",
+      "url": "http://localhost:3000/search-suppliers",
+      "status": 0,
+      "loadTime": 30023,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    },
+    {
+      "path": "/search",
+      "url": "http://localhost:3000/search",
+      "status": 0,
+      "loadTime": 30024,
+      "success": false,
+      "error": "socket hang up",
+      "errors": [
+        "socket hang up"
+      ]
+    }
+  ],
+  "errors": [],
+  "recommendations": [
+    "Fix identified errors to improve frontend reliability",
+    "Optimize 76 slow-loading pages (>3s load time)",
+    "Fix 71 failing pages to achieve 100% success rate"
+  ]
+}

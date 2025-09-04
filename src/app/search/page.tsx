@@ -61,7 +61,7 @@ function SearchContent() {
       };
       
       console.log('🔍 Starting product search for:', query);
-      const response = await dynamicDataService.products.searchProducts(query, searchData);
+      const response = await dynamicDataService.products.searchProducts(query, searchData) as any;
       
       if (page === 1) {
         setProducts(response.products || []);

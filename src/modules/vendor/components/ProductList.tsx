@@ -2,7 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { productAPI, Product } from '@/shared/services/productApi';
+import { productAPI } from '@/shared/services/productApi';
+
+// Define Product interface locally
+interface Product {
+  id: number;
+  name: string;
+  price?: number;
+  originalPrice?: number;
+  stock?: number;
+  isActive?: boolean;
+  images?: Array<{ imageUrl: string }>;
+  imageUrls?: string;
+  category?: { name: string };
+  sku?: string;
+  [key: string]: any;
+}
 import { Button } from '@/shared/components/Button';
 import ImageManager from './ImageManager';
 import { Edit, Trash2, Eye, ToggleLeft, ToggleRight, Plus, Image as ImageIcon } from 'lucide-react';

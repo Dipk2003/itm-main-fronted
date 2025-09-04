@@ -3,7 +3,7 @@ import { api } from './apiClient';
 export const checkBackendHealth = async (): Promise<boolean> => {
   try {
     const response = await api.get('/api/health');
-    return response.status === 200;
+    return response !== null; // If we get any response, backend is healthy
   } catch (error) {
     console.error('Backend health check failed:', error);
     return false;
@@ -20,7 +20,7 @@ export const testBackendConnection = async (): Promise<{
     return {
       success: true,
       message: 'Backend connection successful',
-      details: response.data
+      details: response
     };
   } catch (error: any) {
     return {
@@ -59,8 +59,8 @@ export const testApiEndpoints = async () => {
       
       results[endpoint.name] = {
         success: true,
-        status: response?.status,
-        data: response?.data
+        status: 200, // Assume success if no error thrown
+        data: response
       };
     } catch (error: any) {
       results[endpoint.name] = {

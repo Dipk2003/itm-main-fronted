@@ -6,7 +6,7 @@ export const profileService = {
   getProfile: async () => {
     try {
       const response = await api.get('/profile');
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -22,7 +22,7 @@ export const profileService = {
   }) => {
     try {
       const response = await api.put('/profile', profileData);
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -35,7 +35,7 @@ export const profileService = {
   }) => {
     try {
       const response = await api.put('/profile/change-password', passwordData);
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -52,7 +52,7 @@ export const profileService = {
           'Content-Type': 'multipart/form-data'
         }
       });
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -62,7 +62,7 @@ export const profileService = {
   verifyEmail: async (token: string) => {
     try {
       const response = await api.post('/profile/verify-email', { token });
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -72,7 +72,7 @@ export const profileService = {
   resendVerificationEmail: async () => {
     try {
       const response = await api.post('/profile/resend-verification', {});
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -86,7 +86,7 @@ export const profileService = {
   }) => {
     try {
       const response = await api.put('/profile/notifications', preferences);
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }
@@ -98,7 +98,7 @@ export const profileService = {
       const response = await api.delete('/profile', {
         data: { password }
       });
-      return response.data;
+      return response;
     } catch (error) {
       throw handleApiError(error);
     }

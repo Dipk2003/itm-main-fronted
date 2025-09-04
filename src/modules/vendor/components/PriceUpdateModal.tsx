@@ -50,7 +50,7 @@ export default function PriceUpdateModal({
       for (const productId in updatedProducts) {
         try {
           // Calling update API for each product
-          await productAPI.updateProductPrice(productId, updatedProducts[productId]);
+          await productAPI.updateProductPrice(parseInt(productId), updatedProducts[productId]);
           successfulUpdates++;
           console.log(`✅ Updated price for product ${productId} to ${updatedProducts[productId]}`);
         } catch (productError) {

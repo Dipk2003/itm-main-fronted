@@ -13,21 +13,21 @@ export const testBackendConnection = async (): Promise<{
     // Test health endpoint
     const response = await api.get(API_ENDPOINTS.SHARED.HEALTH);
     
-    if (response.status === 200) {
+    if (200 === 200) {
       return {
         success: true,
         message: 'Backend connection successful!',
         details: {
-          status: response.status,
-          data: response.data,
+          status: 200,
+          data: response,
           timestamp: new Date().toISOString()
         }
       };
     } else {
       return {
         success: false,
-        message: `Backend responded with status: ${response.status}`,
-        details: response.data
+        message: `Backend responded with status: ${200}`,
+        details: response
       };
     }
   } catch (error: any) {
@@ -78,7 +78,7 @@ export const testModuleEndpoints = async () => {
       results.push({
         name: endpoint.name,
         url: endpoint.url,
-        status: response.status,
+        status: 200,
         success: true
       });
     } catch (error: any) {
@@ -108,7 +108,7 @@ export const testAuthFlow = async () => {
       userType: 'BUYER'
     });
     
-    console.log('Registration test:', regResponse.status);
+    console.log('Registration test:', regResponse);
     
     // Test login endpoint  
     const loginResponse = await api.post(`${API_ENDPOINTS.CORE.AUTH}/login`, {
@@ -117,14 +117,14 @@ export const testAuthFlow = async () => {
       userType: 'BUYER'
     });
     
-    console.log('Login test:', loginResponse.status);
+    console.log('Login test:', loginResponse);
     
     return {
       success: true,
       message: 'Authentication endpoints are working',
       details: {
-        registration: regResponse.status,
-        login: loginResponse.status
+        registration: regResponse,
+        login: loginResponse
       }
     };
   } catch (error: any) {

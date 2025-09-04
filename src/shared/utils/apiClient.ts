@@ -1,17 +1,20 @@
-/**
- * Simple and Robust API Client
- * ============================
- * 
- * A straightforward API client with error handling and fallback mechanisms
- */
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
-import { API_BASE_URL } from '@/lib/api-config';
+// Complete API Configuration
+const API_CONFIG = {
+  BASE_URL: 'http://localhost:8080',
+  API_BASE_URL: 'http://localhost:8080/api/v1',
+  TIMEOUT: 30000,
+  DEBUG: true
+};
 
-// Create axios instance
+console.log('🌐 API Client Configuration:', API_CONFIG);
+
+// Create axios instance with complete configuration
 const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 30000,
+  baseURL: API_CONFIG.API_BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -23,14 +26,29 @@ apiClient.interceptors.request.use(
   (config) => {
     // Add auth token if available
     const token = typeof window !== 'undefined' 
-      ? localStorage.getItem('authToken') || localStorage.getItem('token')
+      ? localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
       : null;
     
-    if (token) {
+    if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`);
+    
+    // Add CORS headers
+    if (config.headers) {
+      config.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000';
+      config.headers['Access-Control-Allow-Credentials'] = 'true';
+    }
+    
+    if (API_CONFIG.DEBUG) {
+      console.log('📤 API Request:', {
+        method: config.method?.toUpperCase(),
+        url: config.url,
+        fullUrl: `${config.baseURL}${config.url}`,
+        hasAuth: !!token,
+        headers: config.headers
+      });
+    }
+    
     return config;
   },
   (error) => {
@@ -39,99 +57,73 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor with complete error handling
 apiClient.interceptors.response.use(
-  (response) => {
-    console.log(`✅ ${response.config.method?.toUpperCase()} ${response.config.url} - ${response.status}`);
+  (response: AxiosResponse) => {
+    if (API_CONFIG.DEBUG) {
+      console.log('✅ API Response:', {
+        status: response.status,
+        url: response.config.url,
+        data: response.data
+      });
+    }
     return response;
   },
-  (error: AxiosError) => {
-    console.error(`❌ ${error.config?.method?.toUpperCase()} ${error.config?.url} - ${error.response?.status || 'Network Error'}`);
-    
-    // Handle 401/403 errors
-    if (error.response?.status === 401 && typeof window !== 'undefined') {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('userRole');
+  (error) => {
+    console.error('❌ API Error:', {
+      status: error.response?.status,
+      url: error.config?.url,
+      message: error.message,
+      data: error.response?.data
+    });
+
+    // Handle different error types
+    if (error.response?.status === 403) {
+      console.error('🚨 403 Forbidden - CORS or Security issue');
+      console.error('🔧 Check backend CORS configuration');
+    } else if (error.response?.status === 401) {
+      console.log('🔒 Authentication required, clearing tokens...');
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('authToken');
+      }
     }
 
     return Promise.reject(error);
   }
 );
 
-// Helper function to handle API errors
-export const handleApiError = (error: any) => {
-  if (error.response) {
-    return {
-      message: error.response.data?.message || error.response.data || 'An error occurred',
-      status: error.response.status,
-      data: error.response.data,
-      timestamp: new Date().toISOString(),
-    };
-  } else if (error.request) {
-    return {
-      message: 'Network error. Please check your internet connection.',
-      status: 0,
-      data: null,
-      timestamp: new Date().toISOString(),
-    };
-  } else {
-    return {
-      message: error.message || 'An unexpected error occurred',
-      status: 0,
-      data: null,
-      timestamp: new Date().toISOString()
-    };
-  }
-};
-
-// Simple API wrapper
+// API Helper Functions
 export const api = {
-  get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.get(url, config).then(response => response.data);
-  },
+  get: <T>(url: string, config?: AxiosRequestConfig) => 
+    apiClient.get<T>(url, config).then(res => res.data),
   
-  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.post(url, data, config).then(response => response.data);
-  },
+  post: <T>(url: string, data?: any, config?: AxiosRequestConfig) => 
+    apiClient.post<T>(url, data, config).then(res => res.data),
   
-  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.put(url, data, config).then(response => response.data);
-  },
+  put: <T>(url: string, data?: any, config?: AxiosRequestConfig) => 
+    apiClient.put<T>(url, data, config).then(res => res.data),
   
-  delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.delete(url, config).then(response => response.data);
-  },
+  patch: <T>(url: string, data?: any, config?: AxiosRequestConfig) => 
+    apiClient.patch<T>(url, data, config).then(res => res.data),
   
-  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
-    return apiClient.patch(url, data, config).then(response => response.data);
-  },
-
-  // Utility methods
-  handleError: handleApiError,
-  
-  // Health check
-  healthCheck: async (): Promise<boolean> => {
-    try {
-      await apiClient.get('/api/health');
-      return true;
-    } catch (error) {
-      console.warn('❌ Health check failed:', error);
-      return false;
-    }
-  },
+  delete: <T>(url: string, config?: AxiosRequestConfig) => 
+    apiClient.delete<T>(url, config).then(res => res.data),
 };
 
-// Health check utility
-export const testConnection = async (): Promise<boolean> => {
-  try {
-    return await api.healthCheck();
-  } catch (error) {
-    console.error('Connection test failed:', error);
-    return false;
+// Error handling utility
+export const handleApiError = (error: any): string => {
+  if (error.response?.data?.message) {
+    return error.response.data.message;
   }
+  if (error.response?.data?.error) {
+    return error.response.data.error;
+  }
+  if (error.message) {
+    return error.message;
+  }
+  return 'An unexpected error occurred';
 };
 
-// Export for different import styles
 export default apiClient;

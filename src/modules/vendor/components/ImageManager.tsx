@@ -2,7 +2,16 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { productAPI, Product } from '@/shared/services/productApi';
+import { productAPI } from '@/shared/services/productApi';
+
+// Define Product interface locally
+interface Product {
+  id: number;
+  name: string;
+  images?: Array<{ imageUrl: string }>;
+  imageUrls?: string;
+  [key: string]: any;
+}
 import { Button } from '@/shared/components/Button';
 import { Upload, X, Image as ImageIcon, RefreshCw } from 'lucide-react';
 
@@ -204,7 +213,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({ product, onClose, onImageUp
     setLoading(true);
     try {
       console.log('🔄 Replacing images for product:', product.id);
-      const newUrls = await productAPI.updateProductImages(product.id, selectedImages);
+      const newUrls = await productAPI.uploadProductImages(product.id, selectedImages);
       console.log('✅ Images replaced successfully:', newUrls);
       
       // Convert new URLs to absolute URLs

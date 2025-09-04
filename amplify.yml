@@ -1,0 +1,115 @@
+version: 1
+
+# Environment variables for AWS Amplify deployment
+environment:
+  variables:
+    NEXT_PUBLIC_API_BASE_URL: https://api.yourdomain.com/api
+    NEXT_PUBLIC_API_FALLBACK_BASE_URL: https://backend.yourdomain.com/api
+    NEXT_PUBLIC_FRONTEND_URL: https://yourdomain.com
+    NEXT_PUBLIC_S3_BUCKET: itech-marketplace-files
+    NEXT_PUBLIC_S3_REGION: ap-south-1
+    NEXT_PUBLIC_CLOUDFRONT_DOMAIN: https://d1234567890.cloudfront.net
+    NEXT_PUBLIC_ENVIRONMENT: production
+    NEXT_TELEMETRY_DISABLED: 1
+    NODE_OPTIONS: --max-old-space-size=8192
+
+# Build phases
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing dependencies..."
+        - npm ci --production=false
+        - echo "Clearing Next.js cache..."
+        - npx next info
+        
+    build:
+      commands:
+        - echo "Building Next.js application..."
+        - npm run build:production
+        - echo "Build completed successfully"
+        
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+      
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
+
+# Backend API configuration (if using Amplify Functions)
+backend:
+  phases:
+    build:
+      commands:
+        - echo "No backend build required - using separate Elastic Beanstalk deployment"
+
+# Custom headers for security and performance
+customHeaders:
+  - pattern: '**'
+    headers:
+      - key: 'X-Content-Type-Options'
+        value: 'nosniff'
+      - key: 'X-Frame-Options'
+        value: 'DENY'
+      - key: 'X-XSS-Protection'
+        value: '1; mode=block'
+      - key: 'Referrer-Policy'
+        value: 'strict-origin-when-cross-origin'
+      - key: 'Content-Security-Policy'
+        value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.googleapis.com *.gstatic.com *.razorpay.com; style-src 'self' 'unsafe-inline' *.googleapis.com; img-src 'self' data: https:; font-src 'self' *.googleapis.com *.gstatic.com; connect-src 'self' *.yourdomain.com wss://*.yourdomain.com"
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+        
+  - pattern: '/_next/static/**'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=31536000, immutable'
+        
+  - pattern: '/api/**'
+    headers:
+      - key: 'Cache-Control'
+        value: 'no-cache, no-store, must-revalidate'
+
+# Redirects for SPA routing
+redirects:
+  - source: '/<*>'
+    target: '/index.html'
+    status: '404-200'
+    
+  # API redirects to backend
+  - source: '/api/<*>'
+    target: 'https://api.yourdomain.com/api/<*>'
+    status: '200'
+    
+  # Admin subdomain redirect
+  - source: 'https://admin.yourdomain.com/<*>'
+    target: 'https://yourdomain.com/dashboard/admin/<*>'
+    status: '301'
+    
+  # Vendor subdomain redirect  
+  - source: 'https://vendor.yourdomain.com/<*>'
+    target: 'https://yourdomain.com/dashboard/vendor-panel/<*>'
+    status: '301'
+
+# Test configuration
+test:
+  phases:
+    preTest:
+      commands:
+        - echo "Installing test dependencies..."
+        - npm ci
+        
+    test:
+      commands:
+        - echo "Running tests..."
+        - npm run test:ci
+        - echo "Running lint checks..."
+        - npm run lint
+        
+  artifacts:
+    baseDirectory: coverage
+    files:
+      - '**/*'
