@@ -3,9 +3,9 @@ version: 1
 # Environment variables for AWS Amplify deployment
 environment:
   variables:
-    NEXT_PUBLIC_API_BASE_URL: https://api.yourdomain.com/api
-    NEXT_PUBLIC_API_FALLBACK_BASE_URL: https://backend.yourdomain.com/api
-    NEXT_PUBLIC_FRONTEND_URL: https://yourdomain.com
+    NEXT_PUBLIC_API_BASE_URL: https://dxuvwwiluma2p.amplifyapp.com/api
+    NEXT_PUBLIC_API_FALLBACK_BASE_URL: https://dxuvwwiluma2p.amplifyapp.com/api
+    NEXT_PUBLIC_FRONTEND_URL: https://dxuvwwiluma2p.amplifyapp.com
     NEXT_PUBLIC_S3_BUCKET: itech-marketplace-files
     NEXT_PUBLIC_S3_REGION: ap-south-1
     NEXT_PUBLIC_CLOUDFRONT_DOMAIN: https://d1234567890.cloudfront.net
