@@ -131,12 +131,22 @@ jobs:
         aws s3 cp deployment.zip s3://itech-amplify-deployments/${S3_KEY}
         
         # Create and start deployment
-        DEPLOYMENT_ID=$(aws amplify create-deployment --app-id dxuvwwiluma2p --branch-name main --query 'deploymentId' --output text)
+        echo "Creating Amplify deployment..."
+        DEPLOYMENT_RESPONSE=$(aws amplify create-deployment --app-id dxuvwwiluma2p --branch-name main)
+        DEPLOYMENT_ID=$(echo $DEPLOYMENT_RESPONSE | jq -r '.deploymentId')
+        
+        if [ "$DEPLOYMENT_ID" = "null" ] || [ -z "$DEPLOYMENT_ID" ]; then
+          echo "Error: Failed to create deployment"
+          echo "Response: $DEPLOYMENT_RESPONSE"
+          exit 1
+        fi
+        
         echo "Created deployment: ${DEPLOYMENT_ID}"
         
         # Start the deployment
-        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --deployment-id ${DEPLOYMENT_ID} --source-url s3://itech-amplify-deployments/${S3_KEY}
-        echo "Started deployment: ${DEPLOYMENT_ID}"
+        echo "Starting deployment..."
+        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --deployment-id "${DEPLOYMENT_ID}" --source-url "s3://itech-amplify-deployments/${S3_KEY}"
+        echo "Deployment started successfully: ${DEPLOYMENT_ID}"
 
   notify:
     name: Notify
