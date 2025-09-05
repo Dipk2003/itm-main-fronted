@@ -158,7 +158,7 @@ jobs:
         
         # Start the deployment
         echo "Starting deployment..."
-        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --deployment-id "${DEPLOYMENT_ID}"
+        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --job-id "${DEPLOYMENT_ID}"
         echo "Deployment started successfully: ${DEPLOYMENT_ID}"
 
   notify:
