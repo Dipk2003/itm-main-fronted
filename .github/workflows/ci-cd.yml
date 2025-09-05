@@ -115,14 +115,28 @@ jobs:
     - name: Deploy to AWS Amplify
       run: |
         echo "Deploying to AWS Amplify..."
-        # Install Amplify CLI
-        npm install -g @aws-amplify/cli@latest
         
-        # Configure Amplify
-        amplify configure --amplify-app-id dxuvwwiluma2p --region ap-south-1 --yes || true
+        # Create a deployment ZIP file
+        echo "Creating deployment package..."
+        cd .next && zip -r ../deployment.zip . && cd ..
         
-        # Deploy using AWS CLI (alternative method)
-        aws amplify start-job --app-id dxuvwwiluma2p --branch-name main --job-type RELEASE
+        # Upload to temporary S3 location (using date for uniqueness)
+        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+        S3_KEY="deployments/frontend-${TIMESTAMP}.zip"
+        
+        # Create S3 bucket if it doesn't exist (for deployment artifacts)
+        aws s3api create-bucket --bucket itech-amplify-deployments --region ap-south-1 --create-bucket-configuration LocationConstraint=ap-south-1 || true
+        
+        # Upload deployment package
+        aws s3 cp deployment.zip s3://itech-amplify-deployments/${S3_KEY}
+        
+        # Create and start deployment
+        DEPLOYMENT_ID=$(aws amplify create-deployment --app-id dxuvwwiluma2p --branch-name main --query 'deploymentId' --output text)
+        echo "Created deployment: ${DEPLOYMENT_ID}"
+        
+        # Start the deployment
+        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --deployment-id ${DEPLOYMENT_ID} --source-url s3://itech-amplify-deployments/${S3_KEY}
+        echo "Started deployment: ${DEPLOYMENT_ID}"
 
   notify:
     name: Notify
