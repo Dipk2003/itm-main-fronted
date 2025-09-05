@@ -1,10 +1,7 @@
 name: Deploy iTech B2B Marketplace to AWS
 
+# Temporarily disabled - using ci-cd.yml instead
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
       deploy_target:
