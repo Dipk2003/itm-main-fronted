@@ -130,16 +130,18 @@ jobs:
         # Upload deployment package
         aws s3 cp deployment.zip s3://itech-amplify-deployments/${S3_KEY}
         
-        # Check for running jobs and stop them if needed
-        echo "Checking for running deployments..."
-        RUNNING_JOBS=$(aws amplify list-jobs --app-id dxuvwwiluma2p --branch-name main --max-items 1 --query 'jobSummaries[?status==`RUNNING`].jobId' --output text)
+        # Check for running or pending jobs and stop them if needed
+        echo "Checking for active deployments..."
+        ACTIVE_JOBS=$(aws amplify list-jobs --app-id dxuvwwiluma2p --branch-name main --max-items 5 --query 'jobSummaries[?status==`RUNNING` || status==`PENDING`].jobId' --output text)
         
-        if [ ! -z "$RUNNING_JOBS" ] && [ "$RUNNING_JOBS" != "None" ]; then
-          echo "Found running deployment: $RUNNING_JOBS"
-          echo "Stopping previous deployment..."
-          aws amplify stop-job --app-id dxuvwwiluma2p --branch-name main --job-id "$RUNNING_JOBS" || true
-          echo "Waiting for job to stop..."
-          sleep 10
+        if [ ! -z "$ACTIVE_JOBS" ] && [ "$ACTIVE_JOBS" != "None" ]; then
+          echo "Found active deployments: $ACTIVE_JOBS"
+          for JOB_ID in $ACTIVE_JOBS; do
+            echo "Stopping deployment: $JOB_ID"
+            aws amplify stop-job --app-id dxuvwwiluma2p --branch-name main --job-id "$JOB_ID" || true
+          done
+          echo "Waiting for jobs to stop..."
+          sleep 15
         fi
         
         # Create and start deployment
