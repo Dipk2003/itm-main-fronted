@@ -120,15 +120,8 @@ jobs:
         echo "Creating deployment package..."
         cd .next && zip -r ../deployment.zip . && cd ..
         
-        # Upload to temporary S3 location (using date for uniqueness)
-        TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-        S3_KEY="deployments/frontend-${TIMESTAMP}.zip"
-        
-        # Create S3 bucket if it doesn't exist (for deployment artifacts)
-        aws s3api create-bucket --bucket itech-amplify-deployments --region ap-south-1 --create-bucket-configuration LocationConstraint=ap-south-1 || true
-        
-        # Upload deployment package
-        aws s3 cp deployment.zip s3://itech-amplify-deployments/${S3_KEY}
+        # Prepare deployment ZIP file (already created above)
+        echo "Deployment package ready: deployment.zip"
         
         # Check for running or pending jobs and stop them if needed
         echo "Checking for active deployments..."
@@ -144,10 +137,11 @@ jobs:
           sleep 15
         fi
         
-        # Create and start deployment
+        # Create deployment and get upload URL
         echo "Creating Amplify deployment..."
         DEPLOYMENT_RESPONSE=$(aws amplify create-deployment --app-id dxuvwwiluma2p --branch-name main)
-        DEPLOYMENT_ID=$(echo $DEPLOYMENT_RESPONSE | jq -r '.deploymentId')
+        DEPLOYMENT_ID=$(echo $DEPLOYMENT_RESPONSE | jq -r '.jobId')
+        UPLOAD_URL=$(echo $DEPLOYMENT_RESPONSE | jq -r '.zipUploadUrl')
         
         if [ "$DEPLOYMENT_ID" = "null" ] || [ -z "$DEPLOYMENT_ID" ]; then
           echo "Error: Failed to create deployment"
@@ -156,10 +150,15 @@ jobs:
         fi
         
         echo "Created deployment: ${DEPLOYMENT_ID}"
+        echo "Upload URL received"
+        
+        # Upload ZIP file to Amplify's provided URL
+        echo "Uploading deployment package to Amplify..."
+        curl -X PUT "$UPLOAD_URL" --data-binary @deployment.zip -H "Content-Type: application/zip"
         
         # Start the deployment
         echo "Starting deployment..."
-        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --deployment-id "${DEPLOYMENT_ID}" --source-url "s3://itech-amplify-deployments/${S3_KEY}"
+        aws amplify start-deployment --app-id dxuvwwiluma2p --branch-name main --deployment-id "${DEPLOYMENT_ID}"
         echo "Deployment started successfully: ${DEPLOYMENT_ID}"
 
   notify:
