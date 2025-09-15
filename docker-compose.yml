@@ -1,0 +1,385 @@
+# Indian Trade Mart Frontend - Docker Compose Configuration
+# Multi-environment setup for development, staging, and production
+
+version: '3.8'
+
+# ========== COMMON CONFIGURATION ==========
+x-common-variables: &common-variables
+  NEXT_PUBLIC_APP_NAME: "Indian Trade Mart"
+  NEXT_PUBLIC_APP_VERSION: "${APP_VERSION:-1.0.0}"
+  NEXT_PUBLIC_BUILD_TIME: "${BUILD_TIME}"
+  NEXT_PUBLIC_ENVIRONMENT: "${ENVIRONMENT:-development}"
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+x-monitoring-config: &monitoring-config
+  MONITORING_ENABLED: "${MONITORING_ENABLED:-true}"
+  SENTRY_DSN: "${SENTRY_DSN}"
+  SENTRY_ORG: "${SENTRY_ORG:-indian-trade-mart}"
+  SENTRY_PROJECT: "${SENTRY_PROJECT:-frontend}"
+
+x-common-labels: &common-labels
+  com.indiantrademart.service: "frontend"
+  com.indiantrademart.version: "${APP_VERSION:-1.0.0}"
+  com.indiantrademart.environment: "${ENVIRONMENT:-development}"
+
+services:
+  # ========== DEVELOPMENT SERVICE ==========
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+      args:
+        - NODE_ENV=development
+        - NEXT_PUBLIC_ENVIRONMENT=development
+    container_name: indiantrademart-frontend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *common-variables
+      <<: *monitoring-config
+      NODE_ENV: development
+      NEXT_PUBLIC_ENVIRONMENT: development
+      # API Configuration
+      NEXT_PUBLIC_API_URL: "${DEV_API_URL:-http://localhost:8080}"
+      API_URL: "${DEV_API_URL:-http://localhost:8080}"
+      # Database (for development)
+      DATABASE_URL: "${DEV_DATABASE_URL}"
+      # Authentication
+      NEXTAUTH_URL: "${DEV_NEXTAUTH_URL:-http://localhost:3000}"
+      NEXTAUTH_SECRET: "${DEV_NEXTAUTH_SECRET:-dev-secret-key}"
+      # External Services
+      GOOGLE_CLIENT_ID: "${DEV_GOOGLE_CLIENT_ID}"
+      GOOGLE_CLIENT_SECRET: "${DEV_GOOGLE_CLIENT_SECRET}"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+      # Monitoring volumes
+      - ./monitoring/logs:/app/monitoring/logs
+    networks:
+      - indiantrademart-dev
+    labels:
+      <<: *common-labels
+      com.indiantrademart.environment: "development"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ========== PRODUCTION SERVICE ==========
+  frontend-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+      args:
+        - NODE_ENV=production
+        - NEXT_PUBLIC_APP_VERSION=${APP_VERSION:-1.0.0}
+        - NEXT_PUBLIC_BUILD_TIME=${BUILD_TIME}
+        - NEXT_PUBLIC_ENVIRONMENT=production
+    container_name: indiantrademart-frontend-prod
+    ports:
+      - "3000:3000"
+    environment:
+      <<: *common-variables
+      <<: *monitoring-config
+      NODE_ENV: production
+      NEXT_PUBLIC_ENVIRONMENT: production
+      # API Configuration
+      NEXT_PUBLIC_API_URL: "${PROD_API_URL}"
+      API_URL: "${PROD_API_URL}"
+      # Database
+      DATABASE_URL: "${PROD_DATABASE_URL}"
+      # Authentication
+      NEXTAUTH_URL: "${PROD_NEXTAUTH_URL}"
+      NEXTAUTH_SECRET: "${PROD_NEXTAUTH_SECRET}"
+      # External Services
+      GOOGLE_CLIENT_ID: "${PROD_GOOGLE_CLIENT_ID}"
+      GOOGLE_CLIENT_SECRET: "${PROD_GOOGLE_CLIENT_SECRET}"
+      # Security
+      JWT_SECRET: "${JWT_SECRET}"
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY}"
+      # CDN & Storage
+      AWS_S3_BUCKET: "${AWS_S3_BUCKET}"
+      AWS_REGION: "${AWS_REGION}"
+      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+      CLOUDFRONT_DOMAIN: "${CLOUDFRONT_DOMAIN}"
+      # Email
+      SMTP_HOST: "${SMTP_HOST}"
+      SMTP_PORT: "${SMTP_PORT}"
+      SMTP_USER: "${SMTP_USER}"
+      SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      # Payment Gateway
+      RAZORPAY_KEY_ID: "${RAZORPAY_KEY_ID}"
+      RAZORPAY_KEY_SECRET: "${RAZORPAY_KEY_SECRET}"
+      # Analytics
+      GOOGLE_ANALYTICS_ID: "${GOOGLE_ANALYTICS_ID}"
+      FACEBOOK_PIXEL_ID: "${FACEBOOK_PIXEL_ID}"
+    volumes:
+      # Production volumes (read-only)
+      - ./monitoring/logs:/app/monitoring/logs
+      - ./uploads:/app/uploads:ro
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.environment: "production"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    depends_on:
+      - redis-prod
+      - postgres-prod
+
+  # ========== TESTING SERVICE ==========
+  frontend-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    container_name: indiantrademart-frontend-test
+    environment:
+      <<: *common-variables
+      NODE_ENV: test
+      NEXT_PUBLIC_ENVIRONMENT: test
+      CI: "true"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./test-results:/app/test-results
+    networks:
+      - indiantrademart-test
+    labels:
+      <<: *common-labels
+      com.indiantrademart.environment: "test"
+    profiles:
+      - test
+
+  # ========== NGINX REVERSE PROXY ==========
+  nginx:
+    image: nginx:alpine
+    container_name: indiantrademart-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+      - ./monitoring/logs/nginx:/var/log/nginx
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.service: "nginx"
+    restart: always
+    depends_on:
+      - frontend-prod
+    profiles:
+      - production
+
+  # ========== REDIS (for session storage and caching) ==========
+  redis-prod:
+    image: redis:7-alpine
+    container_name: indiantrademart-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./docker/redis/redis.conf:/etc/redis/redis.conf:ro
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.service: "redis"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+    profiles:
+      - production
+
+  # ========== POSTGRESQL (for session data and logs) ==========
+  postgres-prod:
+    image: postgres:15-alpine
+    container_name: indiantrademart-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:-indiantrademart}"
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=en_US.UTF-8"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+      - ./monitoring/logs/postgres:/var/log/postgresql
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.service: "postgres"
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+    profiles:
+      - production
+
+  # ========== MONITORING STACK ==========
+  
+  # Prometheus (Metrics Collection)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: indiantrademart-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.service: "prometheus"
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+  # Grafana (Visualization)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: indiantrademart-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:-admin}"
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.service: "grafana"
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+  # Loki (Log Aggregation)
+  loki:
+    image: grafana/loki:latest
+    container_name: indiantrademart-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./docker/loki/loki.yml:/etc/loki/local-config.yaml:ro
+      - loki-data:/tmp/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.service: "loki"
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+# ========== NETWORKS ==========
+networks:
+  indiantrademart-dev:
+    driver: bridge
+    name: indiantrademart-dev
+    labels:
+      <<: *common-labels
+      com.indiantrademart.network: "development"
+
+  indiantrademart-prod:
+    driver: bridge
+    name: indiantrademart-prod
+    labels:
+      <<: *common-labels
+      com.indiantrademart.network: "production"
+
+  indiantrademart-test:
+    driver: bridge
+    name: indiantrademart-test
+    labels:
+      <<: *common-labels
+      com.indiantrademart.network: "test"
+
+# ========== VOLUMES ==========
+volumes:
+  redis-data:
+    driver: local
+    name: indiantrademart-redis-data
+    labels:
+      <<: *common-labels
+
+  postgres-data:
+    driver: local
+    name: indiantrademart-postgres-data
+    labels:
+      <<: *common-labels
+
+  prometheus-data:
+    driver: local
+    name: indiantrademart-prometheus-data
+    labels:
+      <<: *common-labels
+
+  grafana-data:
+    driver: local
+    name: indiantrademart-grafana-data
+    labels:
+      <<: *common-labels
+
+  loki-data:
+    driver: local
+    name: indiantrademart-loki-data
+    labels:
+      <<: *common-labels
