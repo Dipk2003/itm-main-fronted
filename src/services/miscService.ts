@@ -157,8 +157,7 @@ class MiscServiceClass {
         formData.append('tags', JSON.stringify(options.tags));
       }
 
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.UPLOAD 
-        || API_CONFIG.ENDPOINTS.FILES?.UPLOAD 
+      const endpoint = API_CONFIG.ENDPOINTS.FILES?.UPLOAD 
         || '/api/files/upload';
 
       const response = await apiRequest<FileUploadResponse>(
@@ -204,9 +203,7 @@ class MiscServiceClass {
         formData.append('tags', JSON.stringify(options.tags));
       }
 
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.BULK_UPLOAD 
-        || API_CONFIG.ENDPOINTS.FILES?.BULK_UPLOAD 
-        || '/api/files/bulk-upload';
+      const endpoint = '/api/files/bulk-upload';
 
       const response = await apiRequest<BulkFileUploadResponse>(
         endpoint,
@@ -254,8 +251,7 @@ class MiscServiceClass {
   async getFileInfo(fileId: string): Promise<FileUploadResponse> {
     console.log('🔍 Getting file info:', fileId);
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.FILES?.GET_INFO 
-        || `/api/files/${fileId}/info`;
+      const endpoint = `/api/files/${fileId}/info`;
 
       const response = await apiRequest<FileUploadResponse>(
         endpoint,
@@ -278,8 +274,7 @@ class MiscServiceClass {
   async getSystemHealth(): Promise<SystemHealth> {
     console.log('🏥 Checking system health');
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.HEALTH 
-        || '/api/system/health';
+      const endpoint = API_CONFIG.ENDPOINTS.HEALTH || '/api/system/health';
 
       const response = await apiRequest<SystemHealth>(
         endpoint,
@@ -302,8 +297,7 @@ class MiscServiceClass {
   async getSystemStats(): Promise<SystemStats> {
     console.log('📊 Fetching system statistics');
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.ADMIN?.SYSTEM_STATS 
-        || '/api/admin/system-stats';
+      const endpoint = '/api/admin/system-stats';
 
       const response = await apiRequest<SystemStats>(
         endpoint,
@@ -332,8 +326,7 @@ class MiscServiceClass {
   }> {
     console.log('🔔 Sending notification:', notificationData.title);
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.NOTIFICATIONS 
-        || '/api/notifications/send';
+      const endpoint = '/api/notifications/send';
 
       const response = await apiRequest<{
         id: string;
@@ -367,8 +360,7 @@ class MiscServiceClass {
   }> {
     console.log('📱 Sending push notification:', pushData.title);
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.PUSH_NOTIFICATIONS 
-        || '/api/notifications/push';
+      const endpoint = '/api/notifications/push';
 
       const response = await apiRequest<{
         success: boolean;
@@ -401,8 +393,7 @@ class MiscServiceClass {
   }> {
     console.log('📧 Sending email:', emailData.subject);
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.SEND_EMAIL 
-        || '/api/communications/email';
+      const endpoint = '/api/communications/email';
 
       const response = await apiRequest<{
         messageId: string;
@@ -436,8 +427,7 @@ class MiscServiceClass {
   }> {
     console.log('📱 Sending SMS');
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.SEND_SMS 
-        || '/api/communications/sms';
+      const endpoint = '/api/communications/sms';
 
       const response = await apiRequest<{
         messageId: string;
@@ -494,8 +484,7 @@ class MiscServiceClass {
   }> {
     console.log('⚙️ Fetching application configuration');
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.CONFIG 
-        || '/api/config';
+      const endpoint = '/api/config';
 
       const response = await apiRequest<{
         siteName: string;
@@ -595,8 +584,7 @@ class MiscServiceClass {
         queryParams.append('includeInactive', 'true');
       }
 
-      const endpoint = API_CONFIG.ENDPOINTS.MISCELLANEOUS?.SEARCH 
-        || '/api/search';
+      const endpoint = '/api/search';
 
       const response = await apiRequest<{
         products?: Array<{
@@ -661,8 +649,7 @@ class MiscServiceClass {
   }> {
     console.log('📊 Generating report:', reportType);
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.ADMIN?.REPORTS 
-        || '/api/admin/reports';
+      const endpoint = '/api/admin/reports';
 
       const response = await apiRequest<{
         downloadUrl: string;
@@ -691,8 +678,7 @@ class MiscServiceClass {
   async clearCache(cacheKeys?: string[]): Promise<{ success: boolean; clearedKeys: string[] }> {
     console.log('🧹 Clearing application cache');
     try {
-      const endpoint = API_CONFIG.ENDPOINTS.ADMIN?.CLEAR_CACHE 
-        || '/api/admin/cache/clear';
+      const endpoint = '/api/admin/cache/clear';
 
       const response = await apiRequest<{ success: boolean; clearedKeys: string[] }>(
         endpoint,

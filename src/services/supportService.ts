@@ -71,7 +71,7 @@ class SupportServiceClass {
     console.log('📧 Submitting contact form:', request.subject);
     try {
       // Check if we have a specific contact endpoint, otherwise use support/contact
-      const endpoint = API_CONFIG.ENDPOINTS.SUPPORT?.CONTACT || '/api/support/contact';
+      const endpoint = '/api/support/contact';
       
       const response = await apiRequest<{
         id: number;

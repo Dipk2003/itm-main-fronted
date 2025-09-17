@@ -4,7 +4,7 @@
 // ========== AUTHENTICATION & USER MANAGEMENT ==========
 export * from './authService';
 export * from './userService';
-export * from './userManagementService';
+export { userManagementService, UserManagementService } from './userManagementService';
 export * from './buyerService';
 
 // ========== CORE BUSINESS LOGIC ==========

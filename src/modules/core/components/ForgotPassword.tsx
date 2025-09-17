@@ -79,7 +79,7 @@ export default function ForgotPassword({ onBackToLogin }: ForgotPasswordProps) {
     try {
       // Try forgot password OTP verification first
       console.log('🔐 Trying forgot password OTP verification...');
-      const forgotOtpResult = await dispatch(verifyForgotPasswordOtp({ email, otp }));
+      const forgotOtpResult = await dispatch(verifyForgotPasswordOtp({ emailOrPhone: email, otp }));
       console.log('🔐 Forgot OTP result:', forgotOtpResult);
       
       if (verifyForgotPasswordOtp.fulfilled.match(forgotOtpResult)) {

@@ -683,14 +683,15 @@ export class EnterpriseLogger extends EventEmitter {
       }
     };
 
-    // Only setup process handlers on server-side
-    if (typeof process !== 'undefined' && process.on && typeof window === 'undefined') {
+    // Only setup process handlers on Node.js server-side (not Edge Runtime)
+    if (this.isNodeJSRuntime()) {
       try {
         process.on('SIGINT', shutdown);
         process.on('SIGTERM', shutdown);
         process.on('beforeExit', shutdown);
       } catch (error) {
-        // Ignore process event setup errors in browser environment
+        // Ignore process event setup errors
+        console.warn('Failed to setup process handlers:', error);
       }
     }
 
@@ -718,6 +719,18 @@ export class EnterpriseLogger extends EventEmitter {
   // ========== UTILITY METHODS ==========
   private generateId(): string {
     return `log_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+  
+  private isNodeJSRuntime(): boolean {
+    try {
+      // Check if we're in a Node.js environment (not Edge Runtime or browser)
+      return typeof process !== 'undefined' && 
+             typeof window === 'undefined' &&
+             typeof process.env !== 'undefined' &&
+             process.env.NEXT_RUNTIME !== 'edge'; // Not in Next.js Edge Runtime
+    } catch {
+      return false;
+    }
   }
 
   getStats(): {
@@ -792,7 +805,12 @@ let globalLogger: EnterpriseLogger | null = null;
 
 export function getGlobalLogger(): EnterpriseLogger {
   if (!globalLogger) {
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    let isDevelopment = false;
+    try {
+      isDevelopment = typeof process !== 'undefined' && process.env?.NODE_ENV === 'development';
+    } catch {
+      // Default to production logger in Edge Runtime or other environments
+    }
     globalLogger = isDevelopment ? createDevelopmentLogger() : createProductionLogger();
   }
   return globalLogger;

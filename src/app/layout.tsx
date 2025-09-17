@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google'
 import '../styles/globals.css'
 import { Footer, Navbar, ChatbotToggle, ClientProviders } from '@/shared/components'
-import AuthDebugger from '@/components/AuthDebugger'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 <main className="pt-16">{children}</main>
           <Footer />
           <ChatbotToggle />
-          <AuthDebugger />
         </ClientProviders>
       </body>
     </html>

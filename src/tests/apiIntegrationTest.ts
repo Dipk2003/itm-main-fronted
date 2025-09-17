@@ -153,8 +153,8 @@ class APIIntegrationTester {
     console.log('\n🛍️ Testing Product Service...');
     
     await this.runTest('productService', 'structure', async () => {
-      if (typeof productService.getAllProducts !== 'function') {
-        throw new Error('getAllProducts method not found');
+      if (typeof productService.getProducts !== 'function') {
+        throw new Error('getProducts method not found');
       }
       if (typeof productService.getProductById !== 'function') {
         throw new Error('getProductById method not found');
@@ -165,8 +165,8 @@ class APIIntegrationTester {
       console.log('  ✓ All required methods are available');
     });
 
-    await this.runTest('productService', 'getAllProducts', async () => {
-      await productService.getAllProducts();
+    await this.runTest('productService', 'getProducts', async () => {
+      await productService.getProducts();
     });
 
     await this.runTest('productService', 'getProductById', async () => {
@@ -174,7 +174,7 @@ class APIIntegrationTester {
     });
 
     await this.runTest('productService', 'searchProducts', async () => {
-      await productService.searchProducts('test query');
+      await productService.searchProducts({ query: 'test query' });
     });
   }
 
@@ -205,7 +205,7 @@ class APIIntegrationTester {
     });
 
     await this.runTest('cartService', 'addToCart', async () => {
-      await cartService.addToCart(1, 2, { color: 'red', size: 'M' });
+      await cartService.addToCart({ productId: 1, quantity: 2 });
     });
   }
 
@@ -244,8 +244,8 @@ class APIIntegrationTester {
     console.log('\n🏷️ Testing Category Service...');
     
     await this.runTest('categoryService', 'structure', async () => {
-      if (typeof categoryService.getAllCategories !== 'function') {
-        throw new Error('getAllCategories method not found');
+      if (typeof categoryService.getCategories !== 'function') {
+        throw new Error('getCategories method not found');
       }
       if (typeof categoryService.getCategoryById !== 'function') {
         throw new Error('getCategoryById method not found');
@@ -253,8 +253,8 @@ class APIIntegrationTester {
       console.log('  ✓ All required methods are available');
     });
 
-    await this.runTest('categoryService', 'getAllCategories', async () => {
-      await categoryService.getAllCategories();
+    await this.runTest('categoryService', 'getCategories', async () => {
+      await categoryService.getCategories();
     });
 
     await this.runTest('categoryService', 'getCategoryById', async () => {
@@ -486,7 +486,8 @@ class APIIntegrationTester {
 }
 
 // Export for use in other files
-export { APIIntegrationTester, TestResult, TestSummary };
+export { APIIntegrationTester };
+export type { TestResult, TestSummary };
 
 // Auto-run tests if this file is executed directly
 if (typeof window === 'undefined' && require.main === module) {

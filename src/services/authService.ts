@@ -97,7 +97,7 @@ class AuthenticationService {
    */
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
-      console.log('🔐 Attempting login for:', credentials.email);
+      console.log('🔐 Attempting login for:', credentials.emailOrPhone);
       
       const response = await apiRequest<AuthResponse>(
         API_CONFIG.ENDPOINTS.AUTH.LOGIN,
@@ -128,7 +128,7 @@ class AuthenticationService {
    * Role-specific login methods
    */
   async loginAdmin(credentials: LoginRequest): Promise<AuthResponse> {
-    console.log('🔐 Admin login attempt for:', credentials.email);
+    console.log('🔐 Admin login attempt for:', credentials.emailOrPhone);
     const response = await apiRequest<AuthResponse>(
       API_CONFIG.ENDPOINTS.AUTH.ADMIN.LOGIN,
       {
@@ -142,7 +142,7 @@ class AuthenticationService {
   }
 
   async loginVendor(credentials: LoginRequest): Promise<AuthResponse> {
-    console.log('🔐 Vendor login attempt for:', credentials.email);
+    console.log('🔐 Vendor login attempt for:', credentials.emailOrPhone);
     const response = await apiRequest<AuthResponse>(
       API_CONFIG.ENDPOINTS.AUTH.VENDOR.LOGIN,
       {
@@ -156,7 +156,7 @@ class AuthenticationService {
   }
 
   async loginBuyer(credentials: LoginRequest): Promise<AuthResponse> {
-    console.log('🔐 Buyer login attempt for:', credentials.email);
+    console.log('🔐 Buyer login attempt for:', credentials.emailOrPhone);
     const response = await apiRequest<AuthResponse>(
       API_CONFIG.ENDPOINTS.AUTH.BUYER.LOGIN,
       {
@@ -170,7 +170,7 @@ class AuthenticationService {
   }
 
   async loginEmployee(credentials: LoginRequest): Promise<AuthResponse> {
-    console.log('🔐 Employee login attempt for:', credentials.email);
+    console.log('🔐 Employee login attempt for:', credentials.emailOrPhone);
     const response = await apiRequest<AuthResponse>(
       API_CONFIG.ENDPOINTS.AUTH.EMPLOYEE.LOGIN,
       {

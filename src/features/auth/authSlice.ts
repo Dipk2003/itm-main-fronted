@@ -24,7 +24,7 @@ export interface User {
   name: string;
   email: string;
   phone: string;
-  role: 'ROLE_USER' | 'ROLE_VENDOR' | 'ROLE_ADMIN' | 'SELLER' | 'ROLE_CTO' | 'CTO' | 'ROLE_SUPPORT' | 'SUPPORT' | 'ROLE_EMPLOYEE' | 'EMPLOYEE' | 'DATA_ENTRY';
+  role: 'ROLE_USER' | 'ROLE_VENDOR' | 'ROLE_ADMIN' | 'SELLER' | 'VENDOR' | 'ROLE_CTO' | 'CTO' | 'ROLE_SUPPORT' | 'SUPPORT' | 'ROLE_EMPLOYEE' | 'EMPLOYEE' | 'DATA_ENTRY';
   userType: 'user' | 'vendor' | 'admin' | 'cto' | 'support' | 'employee';
   isVerified: boolean;
   

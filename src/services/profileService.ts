@@ -96,7 +96,7 @@ class ProfileServiceClass {
     console.log('👤 Fetching current user profile');
     try {
       const response = await apiRequest<UserProfile>(
-        API_CONFIG.ENDPOINTS.USERS.PROFILE,
+        API_CONFIG.ENDPOINTS.AUTH.PROFILE,
         {
           method: 'GET'
         },
@@ -117,7 +117,7 @@ class ProfileServiceClass {
     console.log('📝 Updating user profile');
     try {
       const response = await apiRequest<UserProfile>(
-        API_CONFIG.ENDPOINTS.USERS.PROFILE,
+        API_CONFIG.ENDPOINTS.AUTH.PROFILE,
         {
           method: 'PUT',
           body: JSON.stringify(updateData)
@@ -142,7 +142,7 @@ class ProfileServiceClass {
       formData.append('avatar', file);
 
       const response = await apiRequest<FileUploadResponse>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/avatar`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/avatar`,
         {
           method: 'POST',
           body: formData
@@ -164,7 +164,7 @@ class ProfileServiceClass {
     console.log('🗑️ Deleting user avatar');
     try {
       const response = await apiRequest<{ success: boolean }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/avatar`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/avatar`,
         {
           method: 'DELETE'
         },
@@ -185,7 +185,7 @@ class ProfileServiceClass {
     console.log('🏠 Fetching user addresses');
     try {
       const response = await apiRequest<UserAddress[]>(
-        API_CONFIG.ENDPOINTS.USERS.ADDRESSES,
+        '/api/profile/addresses',
         {
           method: 'GET'
         },
@@ -206,7 +206,7 @@ class ProfileServiceClass {
     console.log('➕ Adding new user address');
     try {
       const response = await apiRequest<UserAddress>(
-        API_CONFIG.ENDPOINTS.USERS.ADDRESSES,
+        '/api/profile/addresses',
         {
           method: 'POST',
           body: JSON.stringify(address)
@@ -228,7 +228,7 @@ class ProfileServiceClass {
     console.log('📝 Updating user address:', addressId);
     try {
       const response = await apiRequest<UserAddress>(
-        `${API_CONFIG.ENDPOINTS.USERS.ADDRESSES}/${addressId}`,
+        `/api/profile/addresses/${addressId}`,
         {
           method: 'PUT',
           body: JSON.stringify(address)
@@ -250,7 +250,7 @@ class ProfileServiceClass {
     console.log('🗑️ Deleting user address:', addressId);
     try {
       const response = await apiRequest<{ success: boolean }>(
-        `${API_CONFIG.ENDPOINTS.USERS.ADDRESSES}/${addressId}`,
+        `/api/profile/addresses/${addressId}`,
         {
           method: 'DELETE'
         },
@@ -271,7 +271,7 @@ class ProfileServiceClass {
     console.log('🏠 Setting default address:', addressId);
     try {
       const response = await apiRequest<UserAddress>(
-        `${API_CONFIG.ENDPOINTS.USERS.ADDRESSES}/${addressId}/set-default`,
+        `/api/profile/addresses/${addressId}/set-default`,
         {
           method: 'PUT'
         },
@@ -292,7 +292,7 @@ class ProfileServiceClass {
     console.log('⚙️ Fetching user preferences');
     try {
       const response = await apiRequest<UserPreferences>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/preferences`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/preferences`,
         {
           method: 'GET'
         },
@@ -313,7 +313,7 @@ class ProfileServiceClass {
     console.log('⚙️ Updating user preferences');
     try {
       const response = await apiRequest<UserPreferences>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/preferences`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/preferences`,
         {
           method: 'PUT',
           body: JSON.stringify(preferences)
@@ -357,7 +357,7 @@ class ProfileServiceClass {
     console.log('❌ Deactivating own account');
     try {
       const response = await apiRequest<{ success: boolean }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/deactivate`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/deactivate`,
         {
           method: 'PUT',
           body: JSON.stringify({ reason })
@@ -379,7 +379,7 @@ class ProfileServiceClass {
     console.log('🗑️ Deleting own account permanently');
     try {
       const response = await apiRequest<{ success: boolean }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/delete`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/delete`,
         {
           method: 'DELETE',
           body: JSON.stringify({ password })
@@ -433,7 +433,7 @@ class ProfileServiceClass {
           hasPrev: boolean;
         };
       }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/activity?page=${page}&limit=${limit}`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/activity?page=${page}&limit=${limit}`,
         {
           method: 'GET'
         },
@@ -472,7 +472,7 @@ class ProfileServiceClass {
         cartItemsCount: number;
         supportTicketsCount: number;
       }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/dashboard-stats`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/dashboard-stats`,
         {
           method: 'GET'
         },
@@ -499,7 +499,7 @@ class ProfileServiceClass {
         downloadUrl: string; 
         expiresAt: string; 
       }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/export-data`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/export-data`,
         {
           method: 'POST'
         },
@@ -520,7 +520,7 @@ class ProfileServiceClass {
     console.log('📧 Requesting email verification');
     try {
       const response = await apiRequest<{ success: boolean; message: string }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/verify-email`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/verify-email`,
         {
           method: 'POST'
         },
@@ -541,7 +541,7 @@ class ProfileServiceClass {
     console.log('📱 Requesting phone verification');
     try {
       const response = await apiRequest<{ success: boolean; message: string }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/verify-phone`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/verify-phone`,
         {
           method: 'POST'
         },
@@ -562,7 +562,7 @@ class ProfileServiceClass {
     console.log('📱 Verifying phone with OTP');
     try {
       const response = await apiRequest<{ success: boolean; message: string }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/verify-phone`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/verify-phone`,
         {
           method: 'PUT',
           body: JSON.stringify({ otp })
@@ -594,7 +594,7 @@ class ProfileServiceClass {
         passwordLastChanged: string;
         activeSessions: number;
       }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/security`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/security`,
         {
           method: 'GET'
         },
@@ -618,7 +618,7 @@ class ProfileServiceClass {
     console.log('🔒 Updating security settings');
     try {
       const response = await apiRequest<{ success: boolean }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/security`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/security`,
         {
           method: 'PUT',
           body: JSON.stringify(settings)
@@ -654,7 +654,7 @@ class ProfileServiceClass {
         lastActivity: string;
         isCurrent: boolean;
       }>>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/sessions`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/sessions`,
         {
           method: 'GET'
         },
@@ -675,7 +675,7 @@ class ProfileServiceClass {
     console.log('🚫 Revoking session:', sessionId);
     try {
       const response = await apiRequest<{ success: boolean }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/sessions/${sessionId}`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/sessions/${sessionId}`,
         {
           method: 'DELETE'
         },
@@ -696,7 +696,7 @@ class ProfileServiceClass {
     console.log('🚫 Revoking all other sessions');
     try {
       const response = await apiRequest<{ success: boolean; revokedCount: number }>(
-        `${API_CONFIG.ENDPOINTS.USERS.PROFILE}/sessions/revoke-all`,
+        `${API_CONFIG.ENDPOINTS.AUTH.PROFILE}/sessions/revoke-all`,
         {
           method: 'DELETE'
         },

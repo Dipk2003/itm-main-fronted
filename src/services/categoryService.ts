@@ -179,18 +179,6 @@ class CategoryService {
     }>(endpoint, { method: 'GET' });
   }
 
-  /**
-   * Get active categories
-   */
-  async getActiveCategories(): Promise<{
-    success: boolean;
-    data: Category[];
-  }> {
-    return await apiRequest<{
-      success: boolean;
-      data: Category[];
-    }>(API_CONFIG.ENDPOINTS.CATEGORIES.ACTIVE, { method: 'GET' });
-  }
 
   /**
    * Get root categories (top level)
@@ -231,18 +219,6 @@ class CategoryService {
     }>(API_CONFIG.ENDPOINTS.CATEGORIES.CUSTOMER_VISIBLE, { method: 'GET' });
   }
 
-  /**
-   * Get category hierarchy
-   */
-  async getCategoryHierarchy(): Promise<{
-    success: boolean;
-    data: Category[];
-  }> {
-    return await apiRequest<{
-      success: boolean;
-      data: Category[];
-    }>(API_CONFIG.ENDPOINTS.CATEGORIES.HIERARCHY, { method: 'GET' });
-  }
 
   /**
    * Get category by ID
@@ -438,7 +414,7 @@ class CategoryService {
    */
   async getCategoryHierarchy(): Promise<Category[]> {
     return await apiRequest<Category[]>(
-      API_CONFIG.ENDPOINTS.CATEGORIES.HIERARCHICAL,
+      API_CONFIG.ENDPOINTS.CATEGORIES.HIERARCHY,
       { method: 'GET' }
     );
   }
@@ -476,7 +452,7 @@ class CategoryService {
    * Get active categories only
    */
   async getActiveCategories(): Promise<Category[]> {
-    return await this.getCategories({ isActive: true }).then(response => response.content);
+    return await this.getCategories({ isActive: true }).then(response => response.data);
   }
 
   /**
@@ -500,7 +476,7 @@ class CategoryService {
    */
   async getCategoriesForDropdown(): Promise<{ id: number; name: string; slug: string }[]> {
     const response = await this.getCategories({ isActive: true, size: 1000 });
-    return response.content.map(category => ({
+    return response.data.map(category => ({
       id: category.id,
       name: category.name,
       slug: category.slug

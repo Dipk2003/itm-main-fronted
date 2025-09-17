@@ -613,7 +613,7 @@ class ResponseProcessor {
     const pathname = request.nextUrl.pathname;
     
     // Add security headers
-    const securityHeaders = new RequestProcessor().getSecurityHeaders();
+    const securityHeaders = this.getSecurityHeaders();
     Object.entries(securityHeaders).forEach(([key, value]) => {
       response.headers.set(key, value);
     });
@@ -659,6 +659,59 @@ class ResponseProcessor {
 
     return staticExtensions.some(ext => pathname.toLowerCase().endsWith(ext)) ||
            pathname.startsWith('/_next/static/');
+  }
+
+  private getSecurityHeaders(): Record<string, string> {
+    const headers: Record<string, string> = {};
+
+    if (MIDDLEWARE_CONFIG.security.enableCSP) {
+      // Simple CSP for production
+      headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;";
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableHSTS) {
+      headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload';
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableXSS) {
+      headers['X-XSS-Protection'] = '1; mode=block';
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableFrameOptions) {
+      headers['X-Frame-Options'] = 'DENY';
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableNoSniff) {
+      headers['X-Content-Type-Options'] = 'nosniff';
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableReferrerPolicy) {
+      headers['Referrer-Policy'] = 'strict-origin-when-cross-origin';
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enablePermissionsPolicy) {
+      headers['Permissions-Policy'] = [
+        'camera=()',
+        'microphone=()',
+        'geolocation=(self)',
+        'interest-cohort=()'
+      ].join(', ');
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableCOEP) {
+      headers['Cross-Origin-Embedder-Policy'] = 'require-corp';
+    }
+
+    if (MIDDLEWARE_CONFIG.security.enableCOOP) {
+      headers['Cross-Origin-Opener-Policy'] = 'same-origin';
+    }
+
+    // Additional security headers
+    headers['X-DNS-Prefetch-Control'] = 'off';
+    headers['X-Permitted-Cross-Domain-Policies'] = 'none';
+    headers['Cross-Origin-Resource-Policy'] = 'cross-origin';
+
+    return headers;
   }
 }
 

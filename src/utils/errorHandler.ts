@@ -431,17 +431,3 @@ export const withRetry = <T extends any[], R>(
   };
 };
 
-// Export common error types for easy importing
-export {
-  ServiceError,
-  NetworkError,
-  TimeoutError,
-  AuthenticationError,
-  AuthorizationError,
-  ValidationError,
-  NotFoundError,
-  ConflictError,
-  RateLimitError,
-  ServerError,
-  MaintenanceError
-};
