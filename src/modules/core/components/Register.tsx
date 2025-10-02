@@ -10,7 +10,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
-import { register, verifyOtp, clearError } from '@/features/auth/authSlice';
+import { register, registerBuyer, registerVendor, verifyOtp, clearError } from '@/features/auth/authSlice';
 import { Button } from '@/shared/components/Button';
 import { Input } from '@/shared/components/Input';
 import { Select } from '@/shared/components/Select';
@@ -110,13 +110,36 @@ const Register: React.FC<RegisterProps> = ({
       return;
     }
 
-    const registerData = {
-      ...formData,
-      role: userType === 'admin' ? 'ROLE_ADMIN' : userType === 'vendor' ? 'ROLE_VENDOR' : 'ROLE_USER',
-      userType: userType,
-    };
-
-    dispatch(register(registerData));
+    // Create proper registration data based on user type
+    if (userType === 'vendor') {
+      // For vendor registration, use vendor-specific fields
+      const vendorData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        businessName: formData.companyName || formData.name + ' Business',
+        businessAddress: formData.address || 'Not provided',
+        city: formData.city || 'Not provided',
+        state: formData.state || 'Not provided',
+        pincode: formData.pincode || '000000',
+        panNumber: 'TEMP' + Date.now().toString().slice(-8), // Temporary PAN
+        gstNumber: formData.gstNumber,
+      };
+      
+      dispatch(registerVendor(vendorData));
+    } else {
+      // For buyer/user registration
+      const buyerData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        aadharCard: formData.gstNumber, // Use GST field as Aadhar for now
+      };
+      
+      dispatch(registerBuyer(buyerData));
+    }
   };
 
   const handleOtpVerification = async (e: React.FormEvent) => {

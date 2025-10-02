@@ -88,7 +88,8 @@ export const registerBuyer = createAsyncThunk(
         aadharCard: buyerData.aadharCard || '',
       };
 
-      const response = await fetch('/api/auth/register', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indiantradebackend.onrender.com';
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,7 +165,8 @@ export const registerVendor = createAsyncThunk(
       };
 
       // FIXED: Call vendor-specific endpoint
-      const response = await fetch('/api/auth/vendor/register', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indiantradebackend.onrender.com';
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,10 +182,21 @@ export const registerVendor = createAsyncThunk(
       }
 
       console.log('✅ Vendor registration successful:', result);
+      
+      // Try to parse JSON response, fallback to text
+      let responseData;
+      try {
+        responseData = JSON.parse(result);
+      } catch {
+        responseData = { message: result };
+      }
+      
       return {
-        message: result,
+        message: responseData.message || result,
         userType: 'vendor',
         email: vendorData.email,
+        success: true,
+        otpSent: true
       };
     } catch (error: any) {
       console.error('❌ Vendor registration error:', error);
@@ -200,7 +213,8 @@ export const login = createAsyncThunk(
       console.log('🔄 Starting login...', { emailOrPhone: credentials.emailOrPhone, userType: credentials.userType });
 
       // Use the unified login endpoint - backend handles role detection
-      const loginEndpoint = '/api/auth/login';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indiantradebackend.onrender.com';
+      const loginEndpoint = `${API_BASE_URL}/auth/login`;
 
       const response = await fetch(loginEndpoint, {
         method: 'POST',
@@ -299,7 +313,8 @@ export const verifyOTP = createAsyncThunk(
     try {
       console.log('🔄 Verifying OTP...', { emailOrPhone: otpData.emailOrPhone });
 
-      const response = await fetch('/api/auth/verify-otp', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indiantradebackend.onrender.com';
+      const response = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -428,7 +443,8 @@ export const checkAuthStatus = createAsyncThunk(
       }
 
       // Verify token with backend
-      const response = await fetch('/api/auth/verify-token', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indiantradebackend.onrender.com';
+      const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
