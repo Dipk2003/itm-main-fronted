@@ -1,6 +1,6 @@
 // API Constants
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
-export const WS_BASE_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8080/ws';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://indiantradebackend.onrender.com';
+export const WS_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'wss://indiantradebackend.onrender.com/ws';
 
 export const getAuthHeaders = () => {
   const token = typeof window !== 'undefined' 

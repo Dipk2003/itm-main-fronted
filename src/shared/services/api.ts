@@ -8,8 +8,8 @@ const getBackendUrl = () => {
     return process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
   }
   
-  // For development, use environment variable or fallback to localhost
-  return process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8080';
+  // For development, use environment variable or fallback to backend URL
+  return process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BASE_URL || 'https://indiantradebackend.onrender.com';
 };
 
 const BACKEND_URL = getBackendUrl();

@@ -29,8 +29,26 @@ const nextConfig = {
         protocol: 'https',
         hostname: '*.indiantrademart.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'indiantradebackend.onrender.com',
+      },
     ],
     dangerouslyAllowSVG: true,
+  },
+  // Add Content Security Policy headers
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; connect-src 'self' https://indiantradebackend.onrender.com wss://indiantradebackend.onrender.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+          }
+        ],
+      },
+    ];
   },
   // Add rewrites for subdomain handling in development
   async rewrites() {
