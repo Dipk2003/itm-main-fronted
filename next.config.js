@@ -38,13 +38,17 @@ const nextConfig = {
   },
   // Add Content Security Policy headers
   async headers() {
+    const isDev = process.env.NODE_ENV === 'development';
+    
     return [
       {
         source: '/(.*)',
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; connect-src 'self' https://indiantradebackend.onrender.com wss://indiantradebackend.onrender.com http://localhost:3000 https://localhost:3000; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+            value: isDev 
+              ? "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:; connect-src *; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:;"
+              : "default-src 'self'; connect-src 'self' https://indiantradebackend.onrender.com https://*.onrender.com wss://indiantradebackend.onrender.com http://localhost:3000 https://localhost:3000 http://localhost:8080 https://localhost:8080; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https: blob:; font-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://indiantradebackend.onrender.com;"
           }
         ],
       },
