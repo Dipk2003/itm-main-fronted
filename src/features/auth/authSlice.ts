@@ -104,10 +104,21 @@ export const registerBuyer = createAsyncThunk(
       }
 
       console.log('✅ Buyer registration successful:', result);
+      
+      // Try to parse JSON response, fallback to text
+      let responseData;
+      try {
+        responseData = JSON.parse(result);
+      } catch {
+        responseData = { message: result };
+      }
+      
       return {
-        message: result,
+        message: responseData.message || result,
         userType: 'user',
         email: buyerData.email,
+        success: true,
+        otpSent: true
       };
     } catch (error: any) {
       console.error('❌ Buyer registration error:', error);
